@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>GUERRA BEYBLADE</title>
+
+<title>⚡ GUERRA BEYBLADE ⚡</title>
 
 <script src="https://unpkg.com/peerjs/dist/peerjs.min.js"></script>
 
@@ -20,7 +21,7 @@ html,body{
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#050711;
+    background:#050816;
     font-family:Arial,sans-serif;
 }
 
@@ -42,20 +43,26 @@ canvas{
     inset:0;
     width:100%;
     height:100%;
-    background:#080b16;
 }
+
+/* =========================
+   PANTALLAS
+========================= */
 
 .screen{
     position:absolute;
     inset:0;
-    z-index:20;
+    z-index:50;
+
     display:flex;
     flex-direction:column;
     justify-content:center;
     align-items:center;
+
     padding:20px;
+
     background:
-      radial-gradient(circle at center,#182344 0%,#090d1c 55%,#03040a 100%);
+    radial-gradient(circle at center,#1b2b55,#090d1d 60%,#03050c);
     color:white;
 }
 
@@ -63,280 +70,425 @@ canvas{
     display:none !important;
 }
 
+/* =========================
+   TITULO
+========================= */
+
 .title{
     font-size:clamp(35px,8vw,75px);
-    text-align:center;
     font-weight:900;
-    color:#fff;
+    text-align:center;
+
+    color:white;
+
     text-shadow:
-      0 0 10px #28a9ff,
-      0 0 25px #28a9ff,
-      0 0 45px #176fff;
-    margin-bottom:12px;
+    0 0 10px #00aaff,
+    0 0 25px #0066ff,
+    0 0 45px #0044ff;
+
+    margin-bottom:10px;
 }
 
 .subtitle{
-    color:#b8c8e8;
-    font-size:clamp(14px,3vw,20px);
-    margin-bottom:25px;
+    color:#b9c9e8;
     text-align:center;
+    font-size:clamp(14px,3vw,20px);
+    margin-bottom:22px;
 }
 
+/* =========================
+   MENU
+========================= */
+
 .menu{
+    width:min(430px,92vw);
+
     display:flex;
     flex-direction:column;
     gap:12px;
-    width:min(420px,90vw);
 }
 
 button{
-    border:0;
+    border:none;
     border-radius:15px;
-    padding:16px 22px;
+
+    padding:15px 20px;
+
     font-size:18px;
     font-weight:bold;
-    color:white;
-    background:linear-gradient(135deg,#147eff,#4d2dff);
-    box-shadow:0 6px 20px #0008;
-    cursor:pointer;
-    transition:.15s;
-}
 
-button:hover{
-    transform:scale(1.03);
+    color:white;
+
+    background:
+    linear-gradient(135deg,#168cff,#5835ff);
+
+    box-shadow:0 7px 22px #0008;
+
+    cursor:pointer;
 }
 
 button:active{
     transform:scale(.96);
 }
 
-.btn-red{
-    background:linear-gradient(135deg,#ff304f,#b9002d);
+.green{
+    background:
+    linear-gradient(135deg,#00bd7c,#007b66);
 }
 
-.btn-green{
-    background:linear-gradient(135deg,#00bd7c,#007e67);
+.red{
+    background:
+    linear-gradient(135deg,#ff3155,#a90029);
+}
+
+.orange{
+    background:
+    linear-gradient(135deg,#ff8c00,#e53b00);
 }
 
 .info{
     margin-top:18px;
-    padding:12px 18px;
-    border-radius:12px;
-    background:#ffffff10;
-    border:1px solid #ffffff20;
-    color:#cdd8ef;
+
+    padding:13px 20px;
+
+    border-radius:13px;
+
+    background:#ffffff0d;
+
+    border:1px solid #ffffff1c;
+
+    color:#d4def0;
+
     text-align:center;
+
+    line-height:1.6;
 }
+
+.controlsBox{
+    margin-top:15px;
+
+    width:min(520px,92vw);
+
+    padding:14px;
+
+    border-radius:15px;
+
+    background:#00000028;
+
+    border:1px solid #ffffff18;
+
+    text-align:center;
+
+    color:#c9d5ec;
+
+    line-height:1.7;
+}
+
+/* =========================
+   ONLINE
+========================= */
 
 .onlineBox{
     width:min(500px,94vw);
-    padding:25px;
-    background:#10172b;
-    border:1px solid #ffffff22;
+
+    padding:24px;
+
     border-radius:22px;
-    box-shadow:0 15px 50px #0008;
+
+    background:#0c1327;
+
+    border:1px solid #ffffff25;
+
+    box-shadow:0 15px 50px #0009;
+
     text-align:center;
 }
 
 .roomCode{
-    font-size:clamp(25px,7vw,48px);
+    margin:16px 0;
+
+    font-size:clamp(25px,7vw,45px);
+
     font-weight:900;
+
     letter-spacing:5px;
-    margin:18px 0;
-    color:#4db6ff;
-    text-shadow:0 0 15px #158cff;
+
+    color:#40baff;
+
+    text-shadow:0 0 18px #008cff;
+
     word-break:break-all;
 }
 
 input{
     width:100%;
-    padding:15px;
-    margin:8px 0;
-    border:1px solid #ffffff25;
-    border-radius:12px;
-    background:#080c18;
-    color:white;
-    text-align:center;
-    font-size:18px;
-    outline:none;
-}
 
-.playersText{
-    font-size:20px;
-    margin:12px 0;
-    color:#fff;
+    padding:15px;
+
+    margin:8px 0;
+
+    border-radius:12px;
+
+    border:1px solid #ffffff25;
+
+    background:#050916;
+
+    color:white;
+
+    text-align:center;
+
+    font-size:18px;
+
+    outline:none;
 }
 
 .status{
     min-height:28px;
-    color:#aebddd;
-    margin:10px 0 18px;
+
+    margin:12px 0;
+
+    color:#c4d0e8;
 }
 
-#hud{
-    position:absolute;
-    top:10px;
-    left:0;
-    width:100%;
-    z-index:10;
-    pointer-events:none;
+.playersNumber{
+    font-size:23px;
+
+    font-weight:bold;
+
+    margin:13px;
+
     color:white;
 }
 
-.playerHUD{
-    display:flex;
-    flex-wrap:wrap;
-    justify-content:center;
-    gap:8px;
+/* =========================
+   HUD
+========================= */
+
+#hud{
+    position:absolute;
+
+    top:8px;
+    left:0;
+
+    width:100%;
+
+    z-index:20;
+
+    pointer-events:none;
 }
 
-.hudCard{
-    min-width:130px;
-    padding:7px 10px;
+.hud{
+    display:flex;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    gap:7px;
+
+    padding:0 70px;
+}
+
+.card{
+    width:135px;
+
+    padding:6px 9px;
+
     border-radius:10px;
-    background:#050814cc;
+
+    background:#030712d9;
+
     border:1px solid #ffffff22;
 }
 
-.hudName{
-    font-size:13px;
+.name{
+    font-size:12px;
+
     margin-bottom:4px;
 }
 
 .lifeBack{
-    width:100%;
     height:8px;
+
+    background:#1b1f2c;
+
     border-radius:10px;
-    background:#222;
+
     overflow:hidden;
 }
 
-.lifeBar{
+.life{
     height:100%;
+
     width:100%;
-    background:#29e66b;
+
     transition:.15s;
 }
 
-#menuGameBtn{
+/* =========================
+   BOTON MENU EN PARTIDA
+========================= */
+
+#gameMenu{
     position:absolute;
+
     top:10px;
-    right:10px;
-    z-index:30;
+    left:10px;
+
+    z-index:40;
+
     padding:9px 13px;
+
     font-size:13px;
-    pointer-events:auto;
 }
 
-#message{
+/* =========================
+   MENSAJE FINAL
+========================= */
+
+#result{
     position:absolute;
-    z-index:25;
+
     inset:0;
+
+    z-index:60;
+
     display:flex;
+
     justify-content:center;
+
     align-items:center;
-    pointer-events:none;
+
+    background:#0005;
 }
 
-.messageBox{
-    padding:25px 35px;
-    border-radius:20px;
-    background:#050814e8;
-    border:1px solid #ffffff22;
+.resultBox{
+    width:min(390px,90vw);
+
+    padding:30px;
+
+    border-radius:22px;
+
     text-align:center;
-    color:white;
-    box-shadow:0 15px 60px #000;
+
+    background:#050817f2;
+
+    border:1px solid #ffffff25;
+
+    box-shadow:0 20px 70px #000;
 }
 
-.messageBox h2{
-    font-size:38px;
-    margin-bottom:15px;
+.resultBox h2{
+    font-size:40px;
+
+    margin-bottom:12px;
 }
+
+/* =========================
+   CONTROLES CELULAR
+========================= */
 
 #mobileControls{
     position:absolute;
+
     inset:0;
-    z-index:15;
+
+    z-index:35;
+
     pointer-events:none;
 }
 
 #joystick{
     position:absolute;
-    left:25px;
-    bottom:25px;
-    width:145px;
-    height:145px;
+
+    left:22px;
+    bottom:22px;
+
+    width:135px;
+    height:135px;
+
     border-radius:50%;
-    background:#ffffff12;
-    border:2px solid #ffffff25;
+
+    background:#ffffff10;
+
+    border:2px solid #ffffff28;
+
     pointer-events:auto;
+
     touch-action:none;
 }
 
 #stick{
     position:absolute;
-    width:60px;
-    height:60px;
-    left:42px;
-    top:42px;
+
+    left:39px;
+    top:39px;
+
+    width:55px;
+    height:55px;
+
     border-radius:50%;
+
     background:#ffffff35;
-    border:2px solid #ffffff55;
+
+    border:2px solid #ffffff50;
 }
 
 #attack{
     position:absolute;
-    right:28px;
-    bottom:35px;
-    width:115px;
-    height:115px;
-    border-radius:50%;
-    padding:0;
-    background:linear-gradient(135deg,#ff254b,#8f0022);
-    border:4px solid #ffffff40;
-    box-shadow:0 0 25px #ff204d88;
-    pointer-events:auto;
-    touch-action:none;
-    font-size:20px;
-}
 
-.mobileOnly{
-    display:none;
+    right:25px;
+    bottom:30px;
+
+    width:110px;
+    height:110px;
+
+    padding:0;
+
+    border-radius:50%;
+
+    background:
+    radial-gradient(circle,#ff526c,#c60030);
+
+    border:4px solid #ffffff40;
+
+    font-size:17px;
+
+    pointer-events:auto;
+
+    touch-action:none;
 }
 
 @media(max-width:800px){
-    .mobileOnly{
-        display:block;
+
+    .hud{
+        padding:0 5px;
     }
 
-    #menuGameBtn{
-        font-size:11px;
-        padding:8px 10px;
+    .card{
+        width:105px;
     }
 
-    .hudCard{
-        min-width:95px;
-    }
-
-    .hudName{
-        font-size:11px;
+    .name{
+        font-size:10px;
     }
 
     #joystick{
-        width:125px;
-        height:125px;
+        width:120px;
+        height:120px;
     }
 
     #stick{
-        width:52px;
-        height:52px;
-        left:35px;
-        top:35px;
+        left:34px;
+        top:34px;
+
+        width:50px;
+        height:50px;
     }
 
     #attack{
-        width:100px;
-        height:100px;
+        width:95px;
+        height:95px;
     }
 }
 </style>
@@ -348,83 +500,126 @@ input{
 
 <canvas id="canvas"></canvas>
 
-<!-- MENÚ PRINCIPAL -->
+
+<!-- =========================
+     MENU PRINCIPAL
+========================= -->
+
 <div id="mainMenu" class="screen">
 
-    <div class="title">⚡ GUERRA BEYBLADE ⚡</div>
+    <div class="title">
+        ⚡ GUERRA BEYBLADE ⚡
+    </div>
 
     <div class="subtitle">
-        Batalla de trompos
+        ¡Entra a la arena y demuestra quién es el campeón!
     </div>
 
     <div class="menu">
 
-        <button onclick="startSolo()">
+        <button onclick="soloGame()">
             🌀 JUGAR SOLO
         </button>
 
         <button onclick="openOnline()">
-            🌐 ONLINE — 4 JUGADORES
+            🌐 PARTIDA ONLINE
         </button>
 
-        <button class="btn-green" onclick="openOnlineCPU()">
+        <button class="green" onclick="openOnlineCPU()">
             🤖 ONLINE + CPU
         </button>
 
     </div>
 
     <div class="info">
-        👥 LÍMITE ONLINE: <b>4 JUGADORES</b><br>
-        📱 Celular + 💻 Computadora
+
+        👥 <b>ONLINE: HASTA 4 JUGADORES</b><br>
+
+        📱 Celular + 💻 Computadora<br>
+
+        🔵 🔴 🟡 🟣 4 jugadores por sala
+
+    </div>
+
+    <div class="controlsBox">
+
+        🎮 <b>CONTROLES</b><br>
+
+        💻 PC:
+        WASD / Flechas = Mover
+        • ESPACIO = Atacar<br>
+
+        📱 CELULAR:
+        🕹️ Joystick = Mover
+        • ⚔️ Botón = Atacar
+
     </div>
 
 </div>
 
 
-<!-- MENÚ ONLINE -->
+<!-- =========================
+     MENU ONLINE
+========================= -->
+
 <div id="onlineMenu" class="screen hidden">
 
     <div class="title" style="font-size:clamp(30px,7vw,55px)">
-        🌐 ONLINE
+        ⚡ GUERRA BEYBLADE ⚡
     </div>
 
     <div class="onlineBox">
 
         <div class="subtitle">
-            👥 Máximo <b>4 jugadores</b> por partida
+            🌐 PARTIDA ONLINE
         </div>
 
+        <div class="info">
+
+            👥 <b>LÍMITE: 4 JUGADORES</b><br>
+            📱💻 Celular y computadora pueden jugar juntos
+
+        </div>
+
+        <br>
+
         <button onclick="createRoom()">
-            ➕ CREAR PARTIDA
+            ➕ CREAR SALA
         </button>
 
         <div id="hostArea" class="hidden">
 
-            <div style="margin-top:18px">
-                CÓDIGO DE SALA
-            </div>
+            <p style="margin-top:18px">
+                🔑 CÓDIGO DE LA SALA
+            </p>
 
             <div id="roomCode" class="roomCode">
                 ----
             </div>
 
-            <button onclick="copyRoom()">
+            <button onclick="copyCode()">
                 📋 COPIAR CÓDIGO
             </button>
 
-            <div id="playersText" class="playersText">
-                Jugadores: 1/4
+            <div id="playersNumber" class="playersNumber">
+                👥 JUGADORES: 1/4
             </div>
 
             <div id="hostStatus" class="status">
                 Esperando jugadores...
             </div>
 
-            <button id="startOnlineBtn" class="btn-green hidden" onclick="startOnlineBattle()">
+            <button
+                id="startOnline"
+                class="green hidden"
+                onclick="startOnline()">
                 ⚔️ INICIAR BATALLA
             </button>
 
-            <button id="startCPUBtn" class="hidden" onclick="startOnlineCPUFromRoom()">
+            <button
+                id="startCPU"
+                class="orange hidden"
+                onclick="startCPUOnline()">
                 🤖 INICIAR CON CPU
             </button>
 
@@ -434,20 +629,20 @@ input{
         <div id="joinArea">
 
             <input
-                id="joinCode"
-                placeholder="ESCRIBE EL CÓDIGO"
-                maxlength="30"
+                id="roomInput"
+                placeholder="CÓDIGO DE LA SALA"
+                maxlength="40"
             >
 
             <button onclick="joinRoom()">
-                🚀 UNIRSE A PARTIDA
+                🚀 ENTRAR A LA SALA
             </button>
 
         </div>
 
         <div id="joinStatus" class="status"></div>
 
-        <button class="btn-red" onclick="goMainMenu()">
+        <button class="red" onclick="mainMenu()">
             ↩️ MENÚ PRINCIPAL
         </button>
 
@@ -456,38 +651,75 @@ input{
 </div>
 
 
-<!-- HUD -->
+<!-- =========================
+     HUD
+========================= -->
+
 <div id="hud" class="hidden">
-    <div id="playerHUD" class="playerHUD"></div>
+
+    <div id="hudPlayers" class="hud"></div>
+
 </div>
 
 
-<button id="menuGameBtn" class="btn-red hidden" onclick="goMainMenu()">
+<button
+id="gameMenu"
+class="red hidden"
+onclick="mainMenu()">
+
     ↩️ MENÚ
+
 </button>
 
 
-<!-- MENSAJE -->
-<div id="message" class="hidden">
-    <div class="messageBox">
-        <h2 id="messageTitle"></h2>
-        <p id="messageText"></p>
+<!-- =========================
+     RESULTADO
+========================= -->
+
+<div id="result" class="hidden">
+
+    <div class="resultBox">
+
+        <h2 id="resultTitle">
+            🏆 GANADOR
+        </h2>
+
+        <p id="resultText">
+            Ganaste la batalla.
+        </p>
+
         <br>
-        <button onclick="restartGame()">🔄 REVANCHA</button>
-        <button class="btn-red" onclick="goMainMenu()">↩️ MENÚ</button>
+
+        <button onclick="rematch()">
+            🔄 JUGAR OTRA VEZ
+        </button>
+
+        <br><br>
+
+        <button class="red" onclick="mainMenu()">
+            ↩️ MENÚ PRINCIPAL
+        </button>
+
     </div>
+
 </div>
 
 
-<!-- CONTROLES CELULAR -->
-<div id="mobileControls" class="mobileOnly hidden">
+<!-- =========================
+     CELULAR
+========================= -->
+
+<div id="mobileControls" class="hidden">
 
     <div id="joystick">
+
         <div id="stick"></div>
+
     </div>
 
     <button id="attack">
-        ⚔️<br>ATACAR
+        ⚔️<br>
+        ATACAR
     </button>
 
 </div>
@@ -497,18 +729,29 @@ input{
 
 <script>
 
-const canvas = document.getElementById("canvas");
-const ctx = canvas.getContext("2d");
+/* =====================================================
+   GUERRA BEYBLADE
+   SISTEMA 4 JUGADORES
+===================================================== */
+
+const canvas =
+document.getElementById("canvas");
+
+const ctx =
+canvas.getContext("2d");
 
 let W = innerWidth;
 let H = innerHeight;
 
 function resize(){
+
     W = canvas.width = innerWidth;
     H = canvas.height = innerHeight;
+
 }
 
 resize();
+
 addEventListener("resize",resize);
 
 
@@ -516,83 +759,104 @@ addEventListener("resize",resize);
    VARIABLES
 ========================= */
 
+const MAX_PLAYERS = 4;
+
+const playerColors = [
+    "#18a9ff",
+    "#ff3155",
+    "#ffd21f",
+    "#a855f7"
+];
+
 let mode = "menu";
 
 let peer = null;
+
 let hostConnection = null;
+
 let connections = {};
 
+let roomCode = "";
+
 let isHost = false;
+
 let localPlayer = 0;
 
-let roomID = "";
-
-const MAX_PLAYERS = 4;
-
 let running = false;
-let winner = null;
+
+let attack = false;
+
+let keys = {};
+
+let joyX = 0;
+let joyY = 0;
 
 let lastTime = performance.now();
 
-let attackPressed = false;
-
-const keys = {};
-
-let joystickX = 0;
-let joystickY = 0;
-
 let state = {
-    players: [],
+    players:[],
     started:false
 };
 
 
 /* =========================
-   COLORES
+   MENUS
 ========================= */
 
-const colors = [
-    "#28a9ff",
-    "#ff3155",
-    "#ffd43b",
-    "#a855f7"
-];
+function hideMenus(){
 
+    document
+    .getElementById("mainMenu")
+    .classList.add("hidden");
 
-/* =========================
-   MENÚ
-========================= */
-
-function hideAllScreens(){
-
-    document.getElementById("mainMenu").classList.add("hidden");
-    document.getElementById("onlineMenu").classList.add("hidden");
+    document
+    .getElementById("onlineMenu")
+    .classList.add("hidden");
 
 }
 
-function goMainMenu(){
+
+function mainMenu(){
 
     running = false;
+
     mode = "menu";
 
     if(peer){
+
         try{
             peer.destroy();
         }catch(e){}
+
     }
 
     peer = null;
+
     hostConnection = null;
+
     connections = {};
 
-    hideAllScreens();
+    hideMenus();
 
-    document.getElementById("mainMenu").classList.remove("hidden");
+    document
+    .getElementById("mainMenu")
+    .classList.remove("hidden");
 
-    document.getElementById("hud").classList.add("hidden");
-    document.getElementById("menuGameBtn").classList.add("hidden");
-    document.getElementById("mobileControls").classList.add("hidden");
-    document.getElementById("message").classList.add("hidden");
+    document
+    .getElementById("hud")
+    .classList.add("hidden");
+
+    document
+    .getElementById("gameMenu")
+    .classList.add("hidden");
+
+    document
+    .getElementById("mobileControls")
+    .classList.add("hidden");
+
+    document
+    .getElementById("result")
+    .classList.add("hidden");
 
 }
 
@@ -601,42 +865,36 @@ function goMainMenu(){
    SOLO
 ========================= */
 
-function startSolo(){
+function soloGame(){
 
     mode = "solo";
+
     isHost = true;
+
     localPlayer = 0;
 
-    hideAllScreens();
+    createPlayers(2);
 
-    document.getElementById("hud").classList.remove("hidden");
-    document.getElementById("menuGameBtn").classList.remove("hidden");
-    document.getElementById("mobileControls").classList.remove("hidden");
-
-    createBattlePlayers(4);
-
-    running = true;
-    winner = null;
+    startBattle();
 
 }
 
 
 /* =========================
-   ONLINE MENU
+   ONLINE
 ========================= */
 
 function openOnline(){
 
     mode = "online";
 
-    hideAllScreens();
+    hideMenus();
 
-    document.getElementById("onlineMenu").classList.remove("hidden");
+    document
+    .getElementById("onlineMenu")
+    .classList.remove("hidden");
 
-    document.getElementById("hostArea").classList.add("hidden");
-    document.getElementById("joinArea").classList.remove("hidden");
-
-    document.getElementById("joinStatus").textContent = "";
+    resetLobby();
 
 }
 
@@ -645,15 +903,30 @@ function openOnlineCPU(){
 
     mode = "onlineCPU";
 
-    hideAllScreens();
+    hideMenus();
 
-    document.getElementById("onlineMenu").classList.remove("hidden");
+    document
+    .getElementById("onlineMenu")
+    .classList.remove("hidden");
 
-    document.getElementById("hostArea").classList.add("hidden");
-    document.getElementById("joinArea").classList.remove("hidden");
+    resetLobby();
 
-    document.getElementById("joinStatus").textContent =
-        "Puedes jugar con otros jugadores y completar los espacios con CPU.";
+}
+
+
+function resetLobby(){
+
+    document
+    .getElementById("hostArea")
+    .classList.add("hidden");
+
+    document
+    .getElementById("joinArea")
+    .classList.remove("hidden");
+
+    document
+    .getElementById("joinStatus")
+    .textContent = "";
 
 }
 
@@ -662,16 +935,22 @@ function openOnlineCPU(){
    CREAR JUGADORES
 ========================= */
 
-function createBattlePlayers(number){
+function createPlayers(number){
 
     state.players = [];
 
     const positions = [
-        {x:.5,y:.22},
-        {x:.78,y:.50},
-        {x:.50,y:.78},
-        {x:.22,y:.50}
+
+        {x:.50,y:.25},
+
+        {x:.75,y:.50},
+
+        {x:.50,y:.75},
+
+        {x:.25,y:.50}
+
     ];
+
 
     for(let i=0;i<number;i++){
 
@@ -680,19 +959,26 @@ function createBattlePlayers(number){
             id:i,
 
             x:W*positions[i].x,
+
             y:H*positions[i].y,
 
             life:100,
 
             angle:0,
 
-            attack:false,
-
-            attackCooldown:0,
-
             alive:true,
 
-            cpu:false
+            attack:false,
+
+            cooldown:0,
+
+            cpu:false,
+
+            input:{
+                x:0,
+                y:0,
+                attack:false
+            }
 
         });
 
@@ -702,42 +988,56 @@ function createBattlePlayers(number){
 
 
 /* =========================
-   CREAR SALA
+   PEERJS - CREAR SALA
 ========================= */
 
 function createRoom(){
 
     if(peer){
-        try{peer.destroy();}catch(e){}
+
+        try{
+            peer.destroy();
+        }catch(e){}
+
     }
+
 
     peer = new Peer();
 
     isHost = true;
 
+
     peer.on("open",id=>{
 
-        roomID = id;
+        roomCode = id;
 
-        document.getElementById("roomCode").textContent = id;
+        document
+        .getElementById("roomCode")
+        .textContent = id;
 
-        document.getElementById("hostArea").classList.remove("hidden");
-        document.getElementById("joinArea").classList.add("hidden");
+        document
+        .getElementById("hostArea")
+        .classList.remove("hidden");
 
-        document.getElementById("playersText").textContent =
-            "Jugadores: 1/4";
+        document
+        .getElementById("joinArea")
+        .classList.add("hidden");
 
-        document.getElementById("hostStatus").textContent =
-            "Esperando jugadores...";
-
-        updateHostButtons();
+        updateLobby();
 
     });
 
 
     peer.on("connection",conn=>{
 
-        if(Object.keys(connections).length >= MAX_PLAYERS-1){
+        /* =====================
+           SALA LLENA
+        ===================== */
+
+        if(
+            Object.keys(connections).length
+            >= MAX_PLAYERS-1
+        ){
 
             conn.on("open",()=>{
 
@@ -746,59 +1046,72 @@ function createRoom(){
                 });
 
                 setTimeout(()=>{
-                    try{conn.close();}catch(e){}
+                    try{
+                        conn.close();
+                    }catch(e){}
                 },500);
 
             });
 
             return;
+
         }
 
 
         conn.on("open",()=>{
 
-            let index = findFreePlayer();
+            let player =
+            getFreePlayer();
 
-            connections[index] = conn;
 
-            conn.playerIndex = index;
+            connections[player] = conn;
+
+            conn.playerIndex = player;
+
 
             conn.send({
+
                 type:"assigned",
-                index:index,
-                mode:mode
+
+                player:player
+
             });
 
+
             updateLobby();
+
 
             conn.on("data",data=>{
 
                 if(data.type === "input"){
 
-                    if(state.players[index]){
+                    if(state.players[player]){
 
-                        state.players[index].input = data.input;
+                        state.players[player].input =
+                        data.input;
 
                     }
 
                 }
 
-                if(data.type === "restart"){
+                if(data.type === "rematch"){
 
-                    restartGame();
+                    restartHost();
 
                 }
 
             });
 
+
             conn.on("close",()=>{
 
-                delete connections[index];
+                delete connections[player];
 
-                if(state.players[index]){
+                if(state.players[player]){
 
-                    state.players[index].alive = false;
-                    state.players[index].life = 0;
+                    state.players[player].alive=false;
+
+                    state.players[player].life=0;
 
                 }
 
@@ -811,118 +1124,12 @@ function createRoom(){
     });
 
 
-    peer.on("error",err=>{
-
-        document.getElementById("hostStatus").textContent =
-            "Error de conexión. Intenta crear otra sala.";
-
-    });
-
-}
-
-
-/* =========================
-   UNIRSE
-========================= */
-
-function joinRoom(){
-
-    const code = document.getElementById("joinCode").value.trim();
-
-    if(!code){
-
-        document.getElementById("joinStatus").textContent =
-            "Escribe el código de la sala.";
-
-        return;
-    }
-
-    peer = new Peer();
-
-    isHost = false;
-
-    document.getElementById("joinStatus").textContent =
-        "Conectando...";
-
-
-    peer.on("open",()=>{
-
-        hostConnection = peer.connect(code);
-
-        hostConnection.on("open",()=>{
-
-            document.getElementById("joinStatus").textContent =
-                "Conectado. Esperando al anfitrión...";
-
-        });
-
-
-        hostConnection.on("data",data=>{
-
-            if(data.type === "full"){
-
-                document.getElementById("joinStatus").textContent =
-                    "❌ La sala ya está llena. Máximo 4 jugadores.";
-
-                try{peer.destroy();}catch(e){}
-
-            }
-
-
-            if(data.type === "assigned"){
-
-                localPlayer = data.index;
-
-            }
-
-
-            if(data.type === "state"){
-
-                state = data.state;
-
-                updateHUD();
-
-            }
-
-
-            if(data.type === "start"){
-
-                state = data.state;
-
-                startBattleScreen();
-
-            }
-
-
-            if(data.type === "message"){
-
-                showWinner(data.title,data.text);
-
-            }
-
-        });
-
-
-        hostConnection.on("close",()=>{
-
-            if(running){
-
-                showWinner(
-                    "⚠️ SALA CERRADA",
-                    "El anfitrión salió de la partida."
-                );
-
-            }
-
-        });
-
-    });
-
-
     peer.on("error",()=>{
 
-        document.getElementById("joinStatus").textContent =
-            "❌ No se pudo conectar a esa sala.";
+        document
+        .getElementById("hostStatus")
+        .textContent =
+        "❌ Error de conexión. Crea otra sala.";
 
     });
 
@@ -930,18 +1137,18 @@ function joinRoom(){
 
 
 /* =========================
-   BUSCAR ESPACIO
+   BUSCAR JUGADOR LIBRE
 ========================= */
 
-function findFreePlayer(){
+function getFreePlayer(){
 
-    const used = [0];
+    const used=[0];
 
-    Object.values(connections).forEach(conn=>{
-
-        used.push(conn.playerIndex);
-
+    Object.values(connections)
+    .forEach(c=>{
+        used.push(c.playerIndex);
     });
+
 
     for(let i=1;i<MAX_PLAYERS;i++){
 
@@ -959,64 +1166,186 @@ function findFreePlayer(){
 
 
 /* =========================
-   LOBBY
+   UNIRSE
+========================= */
+
+function joinRoom(){
+
+    const code =
+    document
+    .getElementById("roomInput")
+    .value
+    .trim();
+
+
+    if(!code){
+
+        document
+        .getElementById("joinStatus")
+        .textContent =
+        "⚠️ Escribe el código de la sala.";
+
+        return;
+
+    }
+
+
+    peer = new Peer();
+
+    isHost=false;
+
+
+    peer.on("open",()=>{
+
+        hostConnection =
+        peer.connect(code);
+
+
+        hostConnection.on("open",()=>{
+
+            document
+            .getElementById("joinStatus")
+            .textContent =
+            "🟢 Conectado a la sala.";
+
+        });
+
+
+        hostConnection.on("data",data=>{
+
+            if(data.type === "full"){
+
+                document
+                .getElementById("joinStatus")
+                .textContent =
+                "❌ SALA LLENA — 4/4 JUGADORES";
+
+                return;
+
+            }
+
+
+            if(data.type === "assigned"){
+
+                localPlayer =
+                data.player;
+
+            }
+
+
+            if(data.type === "start"){
+
+                state =
+                data.state;
+
+                startBattle();
+
+            }
+
+
+            if(data.type === "state"){
+
+                state =
+                data.state;
+
+                updateHUD();
+
+            }
+
+
+            if(data.type === "result"){
+
+                showResult(
+                    data.title,
+                    data.text
+                );
+
+            }
+
+        });
+
+
+        hostConnection.on("close",()=>{
+
+            if(running){
+
+                showResult(
+                    "⚠️ SALA CERRADA",
+                    "El creador salió de la partida."
+                );
+
+            }
+
+        });
+
+    });
+
+
+    peer.on("error",()=>{
+
+        document
+        .getElementById("joinStatus")
+        .textContent =
+        "❌ No se pudo encontrar esa sala.";
+
+    });
+
+}
+
+
+/* =========================
+   ACTUALIZAR SALA
 ========================= */
 
 function updateLobby(){
 
     const count =
-        1 + Object.keys(connections).length;
-
-    document.getElementById("playersText").textContent =
-        `Jugadores: ${count}/4`;
-
-    updateHostButtons();
-
-}
+    1 + Object.keys(connections).length;
 
 
-function updateHostButtons(){
+    document
+    .getElementById("playersNumber")
+    .textContent =
+    `👥 JUGADORES: ${count}/4`;
 
-    const count =
-        1 + Object.keys(connections).length;
 
-    const startBtn =
-        document.getElementById("startOnlineBtn");
+    if(count >= 4){
 
-    const cpuBtn =
-        document.getElementById("startCPUBtn");
-
-    if(count >= 2){
-
-        startBtn.classList.remove("hidden");
+        document
+        .getElementById("hostStatus")
+        .textContent =
+        "🔥 SALA LLENA — 4/4";
 
     }else{
 
-        startBtn.classList.add("hidden");
+        document
+        .getElementById("hostStatus")
+        .textContent =
+        `🟢 Esperando jugadores... ${count}/4`;
+
+    }
+
+
+    if(count >= 2){
+
+        document
+        .getElementById("startOnline")
+        .classList.remove("hidden");
+
+    }else{
+
+        document
+        .getElementById("startOnline")
+        .classList.add("hidden");
 
     }
 
 
     if(mode === "onlineCPU"){
 
-        cpuBtn.classList.remove("hidden");
-
-    }else{
-
-        cpuBtn.classList.add("hidden");
-
-    }
-
-
-    if(count >= 4){
-
-        document.getElementById("hostStatus").textContent =
-            "🔥 SALA LLENA — 4/4 jugadores";
-
-    }else{
-
-        document.getElementById("hostStatus").textContent =
-            `Esperando jugadores... ${count}/4`;
+        document
+        .getElementById("startCPU")
+        .classList.remove("hidden");
 
     }
 
@@ -1024,28 +1353,36 @@ function updateHostButtons(){
 
 
 /* =========================
-   INICIAR BATALLA ONLINE
+   INICIAR ONLINE
 ========================= */
 
-function startOnlineBattle(){
+function startOnline(){
 
-    if(!isHost) return;
+    if(!isHost)return;
+
 
     const count =
-        1 + Object.keys(connections).length;
+    1 + Object.keys(connections).length;
 
-    if(count < 2) return;
 
-    createBattlePlayers(count);
+    if(count<2)return;
 
-    state.started = true;
+
+    createPlayers(count);
+
+    state.started=true;
+
 
     broadcast({
+
         type:"start",
+
         state:state
+
     });
 
-    startBattleScreen();
+
+    startBattle();
 
 }
 
@@ -1054,48 +1391,72 @@ function startOnlineBattle(){
    ONLINE + CPU
 ========================= */
 
-function startOnlineCPUFromRoom(){
+function startCPUOnline(){
 
-    if(!isHost) return;
+    if(!isHost)return;
 
-    const humanCount =
-        1 + Object.keys(connections).length;
 
-    createBattlePlayers(4);
+    const humans =
+    1 + Object.keys(connections).length;
 
-    for(let i=humanCount;i<4;i++){
 
-        state.players[i].cpu = true;
+    createPlayers(4);
+
+
+    for(let i=humans;i<4;i++){
+
+        state.players[i].cpu=true;
 
     }
 
-    state.started = true;
+
+    state.started=true;
+
 
     broadcast({
+
         type:"start",
+
         state:state
+
     });
 
-    startBattleScreen();
+
+    startBattle();
 
 }
 
 
 /* =========================
-   PANTALLA DE JUEGO
+   INICIAR PARTIDA
 ========================= */
 
-function startBattleScreen(){
+function startBattle(){
 
-    hideAllScreens();
+    hideMenus();
 
-    document.getElementById("hud").classList.remove("hidden");
-    document.getElementById("menuGameBtn").classList.remove("hidden");
-    document.getElementById("mobileControls").classList.remove("hidden");
-    document.getElementById("message").classList.add("hidden");
 
-    running = true;
-    winner = null;
+    document
+    .getElementById("hud")
+    .classList.remove("hidden");
+
+
+    document
+    .getElementById("gameMenu")
+    .classList.remove("hidden");
+
+
+    document
+    .getElementById("mobileControls")
+    .classList.remove("hidden");
+
+
+    document
+    .getElementById("result")
+    .classList.add("hidden");
+
+
+    running=true;
 
     updateHUD();
 
@@ -1103,77 +1464,17 @@ function startBattleScreen(){
 
 
 /* =========================
-   REINICIAR
-========================= */
-
-function restartGame(){
-
-    document.getElementById("message").classList.add("hidden");
-
-    if(!isHost){
-
-        if(hostConnection){
-
-            hostConnection.send({
-                type:"restart"
-            });
-
-        }
-
-        return;
-    }
-
-
-    if(mode === "solo"){
-
-        createBattlePlayers(4);
-
-    }else{
-
-        const count =
-            mode === "onlineCPU"
-            ? 4
-            : 1 + Object.keys(connections).length;
-
-        createBattlePlayers(count);
-
-        if(mode === "onlineCPU"){
-
-            const humanCount =
-                1 + Object.keys(connections).length;
-
-            for(let i=humanCount;i<4;i++){
-
-                state.players[i].cpu = true;
-
-            }
-
-        }
-
-    }
-
-    running = true;
-    winner = null;
-
-    broadcast({
-        type:"start",
-        state:state
-    });
-
-}
-
-
-/* =========================
-   INPUT PC
+   CONTROLES PC
 ========================= */
 
 addEventListener("keydown",e=>{
 
-    keys[e.key.toLowerCase()] = true;
+    keys[e.key.toLowerCase()]=true;
 
-    if(e.code === "Space"){
 
-        attackPressed = true;
+    if(e.code==="Space"){
+
+        attack=true;
 
         e.preventDefault();
 
@@ -1184,11 +1485,12 @@ addEventListener("keydown",e=>{
 
 addEventListener("keyup",e=>{
 
-    keys[e.key.toLowerCase()] = false;
+    keys[e.key.toLowerCase()]=false;
 
-    if(e.code === "Space"){
 
-        attackPressed = false;
+    if(e.code==="Space"){
+
+        attack=false;
 
     }
 
@@ -1197,30 +1499,40 @@ addEventListener("keyup",e=>{
 
 function getInput(){
 
-    let x = 0;
-    let y = 0;
+    let x=0;
+    let y=0;
 
-    if(keys["w"] || keys["arrowup"]) y--;
-    if(keys["s"] || keys["arrowdown"]) y++;
-    if(keys["a"] || keys["arrowleft"]) x--;
-    if(keys["d"] || keys["arrowright"]) x++;
 
-    x += joystickX;
-    y += joystickY;
+    if(keys["w"] || keys["arrowup"])y--;
 
-    const len = Math.hypot(x,y);
+    if(keys["s"] || keys["arrowdown"])y++;
 
-    if(len > 1){
+    if(keys["a"] || keys["arrowleft"])x--;
 
-        x /= len;
-        y /= len;
+    if(keys["d"] || keys["arrowright"])x++;
+
+
+    x+=joyX;
+    y+=joyY;
+
+
+    const length=Math.hypot(x,y);
+
+
+    if(length>1){
+
+        x/=length;
+        y/=length;
 
     }
 
-    return {
+
+    return{
+
         x:x,
         y:y,
-        attack:attackPressed
+        attack:attack
+
     };
 
 }
@@ -1231,53 +1543,62 @@ function getInput(){
 ========================= */
 
 const joystick =
-    document.getElementById("joystick");
+document.getElementById("joystick");
 
 const stick =
-    document.getElementById("stick");
+document.getElementById("stick");
 
 
-function joystickMove(clientX,clientY){
+function moveJoystick(x,y){
 
-    const rect =
-        joystick.getBoundingClientRect();
+    const r =
+    joystick.getBoundingClientRect();
+
 
     const cx =
-        rect.left + rect.width/2;
+    r.left+r.width/2;
 
     const cy =
-        rect.top + rect.height/2;
+    r.top+r.height/2;
 
-    let dx = clientX-cx;
-    let dy = clientY-cy;
 
-    const max = rect.width*.34;
+    let dx=x-cx;
+    let dy=y-cy;
 
-    const dist = Math.hypot(dx,dy);
 
-    if(dist > max){
+    const max=r.width*.35;
 
-        dx = dx/dist*max;
-        dy = dy/dist*max;
+    const d=Math.hypot(dx,dy);
+
+
+    if(d>max){
+
+        dx=dx/d*max;
+
+        dy=dy/d*max;
 
     }
 
-    joystickX = dx/max;
-    joystickY = dy/max;
+
+    joyX=dx/max;
+
+    joyY=dy/max;
+
 
     stick.style.transform =
-        `translate(${dx}px,${dy}px)`;
+    `translate(${dx}px,${dy}px)`;
 
 }
 
 
-function joystickEnd(){
+function resetJoystick(){
 
-    joystickX = 0;
-    joystickY = 0;
+    joyX=0;
 
-    stick.style.transform =
-        "translate(0,0)";
+    joyY=0;
+
+    stick.style.transform=
+    "translate(0,0)";
 
 }
 
@@ -1286,9 +1607,9 @@ joystick.addEventListener("touchstart",e=>{
 
     e.preventDefault();
 
-    const t = e.touches[0];
+    const t=e.touches[0];
 
-    joystickMove(t.clientX,t.clientY);
+    moveJoystick(t.clientX,t.clientY);
 
 },{passive:false});
 
@@ -1297,9 +1618,9 @@ joystick.addEventListener("touchmove",e=>{
 
     e.preventDefault();
 
-    const t = e.touches[0];
+    const t=e.touches[0];
 
-    joystickMove(t.clientX,t.clientY);
+    moveJoystick(t.clientX,t.clientY);
 
 },{passive:false});
 
@@ -1308,20 +1629,20 @@ joystick.addEventListener("touchend",e=>{
 
     e.preventDefault();
 
-    joystickEnd();
+    resetJoystick();
 
 },{passive:false});
 
 
 const attackButton =
-    document.getElementById("attack");
+document.getElementById("attack");
 
 
 attackButton.addEventListener("touchstart",e=>{
 
     e.preventDefault();
 
-    attackPressed = true;
+    attack=true;
 
 },{passive:false});
 
@@ -1330,18 +1651,19 @@ attackButton.addEventListener("touchend",e=>{
 
     e.preventDefault();
 
-    attackPressed = false;
+    attack=false;
 
 },{passive:false});
 
 
 /* =========================
-   ACTUALIZACIÓN
+   ACTUALIZAR JUEGO
 ========================= */
 
 function update(dt){
 
-    if(!running) return;
+    if(!running)return;
+
 
     if(isHost){
 
@@ -1349,73 +1671,85 @@ function update(dt){
 
     }else{
 
-        sendLocalInput();
+        sendInput();
 
     }
 
 }
 
 
+/* =========================
+   HOST
+========================= */
+
 function updateHost(dt){
 
-    const speed = 250;
+    const speed=240;
+
 
     state.players.forEach((p,i)=>{
 
-        if(!p.alive) return;
+        if(!p.alive)return;
 
 
-        let input = {
+        let input={
             x:0,
             y:0,
             attack:false
         };
 
 
-        if(i === 0){
+        if(i===0){
 
-            input = getInput();
+            input=getInput();
 
         }else if(p.cpu){
 
-            input = cpuInput(p,i);
-
-        }else if(p.input){
-
-            input = p.input;
-
-        }
-
-
-        p.x += input.x * speed * dt;
-        p.y += input.y * speed * dt;
-
-        p.x = Math.max(80,Math.min(W-80,p.x));
-        p.y = Math.max(100,Math.min(H-80,p.y));
-
-        p.angle += 8*dt;
-
-        if(input.attack && p.attackCooldown <= 0){
-
-            p.attack = true;
-            p.attackCooldown = .35;
+            input=cpuAI(p,i);
 
         }else{
 
-            p.attack = false;
+            input=p.input || input;
 
         }
 
-        p.attackCooldown -= dt;
+
+        p.x+=input.x*speed*dt;
+
+        p.y+=input.y*speed*dt;
+
+
+        p.x=Math.max(70,Math.min(W-70,p.x));
+
+        p.y=Math.max(90,Math.min(H-70,p.y));
+
+
+        p.angle+=9*dt;
+
+
+        if(input.attack && p.cooldown<=0){
+
+            p.attack=true;
+
+            p.cooldown=.32;
+
+        }else{
+
+            p.attack=false;
+
+        }
+
+
+        p.cooldown-=dt;
 
     });
 
 
-    checkCollisions();
+    collisions();
 
     checkWinner();
 
-    broadcastState();
+    sendState();
 
 }
 
@@ -1424,24 +1758,29 @@ function updateHost(dt){
    CPU
 ========================= */
 
-function cpuInput(p,index){
+function cpuAI(p,index){
 
-    let target = null;
-    let best = Infinity;
+    let target=null;
 
-    state.players.forEach((other,j)=>{
+    let closest=Infinity;
 
-        if(j===index || !other.alive) return;
 
-        const d =
-            Math.hypot(
-                other.x-p.x,
-                other.y-p.y
-            );
+    state.players.forEach((other,i)=>{
 
-        if(d<best){
+        if(i===index || !other.alive)return;
 
-            best=d;
+
+        const distance=
+        Math.hypot(
+            other.x-p.x,
+            other.y-p.y
+        );
+
+
+        if(distance<closest){
+
+            closest=distance;
+
             target=other;
 
         }
@@ -1451,7 +1790,7 @@ function cpuInput(p,index){
 
     if(!target){
 
-        return {
+        return{
             x:0,
             y:0,
             attack:false
@@ -1460,20 +1799,21 @@ function cpuInput(p,index){
     }
 
 
-    const dx =
-        target.x-p.x;
+    const dx=target.x-p.x;
 
-    const dy =
-        target.y-p.y;
+    const dy=target.y-p.y;
 
-    const d =
-        Math.hypot(dx,dy)||1;
+    const d=Math.hypot(dx,dy)||1;
 
 
-    return {
+    return{
+
         x:dx/d,
+
         y:dy/d,
-        attack:d<110
+
+        attack:d<105
+
     };
 
 }
@@ -1483,60 +1823,63 @@ function cpuInput(p,index){
    COLISIONES
 ========================= */
 
-function checkCollisions(){
+function collisions(){
 
     for(let i=0;i<state.players.length;i++){
 
         const a=state.players[i];
 
-        if(!a.alive) continue;
+        if(!a.alive)continue;
 
 
         for(let j=i+1;j<state.players.length;j++){
 
             const b=state.players[j];
 
-            if(!b.alive) continue;
+            if(!b.alive)continue;
 
 
             const dx=b.x-a.x;
+
             const dy=b.y-a.y;
 
             const d=Math.hypot(dx,dy);
 
 
-            if(d<75){
+            if(d<70){
 
                 if(a.attack){
 
-                    b.life -= 2.5;
+                    b.life-=3;
 
                 }
+
 
                 if(b.attack){
 
-                    a.life -= 2.5;
+                    a.life-=3;
 
                 }
 
 
-                if(a.attack || b.attack){
+                if(a.attack){
 
-                    const push = 9;
+                    const safe=d||1;
 
-                    if(a.attack){
+                    a.x-=dx/safe*4;
 
-                        a.x -= dx/d*push;
-                        a.y -= dy/d*push;
+                    a.y-=dy/safe*4;
 
-                    }
+                }
 
-                    if(b.attack){
 
-                        b.x += dx/d*push;
-                        b.y += dy/d*push;
+                if(b.attack){
 
-                    }
+                    const safe=d||1;
+
+                    b.x+=dx/safe*4;
+
+                    b.y+=dy/safe*4;
 
                 }
 
@@ -1552,6 +1895,7 @@ function checkCollisions(){
         if(p.life<=0){
 
             p.life=0;
+
             p.alive=false;
 
         }
@@ -1568,31 +1912,49 @@ function checkCollisions(){
 function checkWinner(){
 
     const alive =
-        state.players.filter(p=>p.alive);
+    state.players.filter(p=>p.alive);
 
-    if(alive.length <= 1 && state.players.length>1){
+
+    if(alive.length===1){
 
         running=false;
 
-        if(alive.length===1){
 
-            winner=alive[0].id;
+        const p=alive[0];
 
-            const title =
-                `🏆 JUGADOR ${winner+1} GANA`;
 
-            const text =
-                "¡El último Beyblade con vida ganó la batalla!";
+        let title;
 
-            showWinner(title,text);
+        let text;
 
-            broadcast({
-                type:"message",
-                title:title,
-                text:text
-            });
+
+        if(p.cpu){
+
+            title="💥 ¡PERDISTE!";
+
+            text="La CPU ganó la batalla.";
+
+        }else{
+
+            title=`🏆 ¡JUGADOR ${p.id+1} GANA!`;
+
+            text="¡Es el último Beyblade con vida!";
 
         }
+
+
+        showResult(title,text);
+
+
+        broadcast({
+
+            type:"result",
+
+            title:title,
+
+            text:text
+
+        });
 
     }
 
@@ -1600,15 +1962,18 @@ function checkWinner(){
 
 
 /* =========================
-   RED
+   ENVIAR DATOS
 ========================= */
 
 function broadcast(data){
 
-    Object.values(connections).forEach(conn=>{
+    Object.values(connections)
+    .forEach(conn=>{
 
         try{
+
             conn.send(data);
+
         }catch(e){}
 
     });
@@ -1616,31 +1981,42 @@ function broadcast(data){
 }
 
 
-function broadcastState(){
+let lastSend=0;
 
-    broadcast({
-        type:"state",
-        state:state
+
+function sendInput(){
+
+    if(!hostConnection)return;
+
+
+    const now=performance.now();
+
+
+    if(now-lastSend<40)return;
+
+
+    lastSend=now;
+
+
+    hostConnection.send({
+
+        type:"input",
+
+        input:getInput()
+
     });
 
 }
 
 
-let lastSend=0;
+function sendState(){
 
-function sendLocalInput(){
+    broadcast({
 
-    if(!hostConnection) return;
+        type:"state",
 
-    const now=performance.now();
+        state:state
 
-    if(now-lastSend<40) return;
-
-    lastSend=now;
-
-    hostConnection.send({
-        type:"input",
-        input:getInput()
     });
 
 }
@@ -1653,42 +2029,47 @@ function sendLocalInput(){
 function updateHUD(){
 
     const hud =
-        document.getElementById("playerHUD");
+    document.getElementById("hudPlayers");
+
 
     hud.innerHTML="";
 
+
     state.players.forEach((p,i)=>{
 
-        const card =
-            document.createElement("div");
+        const div =
+        document.createElement("div");
 
-        card.className="hudCard";
 
-        card.innerHTML=`
+        div.className="card";
 
-            <div class="hudName">
-                <span style="
-                color:${colors[i]}
-                ">●</span>
-                JUGADOR ${i+1}
-                ${p.cpu ? " 🤖":""}
+
+        div.innerHTML=`
+
+            <div class="name"
+            style="color:${playerColors[i]}">
+
+            ● JUGADOR ${i+1}
+            ${p.cpu ? " 🤖 CPU":""}
+
             </div>
 
             <div class="lifeBack">
 
                 <div
-                class="lifeBar"
+                class="life"
                 style="
                 width:${p.life}%;
-                background:${colors[i]}
-                "
-                ></div>
+                background:${playerColors[i]}
+                ">
+                </div>
 
             </div>
 
         `;
 
-        hud.appendChild(card);
+
+        hud.appendChild(div);
 
     });
 
@@ -1696,17 +2077,102 @@ function updateHUD(){
 
 
 /* =========================
-   GANADOR VISUAL
+   RESULTADO
 ========================= */
 
-function showWinner(title,text){
+function showResult(title,text){
 
     running=false;
 
-    document.getElementById("messageTitle").textContent=title;
-    document.getElementById("messageText").textContent=text;
 
-    document.getElementById("message").classList.remove("hidden");
+    document
+    .getElementById("resultTitle")
+    .textContent=title;
+
+
+    document
+    .getElementById("resultText")
+    .textContent=text;
+
+
+    document
+    .getElementById("result")
+    .classList.remove("hidden");
+
+}
+
+
+function rematch(){
+
+    document
+    .getElementById("result")
+    .classList.add("hidden");
+
+
+    if(!isHost){
+
+        if(hostConnection){
+
+            hostConnection.send({
+                type:"rematch"
+            });
+
+        }
+
+        return;
+
+    }
+
+
+    restartHost();
+
+}
+
+
+function restartHost(){
+
+    if(mode==="solo"){
+
+        createPlayers(2);
+
+    }else{
+
+        const humans=
+        1+Object.keys(connections).length;
+
+
+        if(mode==="onlineCPU"){
+
+            createPlayers(4);
+
+
+            for(let i=humans;i<4;i++){
+
+                state.players[i].cpu=true;
+
+            }
+
+        }else{
+
+            createPlayers(humans);
+
+        }
+
+    }
+
+
+    state.started=true;
+
+    running=true;
+
+
+    broadcast({
+
+        type:"start",
+
+        state:state
+
+    });
 
 }
 
@@ -1715,21 +2181,27 @@ function showWinner(title,text){
    COPIAR CÓDIGO
 ========================= */
 
-function copyRoom(){
+function copyCode(){
 
-    if(!roomID) return;
+    if(!roomCode)return;
 
-    navigator.clipboard.writeText(roomID)
+
+    navigator.clipboard
+    .writeText(roomCode)
     .then(()=>{
 
-        document.getElementById("hostStatus").textContent =
-            "✅ Código copiado. Envíalo a los otros jugadores.";
+        document
+        .getElementById("hostStatus")
+        .textContent=
+        "✅ Código copiado. Envíalo a los jugadores.";
 
     })
     .catch(()=>{
 
-        document.getElementById("hostStatus").textContent =
-            "Copia manualmente el código.";
+        document
+        .getElementById("hostStatus")
+        .textContent=
+        "Copia el código manualmente.";
 
     });
 
@@ -1737,7 +2209,7 @@ function copyRoom(){
 
 
 /* =========================
-   DIBUJO
+   DIBUJAR ARENA
 ========================= */
 
 function drawArena(){
@@ -1745,25 +2217,26 @@ function drawArena(){
     ctx.clearRect(0,0,W,H);
 
 
-    // Fondo
+    const bg=
+    ctx.createRadialGradient(
+        W/2,H/2,50,
+        W/2,H/2,Math.max(W,H)
+    );
 
-    const gradient =
-        ctx.createRadialGradient(
-            W/2,H/2,50,
-            W/2,H/2,Math.max(W,H)
-        );
 
-    gradient.addColorStop(0,"#17233f");
-    gradient.addColorStop(1,"#050711");
+    bg.addColorStop(0,"#1a2c54");
 
-    ctx.fillStyle=gradient;
+    bg.addColorStop(1,"#050816");
+
+
+    ctx.fillStyle=bg;
+
     ctx.fillRect(0,0,W,H);
 
 
-    // Arena
+    const radius=
+    Math.min(W,H)*.40;
 
-    const radius =
-        Math.min(W,H)*.40;
 
     ctx.beginPath();
 
@@ -1775,15 +2248,18 @@ function drawArena(){
         Math.PI*2
     );
 
-    ctx.fillStyle="#101827";
+
+    ctx.fillStyle="#101a2d";
+
     ctx.fill();
 
-    ctx.strokeStyle="#425a80";
+
+    ctx.strokeStyle="#405c86";
+
     ctx.lineWidth=8;
+
     ctx.stroke();
 
-
-    // Líneas
 
     ctx.beginPath();
 
@@ -1795,61 +2271,74 @@ function drawArena(){
         Math.PI*2
     );
 
-    ctx.strokeStyle="#243a5b";
-    ctx.lineWidth=2;
+
+    ctx.strokeStyle="#243d62";
+
+    ctx.lineWidth=3;
+
     ctx.stroke();
 
 
-    // Estrellas
+    /* detalles de la arena */
 
-    for(let i=0;i<35;i++){
+    for(let i=0;i<25;i++){
 
-        const x =
-            (i*97)%W;
+        const x=(i*137)%W;
 
-        const y =
-            (i*53)%H;
+        const y=(i*83)%H;
 
-        ctx.fillStyle="#ffffff25";
 
-        ctx.fillRect(x,y,2,2);
+        ctx.fillStyle="#ffffff18";
+
+        ctx.beginPath();
+
+        ctx.arc(x,y,2,0,Math.PI*2);
+
+        ctx.fill();
 
     }
 
 }
 
 
+/* =========================
+   DIBUJAR TROMPO
+========================= */
+
 function drawPlayer(p,i){
 
-    if(!p.alive) return;
+    if(!p.alive)return;
 
 
     ctx.save();
+
 
     ctx.translate(p.x,p.y);
 
     ctx.rotate(p.angle);
 
 
-    // Sombra
+    /* sombra */
 
     ctx.beginPath();
 
     ctx.ellipse(
         4,
         8,
-        31,
-        12,
+        34,
+        13,
         0,
         0,
         Math.PI*2
     );
 
-    ctx.fillStyle="#0008";
+
+    ctx.fillStyle="#0009";
+
     ctx.fill();
 
 
-    // Trompo
+    /* trompo */
 
     ctx.beginPath();
 
@@ -1861,16 +2350,21 @@ function drawPlayer(p,i){
         Math.PI*2
     );
 
-    ctx.fillStyle=colors[i];
+
+    ctx.fillStyle=
+    playerColors[i];
+
     ctx.fill();
 
 
     ctx.lineWidth=5;
+
     ctx.strokeStyle="#ffffffaa";
+
     ctx.stroke();
 
 
-    // Centro
+    /* centro */
 
     ctx.beginPath();
 
@@ -1882,7 +2376,9 @@ function drawPlayer(p,i){
         Math.PI*2
     );
 
-    ctx.fillStyle="#ffffff";
+
+    ctx.fillStyle="#fff";
+
     ctx.fill();
 
 
@@ -1896,11 +2392,14 @@ function drawPlayer(p,i){
         Math.PI*2
     );
 
-    ctx.fillStyle=colors[i];
+
+    ctx.fillStyle=
+    playerColors[i];
+
     ctx.fill();
 
 
-    // Ataque
+    /* ataque */
 
     if(p.attack){
 
@@ -1909,13 +2408,16 @@ function drawPlayer(p,i){
         ctx.arc(
             0,
             0,
-            42,
+            43,
             0,
             Math.PI*2
         );
 
+
         ctx.strokeStyle="#fff";
+
         ctx.lineWidth=5;
+
         ctx.stroke();
 
     }
@@ -1924,17 +2426,24 @@ function drawPlayer(p,i){
     ctx.restore();
 
 
-    // Nombre
+    /* nombre */
+
+    ctx.textAlign="center";
 
     ctx.font="bold 12px Arial";
-    ctx.textAlign="center";
 
     ctx.fillStyle="#fff";
 
+
     ctx.fillText(
-        p.cpu ? "🤖 CPU" : "JUGADOR "+(i+1),
+
+        p.cpu
+        ? "🤖 CPU"
+        : "JUGADOR "+(i+1),
+
         p.x,
-        p.y-42
+        p.y-43
+
     );
 
 }
@@ -1944,28 +2453,40 @@ function drawPlayer(p,i){
    LOOP
 ========================= */
 
-function loop(now){
+function gameLoop(now){
 
-    const dt =
-        Math.min(.033,(now-lastTime)/1000);
+    const dt=
+    Math.min(
+        .033,
+        (now-lastTime)/1000
+    );
+
 
     lastTime=now;
 
+
     update(dt);
+
 
     drawArena();
 
+
     state.players.forEach((p,i)=>{
+
         drawPlayer(p,i);
+
     });
+
 
     updateHUD();
 
-    requestAnimationFrame(loop);
+
+    requestAnimationFrame(gameLoop);
 
 }
 
-requestAnimationFrame(loop);
+
+requestAnimationFrame(gameLoop);
 
 </script>
 
