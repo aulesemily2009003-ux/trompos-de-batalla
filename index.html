@@ -1,2629 +1,698 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
-
 <meta charset="UTF-8">
-
-<meta name="viewport"
-      content="width=device-width, initial-scale=1.0">
-
-<title>⚡ Guerra de Trompos ⚡</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>GUERRA BEYBLADE</title>
 
 <script src="https://unpkg.com/peerjs/dist/peerjs.min.js"></script>
 
 <style>
-
 *{
     box-sizing:border-box;
     margin:0;
     padding:0;
+    user-select:none;
+    -webkit-user-select:none;
+}
+
+html,body{
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background:#050711;
+    font-family:Arial,sans-serif;
 }
 
 body{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+}
 
-    min-height:100vh;
-
-    background:
-    radial-gradient(
-        circle at top,
-        #263b82 0%,
-        #111735 45%,
-        #050611 100%
-    );
-
-    font-family:
-    Arial,
-    Helvetica,
-    sans-serif;
-
-    color:white;
-
+#game{
+    position:relative;
+    width:100vw;
+    height:100vh;
     overflow:hidden;
 }
 
-
-/* =====================================================
-   MENU PRINCIPAL
-===================================================== */
-
-#menu{
-
-    position:fixed;
-
+canvas{
+    position:absolute;
     inset:0;
+    width:100%;
+    height:100%;
+    background:#080b16;
+}
 
+.screen{
+    position:absolute;
+    inset:0;
+    z-index:20;
     display:flex;
-
+    flex-direction:column;
     justify-content:center;
-
     align-items:center;
-
     padding:20px;
-
-    z-index:50;
-}
-
-
-.menuBox{
-
-    width:min(700px,95vw);
-
-    max-height:95vh;
-
-    overflow:auto;
-
-    padding:35px;
-
-    border-radius:30px;
-
-    text-align:center;
-
     background:
-
-    linear-gradient(
-        145deg,
-        rgba(35,48,105,.98),
-        rgba(7,10,30,.98)
-    );
-
-    border:
-    2px solid
-    rgba(255,255,255,.15);
-
-    box-shadow:
-
-    0 0 60px
-    rgba(0,150,255,.25),
-
-    inset 0 0 40px
-    rgba(255,255,255,.04);
+      radial-gradient(circle at center,#182344 0%,#090d1c 55%,#03040a 100%);
+    color:white;
 }
 
-
-/* TITULO */
+.hidden{
+    display:none !important;
+}
 
 .title{
-
-    font-size:
-    clamp(38px,7vw,70px);
-
-    font-weight:
-    900;
-
-    letter-spacing:
-    3px;
-
-    line-height:
-    1.05;
-
-    background:
-
-    linear-gradient(
-        90deg,
-        #42d9ff,
-        #ffffff,
-        #ff4e7a
-    );
-
-    -webkit-background-clip:
-    text;
-
-    background-clip:
-    text;
-
-    color:
-    transparent;
-
-    margin-bottom:
-    15px;
+    font-size:clamp(35px,8vw,75px);
+    text-align:center;
+    font-weight:900;
+    color:#fff;
+    text-shadow:
+      0 0 10px #28a9ff,
+      0 0 25px #28a9ff,
+      0 0 45px #176fff;
+    margin-bottom:12px;
 }
-
 
 .subtitle{
-
-    color:
-    #d1d8ff;
-
-    font-size:
-    17px;
-
-    margin-bottom:
-    30px;
+    color:#b8c8e8;
+    font-size:clamp(14px,3vw,20px);
+    margin-bottom:25px;
+    text-align:center;
 }
 
-
-/* BOTONES */
-
-.menuButtons{
-
+.menu{
     display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
+    flex-direction:column;
     gap:12px;
-
-    flex-wrap:wrap;
+    width:min(420px,90vw);
 }
-
 
 button{
-
-    border:none;
-
-    border-radius:
-    15px;
-
-    padding:
-    15px 23px;
-
-    font-size:
-    16px;
-
-    font-weight:
-    bold;
-
+    border:0;
+    border-radius:15px;
+    padding:16px 22px;
+    font-size:18px;
+    font-weight:bold;
     color:white;
-
+    background:linear-gradient(135deg,#147eff,#4d2dff);
+    box-shadow:0 6px 20px #0008;
     cursor:pointer;
-
-    background:
-
-    linear-gradient(
-        135deg,
-        #168cff,
-        #7047ff
-    );
-
-    box-shadow:
-    0 7px 20px
-    rgba(0,0,0,.3);
-
-    transition:
-    .2s;
+    transition:.15s;
 }
-
 
 button:hover{
-
-    transform:
-    translateY(-3px)
-    scale(1.03);
-
-    filter:
-    brightness(1.15);
+    transform:scale(1.03);
 }
-
 
 button:active{
-
-    transform:
-    scale(.97);
+    transform:scale(.96);
 }
 
-
-button:disabled{
-
-    opacity:.5;
-
-    cursor:not-allowed;
-
-    transform:none;
+.btn-red{
+    background:linear-gradient(135deg,#ff304f,#b9002d);
 }
 
-
-/* SOLO */
-
-#soloBtn{
-
-    background:
-
-    linear-gradient(
-        135deg,
-        #00b894,
-        #00cec9
-    );
+.btn-green{
+    background:linear-gradient(135deg,#00bd7c,#007e67);
 }
 
-
-/* UNIRSE */
-
-.secondary{
-
-    background:
-
-    linear-gradient(
-        135deg,
-        #ff3864,
-        #ff7735
-    );
+.info{
+    margin-top:18px;
+    padding:12px 18px;
+    border-radius:12px;
+    background:#ffffff10;
+    border:1px solid #ffffff20;
+    color:#cdd8ef;
+    text-align:center;
 }
 
-
-/* AREAS */
-
-.roomArea{
-
-    margin-top:
-    25px;
-
-    display:none;
+.onlineBox{
+    width:min(500px,94vw);
+    padding:25px;
+    background:#10172b;
+    border:1px solid #ffffff22;
+    border-radius:22px;
+    box-shadow:0 15px 50px #0008;
+    text-align:center;
 }
-
-
-.roomArea.show{
-
-    display:block;
-}
-
-
-.roomTitle{
-
-    font-size:
-    18px;
-
-    margin-bottom:
-    10px;
-}
-
 
 .roomCode{
-
-    background:
-    #050713;
-
-    border:
-    2px solid
-    #38d5ff;
-
-    border-radius:
-    12px;
-
-    padding:
-    14px;
-
-    font-size:
-    18px;
-
-    font-weight:
-    bold;
-
-    letter-spacing:
-    2px;
-
-    word-break:
-    break-all;
-
-    margin-bottom:
-    12px;
+    font-size:clamp(25px,7vw,48px);
+    font-weight:900;
+    letter-spacing:5px;
+    margin:18px 0;
+    color:#4db6ff;
+    text-shadow:0 0 15px #158cff;
+    word-break:break-all;
 }
-
-
-.inputArea{
-
-    display:flex;
-
-    gap:10px;
-
-    margin-top:
-    15px;
-}
-
 
 input{
-
-    flex:1;
-
-    min-width:
-    0;
-
-    padding:
-    14px;
-
-    border-radius:
-    12px;
-
-    border:
-    2px solid
-    #46527f;
-
-    background:
-    #070a18;
-
+    width:100%;
+    padding:15px;
+    margin:8px 0;
+    border:1px solid #ffffff25;
+    border-radius:12px;
+    background:#080c18;
     color:white;
-
-    font-size:
-    16px;
-
+    text-align:center;
+    font-size:18px;
     outline:none;
 }
 
-
-input:focus{
-
-    border-color:
-    #39d8ff;
+.playersText{
+    font-size:20px;
+    margin:12px 0;
+    color:#fff;
 }
-
 
 .status{
-
-    min-height:
-    25px;
-
-    margin-top:
-    20px;
-
-    color:
-    #aeeaff;
-
-    font-weight:
-    bold;
+    min-height:28px;
+    color:#aebddd;
+    margin:10px 0 18px;
 }
 
-
-/* CONTROLES MENU */
-
-.instructions{
-
-    margin-top:
-    25px;
-
-    padding:
-    18px;
-
-    border-radius:
-    18px;
-
-    background:
-    rgba(255,255,255,.05);
-
-    color:
-    #d3d9ff;
-
-    line-height:
-    1.8;
-
-    font-size:
-    14px;
-}
-
-
-/* =====================================================
-   JUEGO
-===================================================== */
-
-#game{
-
-    display:none;
-
-    position:relative;
-
-    width:100vw;
-
-    height:100vh;
-}
-
-
-canvas{
-
-    display:block;
-
+#hud{
+    position:absolute;
+    top:10px;
+    left:0;
     width:100%;
-
-    height:100%;
-}
-
-
-/* BOTON MENU */
-
-.menuGameBtn{
-
-    position:absolute;
-
-    top:15px;
-
-    left:15px;
-
-    z-index:20;
-
-    padding:
-    10px 16px;
-
-    font-size:
-    14px;
-
-    background:
-    rgba(8,12,35,.9);
-
-    border:
-    1px solid
-    rgba(255,255,255,.25);
-}
-
-
-/* =====================================================
-   BARRAS DE VIDA
-===================================================== */
-
-#topUI{
-
-    position:absolute;
-
-    top:15px;
-
-    left:50%;
-
-    transform:
-    translateX(-50%);
-
-    width:
-    min(850px,82vw);
-
-    display:flex;
-
-    justify-content:
-    space-between;
-
-    gap:20px;
-
+    z-index:10;
     pointer-events:none;
+    color:white;
 }
 
-
-.playerInfo{
-
-    width:
-    40%;
+.playerHUD{
+    display:flex;
+    flex-wrap:wrap;
+    justify-content:center;
+    gap:8px;
 }
 
-
-.playerName{
-
-    font-size:
-    16px;
-
-    font-weight:
-    bold;
-
-    margin-bottom:
-    6px;
+.hudCard{
+    min-width:130px;
+    padding:7px 10px;
+    border-radius:10px;
+    background:#050814cc;
+    border:1px solid #ffffff22;
 }
 
-
-.blueName{
-
-    color:
-    #4bdcff;
+.hudName{
+    font-size:13px;
+    margin-bottom:4px;
 }
 
-
-.redName{
-
-    color:
-    #ff5878;
-
-    text-align:
-    right;
-}
-
-
-.bar{
-
+.lifeBack{
     width:100%;
-
-    height:
-    18px;
-
-    background:
-    #070a16;
-
-    border:
-    2px solid
-    rgba(255,255,255,.25);
-
-    border-radius:
-    20px;
-
+    height:8px;
+    border-radius:10px;
+    background:#222;
     overflow:hidden;
 }
 
-
-.life{
-
+.lifeBar{
     height:100%;
-
     width:100%;
-
-    transition:
-    .15s;
+    background:#29e66b;
+    transition:.15s;
 }
 
-
-.blueLife{
-
-    background:
-
-    linear-gradient(
-        90deg,
-        #008cff,
-        #58edff
-    );
-}
-
-
-.redLife{
-
-    background:
-
-    linear-gradient(
-        90deg,
-        #ff315c,
-        #ff914d
-    );
-}
-
-
-/* =====================================================
-   ESTADO
-===================================================== */
-
-#centerInfo{
-
+#menuGameBtn{
     position:absolute;
+    top:10px;
+    right:10px;
+    z-index:30;
+    padding:9px 13px;
+    font-size:13px;
+    pointer-events:auto;
+}
 
-    top:15px;
-
-    left:50%;
-
-    transform:
-    translateX(-50%);
-
-    text-align:center;
-
+#message{
+    position:absolute;
+    z-index:25;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
     pointer-events:none;
 }
 
-
-#connectionStatus{
-
-    font-size:
-    12px;
-
-    color:
-    #a9ecff;
-
-    background:
-    rgba(0,0,0,.4);
-
-    padding:
-    6px 12px;
-
-    border-radius:
-    20px;
-}
-
-
-/* =====================================================
-   GANADOR
-===================================================== */
-
-#gameMessage{
-
-    position:absolute;
-
-    left:50%;
-
-    top:50%;
-
-    transform:
-    translate(-50%,-50%);
-
-    display:none;
-
+.messageBox{
+    padding:25px 35px;
+    border-radius:20px;
+    background:#050814e8;
+    border:1px solid #ffffff22;
     text-align:center;
-
-    padding:
-    35px 45px;
-
-    border-radius:
-    25px;
-
-    background:
-    rgba(5,8,25,.96);
-
-    border:
-    2px solid
-    rgba(255,255,255,.2);
-
-    box-shadow:
-    0 0 70px
-    rgba(0,0,0,.7);
-
-    z-index:30;
-
-    min-width:
-    300px;
+    color:white;
+    box-shadow:0 15px 60px #000;
 }
 
-
-#gameMessage h2{
-
-    font-size:
-    38px;
-
-    margin-bottom:
-    12px;
+.messageBox h2{
+    font-size:38px;
+    margin-bottom:15px;
 }
 
-
-#gameMessage p{
-
-    color:
-    #cbd3ff;
-
-    margin-bottom:
-    20px;
-}
-
-
-/* CONTROLES */
-
-#controls{
-
+#mobileControls{
     position:absolute;
-
-    bottom:15px;
-
-    left:50%;
-
-    transform:
-    translateX(-50%);
-
-    background:
-    rgba(4,7,20,.7);
-
-    border:
-    1px solid
-    rgba(255,255,255,.15);
-
-    padding:
-    9px 18px;
-
-    border-radius:
-    20px;
-
-    color:
-    #d7ddff;
-
-    font-size:
-    13px;
-
-    text-align:
-    center;
+    inset:0;
+    z-index:15;
+    pointer-events:none;
 }
 
-
-/* =====================================================
-   RESPONSIVE
-===================================================== */
-
-@media(max-width:650px){
-
-    .menuBox{
-
-        padding:
-        25px 17px;
-    }
-
-    .subtitle{
-
-        font-size:
-        14px;
-    }
-
-    .inputArea{
-
-        flex-direction:
-        column;
-    }
-
-    #topUI{
-
-        width:
-        78vw;
-    }
-
-    .playerName{
-
-        font-size:
-        12px;
-    }
-
-    #controls{
-
-        width:
-        90%;
-
-        font-size:
-        10px;
-    }
-
-    #gameMessage{
-
-        min-width:
-        270px;
-
-        padding:
-        30px 20px;
-    }
-
-    #gameMessage h2{
-
-        font-size:
-        30px;
-    }
-
+#joystick{
+    position:absolute;
+    left:25px;
+    bottom:25px;
+    width:145px;
+    height:145px;
+    border-radius:50%;
+    background:#ffffff12;
+    border:2px solid #ffffff25;
+    pointer-events:auto;
+    touch-action:none;
 }
 
+#stick{
+    position:absolute;
+    width:60px;
+    height:60px;
+    left:42px;
+    top:42px;
+    border-radius:50%;
+    background:#ffffff35;
+    border:2px solid #ffffff55;
+}
+
+#attack{
+    position:absolute;
+    right:28px;
+    bottom:35px;
+    width:115px;
+    height:115px;
+    border-radius:50%;
+    padding:0;
+    background:linear-gradient(135deg,#ff254b,#8f0022);
+    border:4px solid #ffffff40;
+    box-shadow:0 0 25px #ff204d88;
+    pointer-events:auto;
+    touch-action:none;
+    font-size:20px;
+}
+
+.mobileOnly{
+    display:none;
+}
+
+@media(max-width:800px){
+    .mobileOnly{
+        display:block;
+    }
+
+    #menuGameBtn{
+        font-size:11px;
+        padding:8px 10px;
+    }
+
+    .hudCard{
+        min-width:95px;
+    }
+
+    .hudName{
+        font-size:11px;
+    }
+
+    #joystick{
+        width:125px;
+        height:125px;
+    }
+
+    #stick{
+        width:52px;
+        height:52px;
+        left:35px;
+        top:35px;
+    }
+
+    #attack{
+        width:100px;
+        height:100px;
+    }
+}
 </style>
-
 </head>
-
 
 <body>
 
-
-<!-- =====================================================
-     MENU
-===================================================== -->
-
-<div id="menu">
-
-<div class="menuBox">
-
-
-    <div class="title">
-
-        ⚡ GUERRA DE TROMPOS ⚡
-
-    </div>
-
-
-    <div class="subtitle">
-
-        🌀 ARENA DE BATALLA • ONLINE Y SOLO • 1 VS 1
-
-    </div>
-
-
-    <div class="menuButtons">
-
-
-        <button id="soloBtn">
-
-            🌀 JUGAR SOLO
-
-        </button>
-
-
-        <button id="createBtn">
-
-            🌐 CREAR PARTIDA
-
-        </button>
-
-
-        <button id="joinShowBtn"
-                class="secondary">
-
-            🔑 UNIRSE
-
-        </button>
-
-
-    </div>
-
-
-    <!-- CREAR PARTIDA -->
-
-    <div id="hostArea"
-         class="roomArea">
-
-
-        <div class="roomTitle">
-
-            🔥 Comparte este código con tu amigo:
-
-        </div>
-
-
-        <div id="roomCode"
-             class="roomCode">
-
-            Generando...
-
-        </div>
-
-
-        <button id="copyBtn">
-
-            📋 COPIAR CÓDIGO
-
-        </button>
-
-
-    </div>
-
-
-    <!-- UNIRSE -->
-
-    <div id="joinArea"
-         class="roomArea">
-
-
-        <div class="roomTitle">
-
-            🔑 Escribe el código de la partida:
-
-        </div>
-
-
-        <div class="inputArea">
-
-
-            <input
-                id="codeInput"
-                type="text"
-                placeholder="Código de sala"
-                autocomplete="off"
-            >
-
-
-            <button id="joinBtn">
-
-                🚀 ENTRAR
-
-            </button>
-
-
-        </div>
-
-
-    </div>
-
-
-    <div id="status"
-         class="status">
-
-        Elige cómo quieres jugar.
-
-    </div>
-
-
-    <div class="instructions">
-
-        🎮 <b>CONTROLES</b><br>
-
-        🔵 WASD o FLECHAS = mover<br>
-
-        ⚡ ESPACIO = atacar<br>
-
-        💥 Choca contra el rival para dañarlo<br>
-
-        ❤️ Cada trompo comienza con 100 de vida<br>
-
-        🏆 Deja al rival sin vida para ganar
-
-    </div>
-
-
-</div>
-
-</div>
-
-
-
-<!-- =====================================================
-     JUEGO
-===================================================== -->
-
 <div id="game">
 
+<canvas id="canvas"></canvas>
 
-    <canvas id="canvas"></canvas>
+<!-- MENÚ PRINCIPAL -->
+<div id="mainMenu" class="screen">
 
+    <div class="title">⚡ GUERRA BEYBLADE ⚡</div>
 
-    <!-- BOTON MENU -->
-
-    <button id="menuBtn"
-            class="menuGameBtn">
-
-        ↩️ MENÚ
-
-    </button>
-
-
-    <!-- VIDAS -->
-
-    <div id="topUI">
-
-
-        <div class="playerInfo">
-
-
-            <div class="playerName blueName">
-
-                🔵 JUGADOR 1
-
-            </div>
-
-
-            <div class="bar">
-
-                <div
-                    id="blueLife"
-                    class="life blueLife">
-                </div>
-
-            </div>
-
-
-        </div>
-
-
-        <div class="playerInfo">
-
-
-            <div class="playerName redName">
-
-                JUGADOR 2 🔴
-
-            </div>
-
-
-            <div class="bar">
-
-                <div
-                    id="redLife"
-                    class="life redLife">
-                </div>
-
-            </div>
-
-
-        </div>
-
-
+    <div class="subtitle">
+        Batalla de trompos
     </div>
 
+    <div class="menu">
 
-    <!-- CONEXION -->
-
-    <div id="centerInfo">
-
-        <div id="connectionStatus">
-
-            🌀 PREPARANDO ARENA...
-
-        </div>
-
-    </div>
-
-
-    <!-- GANADOR -->
-
-    <div id="gameMessage">
-
-
-        <h2 id="winnerText">
-
-            🏆 GANADOR
-
-        </h2>
-
-
-        <p id="resultText">
-
-            ¡Buena batalla!
-
-        </p>
-
-
-        <button id="restartBtn">
-
-            🔄 JUGAR OTRA VEZ
-
+        <button onclick="startSolo()">
+            🌀 JUGAR SOLO
         </button>
 
+        <button onclick="openOnline()">
+            🌐 ONLINE — 4 JUGADORES
+        </button>
+
+        <button class="btn-green" onclick="openOnlineCPU()">
+            🤖 ONLINE + CPU
+        </button>
 
     </div>
 
-
-    <div id="controls">
-
-        🎮 WASD / FLECHAS = MOVER
-        &nbsp; • &nbsp;
-        ⚡ ESPACIO = ATACAR
-
+    <div class="info">
+        👥 LÍMITE ONLINE: <b>4 JUGADORES</b><br>
+        📱 Celular + 💻 Computadora
     </div>
-
 
 </div>
 
+
+<!-- MENÚ ONLINE -->
+<div id="onlineMenu" class="screen hidden">
+
+    <div class="title" style="font-size:clamp(30px,7vw,55px)">
+        🌐 ONLINE
+    </div>
+
+    <div class="onlineBox">
+
+        <div class="subtitle">
+            👥 Máximo <b>4 jugadores</b> por partida
+        </div>
+
+        <button onclick="createRoom()">
+            ➕ CREAR PARTIDA
+        </button>
+
+        <div id="hostArea" class="hidden">
+
+            <div style="margin-top:18px">
+                CÓDIGO DE SALA
+            </div>
+
+            <div id="roomCode" class="roomCode">
+                ----
+            </div>
+
+            <button onclick="copyRoom()">
+                📋 COPIAR CÓDIGO
+            </button>
+
+            <div id="playersText" class="playersText">
+                Jugadores: 1/4
+            </div>
+
+            <div id="hostStatus" class="status">
+                Esperando jugadores...
+            </div>
+
+            <button id="startOnlineBtn" class="btn-green hidden" onclick="startOnlineBattle()">
+                ⚔️ INICIAR BATALLA
+            </button>
+
+            <button id="startCPUBtn" class="hidden" onclick="startOnlineCPUFromRoom()">
+                🤖 INICIAR CON CPU
+            </button>
+
+        </div>
+
+
+        <div id="joinArea">
+
+            <input
+                id="joinCode"
+                placeholder="ESCRIBE EL CÓDIGO"
+                maxlength="30"
+            >
+
+            <button onclick="joinRoom()">
+                🚀 UNIRSE A PARTIDA
+            </button>
+
+        </div>
+
+        <div id="joinStatus" class="status"></div>
+
+        <button class="btn-red" onclick="goMainMenu()">
+            ↩️ MENÚ PRINCIPAL
+        </button>
+
+    </div>
+
+</div>
+
+
+<!-- HUD -->
+<div id="hud" class="hidden">
+    <div id="playerHUD" class="playerHUD"></div>
+</div>
+
+
+<button id="menuGameBtn" class="btn-red hidden" onclick="goMainMenu()">
+    ↩️ MENÚ
+</button>
+
+
+<!-- MENSAJE -->
+<div id="message" class="hidden">
+    <div class="messageBox">
+        <h2 id="messageTitle"></h2>
+        <p id="messageText"></p>
+        <br>
+        <button onclick="restartGame()">🔄 REVANCHA</button>
+        <button class="btn-red" onclick="goMainMenu()">↩️ MENÚ</button>
+    </div>
+</div>
+
+
+<!-- CONTROLES CELULAR -->
+<div id="mobileControls" class="mobileOnly hidden">
+
+    <div id="joystick">
+        <div id="stick"></div>
+    </div>
+
+    <button id="attack">
+        ⚔️<br>ATACAR
+    </button>
+
+</div>
+
+</div>
 
 
 <script>
 
-/* =====================================================
-   VARIABLES
-===================================================== */
+const canvas = document.getElementById("canvas");
+const ctx = canvas.getContext("2d");
 
-const canvas =
-    document.getElementById("canvas");
-
-const ctx =
-    canvas.getContext("2d");
-
-
-const menu =
-    document.getElementById("menu");
-
-const game =
-    document.getElementById("game");
-
-
-const soloBtn =
-    document.getElementById("soloBtn");
-
-const createBtn =
-    document.getElementById("createBtn");
-
-const joinShowBtn =
-    document.getElementById("joinShowBtn");
-
-const joinBtn =
-    document.getElementById("joinBtn");
-
-const menuBtn =
-    document.getElementById("menuBtn");
-
-const restartBtn =
-    document.getElementById("restartBtn");
-
-const copyBtn =
-    document.getElementById("copyBtn");
-
-
-const hostArea =
-    document.getElementById("hostArea");
-
-const joinArea =
-    document.getElementById("joinArea");
-
-
-const roomCode =
-    document.getElementById("roomCode");
-
-const codeInput =
-    document.getElementById("codeInput");
-
-
-const statusText =
-    document.getElementById("status");
-
-
-const connectionStatus =
-    document.getElementById("connectionStatus");
-
-
-const blueLifeBar =
-    document.getElementById("blueLife");
-
-const redLifeBar =
-    document.getElementById("redLife");
-
-
-const gameMessage =
-    document.getElementById("gameMessage");
-
-const winnerText =
-    document.getElementById("winnerText");
-
-const resultText =
-    document.getElementById("resultText");
-
-
-/* =====================================================
-   CANVAS
-===================================================== */
-
-let W =
-    window.innerWidth;
-
-let H =
-    window.innerHeight;
-
+let W = innerWidth;
+let H = innerHeight;
 
 function resize(){
-
-    W =
-        window.innerWidth;
-
-    H =
-        window.innerHeight;
-
-    canvas.width =
-        W;
-
-    canvas.height =
-        H;
-
-    setupArena();
-
+    W = canvas.width = innerWidth;
+    H = canvas.height = innerHeight;
 }
 
-
-window.addEventListener(
-    "resize",
-    resize
-);
+resize();
+addEventListener("resize",resize);
 
 
-/* =====================================================
-   PEERJS
-===================================================== */
+/* =========================
+   VARIABLES
+========================= */
 
-let peer =
-    null;
+let mode = "menu";
 
-let connection =
-    null;
+let peer = null;
+let hostConnection = null;
+let connections = {};
 
-let roomId =
-    "";
+let isHost = false;
+let localPlayer = 0;
 
-let isHost =
-    false;
+let roomID = "";
 
-let localPlayer =
-    null;
+const MAX_PLAYERS = 4;
 
-let soloMode =
-    false;
+let running = false;
+let winner = null;
 
+let lastTime = performance.now();
 
-/* =====================================================
-   ARENA
-===================================================== */
+let attackPressed = false;
 
-const arena = {
+const keys = {};
 
-    x:0,
+let joystickX = 0;
+let joystickY = 0;
 
-    y:0,
-
-    width:0,
-
-    height:0
-
+let state = {
+    players: [],
+    started:false
 };
 
 
-function setupArena(){
+/* =========================
+   COLORES
+========================= */
 
-    arena.width =
-        Math.min(
-            W * .88,
-            1000
-        );
+const colors = [
+    "#28a9ff",
+    "#ff3155",
+    "#ffd43b",
+    "#a855f7"
+];
 
-    arena.height =
-        Math.min(
-            H * .68,
-            650
-        );
 
-    arena.x =
-        (W - arena.width) / 2;
+/* =========================
+   MENÚ
+========================= */
 
-    arena.y =
-        (H - arena.height) / 2 + 25;
+function hideAllScreens(){
+
+    document.getElementById("mainMenu").classList.add("hidden");
+    document.getElementById("onlineMenu").classList.add("hidden");
+
+}
+
+function goMainMenu(){
+
+    running = false;
+    mode = "menu";
+
+    if(peer){
+        try{
+            peer.destroy();
+        }catch(e){}
+    }
+
+    peer = null;
+    hostConnection = null;
+    connections = {};
+
+    hideAllScreens();
+
+    document.getElementById("mainMenu").classList.remove("hidden");
+
+    document.getElementById("hud").classList.add("hidden");
+    document.getElementById("menuGameBtn").classList.add("hidden");
+    document.getElementById("mobileControls").classList.add("hidden");
+    document.getElementById("message").classList.add("hidden");
 
 }
 
 
-/* =====================================================
-   ESTADO
-===================================================== */
+/* =========================
+   SOLO
+========================= */
 
-const state = {
+function startSolo(){
 
+    mode = "solo";
+    isHost = true;
+    localPlayer = 0;
 
-    blue:{
+    hideAllScreens();
 
-        x:0,
+    document.getElementById("hud").classList.remove("hidden");
+    document.getElementById("menuGameBtn").classList.remove("hidden");
+    document.getElementById("mobileControls").classList.remove("hidden");
 
-        y:0,
+    createBattlePlayers(4);
 
-        angle:0,
-
-        life:100
-
-    },
-
-
-    red:{
-
-        x:0,
-
-        y:0,
-
-        angle:0,
-
-        life:100
-
-    }
-
-};
-
-
-let localInput = {
-
-    up:false,
-
-    down:false,
-
-    left:false,
-
-    right:false,
-
-    attack:false
-
-};
-
-
-let remoteInput = {
-
-    up:false,
-
-    down:false,
-
-    left:false,
-
-    right:false,
-
-    attack:false
-
-};
-
-
-let cpuInput = {
-
-    up:false,
-
-    down:false,
-
-    left:false,
-
-    right:false,
-
-    attack:false
-
-};
-
-
-let gameStarted =
-    false;
-
-let gameOver =
-    false;
-
-let winner =
-    null;
-
-
-let blueHitCooldown =
-    0;
-
-let redHitCooldown =
-    0;
-
-
-let particles =
-    [];
-
-
-let keys =
-    {};
-
-
-/* =====================================================
-   RESET
-===================================================== */
-
-function resetState(){
-
-    setupArena();
-
-
-    state.blue.x =
-        arena.x +
-        arena.width * .25;
-
-    state.blue.y =
-        arena.y +
-        arena.height / 2;
-
-    state.blue.angle =
-        0;
-
-    state.blue.life =
-        100;
-
-
-    state.red.x =
-        arena.x +
-        arena.width * .75;
-
-    state.red.y =
-        arena.y +
-        arena.height / 2;
-
-    state.red.angle =
-        Math.PI;
-
-    state.red.life =
-        100;
-
-
-    blueHitCooldown =
-        0;
-
-    redHitCooldown =
-        0;
-
-
-    particles =
-        [];
-
-
-    gameOver =
-        false;
-
-    winner =
-        null;
-
-
-    hideGameMessage();
-
-    updateLifeBars();
+    running = true;
+    winner = null;
 
 }
 
 
-/* =====================================================
-   JUGAR SOLO
-===================================================== */
+/* =========================
+   ONLINE MENU
+========================= */
 
-soloBtn.addEventListener(
-    "click",
-    ()=>{
+function openOnline(){
 
-        soloMode =
-            true;
+    mode = "online";
 
-        isHost =
-            true;
+    hideAllScreens();
 
-        localPlayer =
-            "blue";
+    document.getElementById("onlineMenu").classList.remove("hidden");
 
+    document.getElementById("hostArea").classList.add("hidden");
+    document.getElementById("joinArea").classList.remove("hidden");
 
-        menu.style.display =
-            "none";
-
-        game.style.display =
-            "block";
-
-
-        connectionStatus.innerText =
-            "🟢 MODO SOLO • CPU";
-
-
-        resetState();
-
-
-        gameStarted =
-            true;
-
-    }
-);
-
-
-/* =====================================================
-   CREAR PARTIDA ONLINE
-===================================================== */
-
-createBtn.addEventListener(
-    "click",
-    ()=>{
-
-        soloMode =
-            false;
-
-        isHost =
-            true;
-
-        localPlayer =
-            "blue";
-
-
-        createBtn.disabled =
-            true;
-
-        joinShowBtn.disabled =
-            true;
-
-        soloBtn.disabled =
-            true;
-
-
-        hostArea.classList.add(
-            "show"
-        );
-
-        joinArea.classList.remove(
-            "show"
-        );
-
-
-        statusText.innerText =
-            "🌐 Creando partida online...";
-
-
-        peer =
-            new Peer();
-
-
-        peer.on(
-            "open",
-            (id)=>{
-
-                roomId =
-                    id;
-
-                roomCode.innerText =
-                    id;
-
-
-                statusText.innerText =
-                    "🟢 Sala creada. Esperando al otro jugador...";
-
-            }
-        );
-
-
-        peer.on(
-            "connection",
-            (conn)=>{
-
-                if(connection){
-
-                    conn.close();
-
-                    return;
-
-                }
-
-
-                connection =
-                    conn;
-
-
-                setupConnection();
-
-            }
-        );
-
-
-        peer.on(
-            "error",
-            (error)=>{
-
-                console.error(error);
-
-
-                statusText.innerText =
-                    "❌ Error al crear la partida.";
-
-
-                enableMenuButtons();
-
-            }
-        );
-
-    }
-);
-
-
-/* =====================================================
-   MOSTRAR UNIRSE
-===================================================== */
-
-joinShowBtn.addEventListener(
-    "click",
-    ()=>{
-
-        hostArea.classList.remove(
-            "show"
-        );
-
-        joinArea.classList.add(
-            "show"
-        );
-
-
-        statusText.innerText =
-            "🔑 Escribe el código de la partida.";
-
-    }
-);
-
-
-/* =====================================================
-   UNIRSE ONLINE
-===================================================== */
-
-joinBtn.addEventListener(
-    "click",
-    ()=>{
-
-        const code =
-            codeInput.value.trim();
-
-
-        if(!code){
-
-            statusText.innerText =
-                "⚠️ Escribe un código.";
-
-            return;
-
-        }
-
-
-        soloMode =
-            false;
-
-        isHost =
-            false;
-
-        localPlayer =
-            "red";
-
-
-        createBtn.disabled =
-            true;
-
-        joinShowBtn.disabled =
-            true;
-
-        soloBtn.disabled =
-            true;
-
-        joinBtn.disabled =
-            true;
-
-
-        statusText.innerText =
-            "🌐 Conectando con el jugador 1...";
-
-
-        peer =
-            new Peer();
-
-
-        peer.on(
-            "open",
-            ()=>{
-
-                connection =
-                    peer.connect(
-                        code,
-                        {
-                            reliable:true
-                        }
-                    );
-
-
-                setupConnection();
-
-            }
-        );
-
-
-        peer.on(
-            "error",
-            (error)=>{
-
-                console.error(error);
-
-
-                statusText.innerText =
-                    "❌ No se pudo conectar.";
-
-                enableMenuButtons();
-
-            }
-        );
-
-    }
-);
-
-
-/* =====================================================
-   CONEXIÓN
-===================================================== */
-
-function setupConnection(){
-
-    if(!connection)
-        return;
-
-
-    connection.on(
-        "open",
-        ()=>{
-
-            connectionStatus.innerText =
-                "🟢 ONLINE • CONECTADO";
-
-
-            statusText.innerText =
-                "🟢 ¡Los dos jugadores están conectados!";
-
-
-            menu.style.display =
-                "none";
-
-            game.style.display =
-                "block";
-
-
-            setupArena();
-
-
-            if(isHost){
-
-                resetState();
-
-                gameStarted =
-                    true;
-
-                sendState();
-
-            }
-
-        }
-    );
-
-
-    connection.on(
-        "data",
-        (data)=>{
-
-            handleNetworkData(data);
-
-        }
-    );
-
-
-    connection.on(
-        "close",
-        ()=>{
-
-            connectionStatus.innerText =
-                "🔴 JUGADOR DESCONECTADO";
-
-
-            if(!gameOver){
-
-                showDisconnected();
-
-            }
-
-        }
-    );
-
-
-    connection.on(
-        "error",
-        ()=>{
-
-            connectionStatus.innerText =
-                "🔴 ERROR DE CONEXIÓN";
-
-        }
-    );
+    document.getElementById("joinStatus").textContent = "";
 
 }
 
 
-/* =====================================================
-   DATOS ONLINE
-===================================================== */
+function openOnlineCPU(){
 
-function handleNetworkData(data){
+    mode = "onlineCPU";
 
-    if(!data ||
-       !data.type)
-        return;
+    hideAllScreens();
 
+    document.getElementById("onlineMenu").classList.remove("hidden");
 
-    /* INPUT DEL JUGADOR 2 */
+    document.getElementById("hostArea").classList.add("hidden");
+    document.getElementById("joinArea").classList.remove("hidden");
 
-    if(
-        data.type === "input"
-        &&
-        isHost
-    ){
-
-        remoteInput =
-            data.input;
-
-    }
-
-
-    /* ESTADO */
-
-    if(
-        data.type === "state"
-        &&
-        !isHost
-    ){
-
-        state.blue.x =
-            data.state.blue.x;
-
-        state.blue.y =
-            data.state.blue.y;
-
-        state.blue.angle =
-            data.state.blue.angle;
-
-        state.blue.life =
-            data.state.blue.life;
-
-
-        state.red.x =
-            data.state.red.x;
-
-        state.red.y =
-            data.state.red.y;
-
-        state.red.angle =
-            data.state.red.angle;
-
-        state.red.life =
-            data.state.red.life;
-
-
-        gameStarted =
-            data.started;
-
-        gameOver =
-            data.gameOver;
-
-        winner =
-            data.winner;
-
-
-        updateLifeBars();
-
-
-        if(gameOver){
-
-            showWinner();
-
-        }
-
-    }
-
-
-    /* REINICIAR */
-
-    if(
-        data.type === "restart"
-    ){
-
-        if(isHost){
-
-            resetState();
-
-            gameStarted =
-                true;
-
-            sendState();
-
-        }
-
-    }
+    document.getElementById("joinStatus").textContent =
+        "Puedes jugar con otros jugadores y completar los espacios con CPU.";
 
 }
 
 
-/* =====================================================
-   ENVIAR ESTADO
-===================================================== */
+/* =========================
+   CREAR JUGADORES
+========================= */
 
-function sendState(){
+function createBattlePlayers(number){
 
-    if(!connection)
-        return;
+    state.players = [];
 
-    if(!connection.open)
-        return;
+    const positions = [
+        {x:.5,y:.22},
+        {x:.78,y:.50},
+        {x:.50,y:.78},
+        {x:.22,y:.50}
+    ];
 
+    for(let i=0;i<number;i++){
 
-    connection.send({
+        state.players.push({
 
-        type:"state",
+            id:i,
 
-        state:{
+            x:W*positions[i].x,
+            y:H*positions[i].y,
 
-            blue:{
-                ...state.blue
-            },
+            life:100,
 
-            red:{
-                ...state.red
-            }
+            angle:0,
 
-        },
+            attack:false,
 
-        started:
-            gameStarted,
+            attackCooldown:0,
 
-        gameOver:
-            gameOver,
+            alive:true,
 
-        winner:
-            winner
-
-    });
-
-}
-
-
-/* =====================================================
-   TECLADO
-===================================================== */
-
-window.addEventListener(
-    "keydown",
-    (e)=>{
-
-        keys[
-            e.key.toLowerCase()
-        ] =
-            true;
-
-
-        if(
-            e.key === " "
-            ||
-            e.code === "Space"
-        ){
-
-            e.preventDefault();
-
-            localInput.attack =
-                true;
-
-        }
-
-    }
-);
-
-
-window.addEventListener(
-    "keyup",
-    (e)=>{
-
-        keys[
-            e.key.toLowerCase()
-        ] =
-            false;
-
-
-        if(
-            e.key === " "
-            ||
-            e.code === "Space"
-        ){
-
-            localInput.attack =
-                false;
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   ACTUALIZAR INPUT
-===================================================== */
-
-function updateLocalInput(){
-
-    localInput.up =
-        !!(
-            keys["w"]
-            ||
-            keys["arrowup"]
-        );
-
-
-    localInput.down =
-        !!(
-            keys["s"]
-            ||
-            keys["arrowdown"]
-        );
-
-
-    localInput.left =
-        !!(
-            keys["a"]
-            ||
-            keys["arrowleft"]
-        );
-
-
-    localInput.right =
-        !!(
-            keys["d"]
-            ||
-            keys["arrowright"]
-        );
-
-}
-
-
-/* =====================================================
-   ENVIAR INPUT
-===================================================== */
-
-let lastInputSend =
-    0;
-
-
-function sendLocalInput(time){
-
-    if(soloMode)
-        return;
-
-
-    if(isHost)
-        return;
-
-
-    if(!connection)
-        return;
-
-
-    if(!connection.open)
-        return;
-
-
-    if(
-        time -
-        lastInputSend
-        <
-        40
-    )
-        return;
-
-
-    lastInputSend =
-        time;
-
-
-    connection.send({
-
-        type:"input",
-
-        input:{
-
-            up:
-                !!localInput.up,
-
-            down:
-                !!localInput.down,
-
-            left:
-                !!localInput.left,
-
-            right:
-                !!localInput.right,
-
-            attack:
-                !!localInput.attack
-
-        }
-
-    });
-
-}
-
-
-/* =====================================================
-   MOVIMIENTO
-===================================================== */
-
-function movePlayer(
-    player,
-    input
-){
-
-    const speed =
-        input.attack
-        ?
-        6.2
-        :
-        4.5;
-
-
-    let dx =
-        0;
-
-    let dy =
-        0;
-
-
-    if(input.left)
-        dx -= 1;
-
-    if(input.right)
-        dx += 1;
-
-    if(input.up)
-        dy -= 1;
-
-    if(input.down)
-        dy += 1;
-
-
-    if(
-        dx !== 0
-        ||
-        dy !== 0
-    ){
-
-        const length =
-            Math.sqrt(
-                dx*dx +
-                dy*dy
-            );
-
-
-        dx /=
-            length;
-
-        dy /=
-            length;
-
-
-        player.x +=
-            dx *
-            speed;
-
-        player.y +=
-            dy *
-            speed;
-
-
-        player.angle +=
-            .18 +
-            speed*.02;
-
-    }
-    else{
-
-        player.angle +=
-            .08;
-
-    }
-
-
-    const margin =
-        65;
-
-
-    player.x =
-        Math.max(
-            arena.x + margin,
-
-            Math.min(
-                arena.x +
-                arena.width -
-                margin,
-
-                player.x
-            )
-        );
-
-
-    player.y =
-        Math.max(
-            arena.y + margin,
-
-            Math.min(
-                arena.y +
-                arena.height -
-                margin,
-
-                player.y
-            )
-        );
-
-}
-
-
-/* =====================================================
-   CPU
-===================================================== */
-
-function updateCPU(){
-
-    if(!soloMode)
-        return;
-
-
-    if(gameOver)
-        return;
-
-
-    cpuInput = {
-
-        up:false,
-
-        down:false,
-
-        left:false,
-
-        right:false,
-
-        attack:false
-
-    };
-
-
-    const dx =
-        state.blue.x -
-        state.red.x;
-
-
-    const dy =
-        state.blue.y -
-        state.red.y;
-
-
-    const dist =
-        Math.sqrt(
-            dx*dx +
-            dy*dy
-        );
-
-
-    /*
-       LA CPU PERSIGUE
-    */
-
-    if(
-        Math.abs(dx)
-        >
-        15
-    ){
-
-        if(dx > 0)
-            cpuInput.right =
-                true;
-
-        else
-            cpuInput.left =
-                true;
-
-    }
-
-
-    if(
-        Math.abs(dy)
-        >
-        15
-    ){
-
-        if(dy > 0)
-            cpuInput.down =
-                true;
-
-        else
-            cpuInput.up =
-                true;
-
-    }
-
-
-    /*
-       ATAQUE
-    */
-
-    if(dist < 120){
-
-        cpuInput.attack =
-            true;
-
-    }
-
-}
-
-
-/* =====================================================
-   DISTANCIA
-===================================================== */
-
-function distance(a,b){
-
-    const dx =
-        a.x-b.x;
-
-    const dy =
-        a.y-b.y;
-
-
-    return Math.sqrt(
-        dx*dx +
-        dy*dy
-    );
-
-}
-
-
-/* =====================================================
-   BATALLA
-===================================================== */
-
-function updateBattle(){
-
-    if(gameOver)
-        return;
-
-
-    /*
-       JUGADOR AZUL
-    */
-
-    movePlayer(
-        state.blue,
-        localInput
-    );
-
-
-    /*
-       JUGADOR ROJO
-    */
-
-    if(soloMode){
-
-        updateCPU();
-
-        movePlayer(
-            state.red,
-            cpuInput
-        );
-
-    }
-    else{
-
-        movePlayer(
-            state.red,
-            remoteInput
-        );
-
-    }
-
-
-    /*
-       COOLDOWNS
-    */
-
-    if(
-        blueHitCooldown >
-        0
-    )
-        blueHitCooldown--;
-
-
-    if(
-        redHitCooldown >
-        0
-    )
-        redHitCooldown--;
-
-
-    /*
-       COLISIÓN
-    */
-
-    const dist =
-        distance(
-            state.blue,
-            state.red
-        );
-
-
-    const collisionDistance =
-        90;
-
-
-    if(
-        dist <
-        collisionDistance
-    ){
-
-        let dx =
-            state.red.x -
-            state.blue.x;
-
-
-        let dy =
-            state.red.y -
-            state.blue.y;
-
-
-        let d =
-            Math.sqrt(
-                dx*dx +
-                dy*dy
-            );
-
-
-        if(d === 0)
-            d = 1;
-
-
-        dx /=
-            d;
-
-        dy /=
-            d;
-
-
-        /*
-           EMPUJE
-        */
-
-        const push =
-            3.5;
-
-
-        state.blue.x -=
-            dx *
-            push;
-
-        state.blue.y -=
-            dy *
-            push;
-
-
-        state.red.x +=
-            dx *
-            push;
-
-        state.red.y +=
-            dy *
-            push;
-
-
-        /*
-           ATAQUE AZUL
-        */
-
-        if(
-            blueHitCooldown <= 0
-        ){
-
-            const damage =
-                localInput.attack
-                ?
-                10
-                :
-                5;
-
-
-            state.red.life -=
-                damage;
-
-
-            blueHitCooldown =
-                18;
-
-
-            createImpact(
-                state.red.x,
-                state.red.y,
-                20
-            );
-
-        }
-
-
-        /*
-           ATAQUE ROJO
-        */
-
-        if(
-            redHitCooldown <= 0
-        ){
-
-            const redAttack =
-                soloMode
-                ?
-                cpuInput.attack
-                :
-                remoteInput.attack;
-
-
-            const damage =
-                redAttack
-                ?
-                10
-                :
-                5;
-
-
-            state.blue.life -=
-                damage;
-
-
-            redHitCooldown =
-                18;
-
-
-            createImpact(
-                state.blue.x,
-                state.blue.y,
-                20
-            );
-
-        }
-
-
-        state.blue.life =
-            Math.max(
-                0,
-                state.blue.life
-            );
-
-
-        state.red.life =
-            Math.max(
-                0,
-                state.red.life
-            );
-
-
-        /*
-           GANADOR
-        */
-
-        if(
-            state.blue.life <= 0
-        ){
-
-            gameOver =
-                true;
-
-            winner =
-                "red";
-
-            showWinner();
-
-        }
-
-
-        if(
-            state.red.life <= 0
-        ){
-
-            gameOver =
-                true;
-
-            winner =
-                "blue";
-
-            showWinner();
-
-        }
-
-    }
-
-}
-
-
-/* =====================================================
-   PARTICULAS
-===================================================== */
-
-function createImpact(
-    x,
-    y,
-    count
-){
-
-    for(
-        let i=0;
-        i<count;
-        i++
-    ){
-
-        const angle =
-            Math.random() *
-            Math.PI *
-            2;
-
-
-        const speed =
-            Math.random() *
-            5 +
-            2;
-
-
-        particles.push({
-
-            x:x,
-
-            y:y,
-
-            vx:
-                Math.cos(angle) *
-                speed,
-
-            vy:
-                Math.sin(angle) *
-                speed,
-
-            life:
-                30 +
-                Math.random()*25,
-
-            size:
-                2 +
-                Math.random()*4
+            cpu:false
 
         });
 
@@ -2632,43 +701,896 @@ function createImpact(
 }
 
 
-function updateParticles(){
+/* =========================
+   CREAR SALA
+========================= */
 
-    for(
-        let i=particles.length-1;
-        i>=0;
-        i--
-    ){
+function createRoom(){
 
-        const p =
-            particles[i];
+    if(peer){
+        try{peer.destroy();}catch(e){}
+    }
+
+    peer = new Peer();
+
+    isHost = true;
+
+    peer.on("open",id=>{
+
+        roomID = id;
+
+        document.getElementById("roomCode").textContent = id;
+
+        document.getElementById("hostArea").classList.remove("hidden");
+        document.getElementById("joinArea").classList.add("hidden");
+
+        document.getElementById("playersText").textContent =
+            "Jugadores: 1/4";
+
+        document.getElementById("hostStatus").textContent =
+            "Esperando jugadores...";
+
+        updateHostButtons();
+
+    });
 
 
-        p.x +=
-            p.vx;
+    peer.on("connection",conn=>{
 
-        p.y +=
-            p.vy;
+        if(Object.keys(connections).length >= MAX_PLAYERS-1){
+
+            conn.on("open",()=>{
+
+                conn.send({
+                    type:"full"
+                });
+
+                setTimeout(()=>{
+                    try{conn.close();}catch(e){}
+                },500);
+
+            });
+
+            return;
+        }
 
 
-        p.vx *=
-            .96;
+        conn.on("open",()=>{
 
-        p.vy *=
-            .96;
+            let index = findFreePlayer();
+
+            connections[index] = conn;
+
+            conn.playerIndex = index;
+
+            conn.send({
+                type:"assigned",
+                index:index,
+                mode:mode
+            });
+
+            updateLobby();
+
+            conn.on("data",data=>{
+
+                if(data.type === "input"){
+
+                    if(state.players[index]){
+
+                        state.players[index].input = data.input;
+
+                    }
+
+                }
+
+                if(data.type === "restart"){
+
+                    restartGame();
+
+                }
+
+            });
+
+            conn.on("close",()=>{
+
+                delete connections[index];
+
+                if(state.players[index]){
+
+                    state.players[index].alive = false;
+                    state.players[index].life = 0;
+
+                }
+
+                updateLobby();
+
+            });
+
+        });
+
+    });
 
 
-        p.life--;
+    peer.on("error",err=>{
+
+        document.getElementById("hostStatus").textContent =
+            "Error de conexión. Intenta crear otra sala.";
+
+    });
+
+}
 
 
-        if(
-            p.life <= 0
-        ){
+/* =========================
+   UNIRSE
+========================= */
 
-            particles.splice(
-                i,
-                1
+function joinRoom(){
+
+    const code = document.getElementById("joinCode").value.trim();
+
+    if(!code){
+
+        document.getElementById("joinStatus").textContent =
+            "Escribe el código de la sala.";
+
+        return;
+    }
+
+    peer = new Peer();
+
+    isHost = false;
+
+    document.getElementById("joinStatus").textContent =
+        "Conectando...";
+
+
+    peer.on("open",()=>{
+
+        hostConnection = peer.connect(code);
+
+        hostConnection.on("open",()=>{
+
+            document.getElementById("joinStatus").textContent =
+                "Conectado. Esperando al anfitrión...";
+
+        });
+
+
+        hostConnection.on("data",data=>{
+
+            if(data.type === "full"){
+
+                document.getElementById("joinStatus").textContent =
+                    "❌ La sala ya está llena. Máximo 4 jugadores.";
+
+                try{peer.destroy();}catch(e){}
+
+            }
+
+
+            if(data.type === "assigned"){
+
+                localPlayer = data.index;
+
+            }
+
+
+            if(data.type === "state"){
+
+                state = data.state;
+
+                updateHUD();
+
+            }
+
+
+            if(data.type === "start"){
+
+                state = data.state;
+
+                startBattleScreen();
+
+            }
+
+
+            if(data.type === "message"){
+
+                showWinner(data.title,data.text);
+
+            }
+
+        });
+
+
+        hostConnection.on("close",()=>{
+
+            if(running){
+
+                showWinner(
+                    "⚠️ SALA CERRADA",
+                    "El anfitrión salió de la partida."
+                );
+
+            }
+
+        });
+
+    });
+
+
+    peer.on("error",()=>{
+
+        document.getElementById("joinStatus").textContent =
+            "❌ No se pudo conectar a esa sala.";
+
+    });
+
+}
+
+
+/* =========================
+   BUSCAR ESPACIO
+========================= */
+
+function findFreePlayer(){
+
+    const used = [0];
+
+    Object.values(connections).forEach(conn=>{
+
+        used.push(conn.playerIndex);
+
+    });
+
+    for(let i=1;i<MAX_PLAYERS;i++){
+
+        if(!used.includes(i)){
+
+            return i;
+
+        }
+
+    }
+
+    return 1;
+
+}
+
+
+/* =========================
+   LOBBY
+========================= */
+
+function updateLobby(){
+
+    const count =
+        1 + Object.keys(connections).length;
+
+    document.getElementById("playersText").textContent =
+        `Jugadores: ${count}/4`;
+
+    updateHostButtons();
+
+}
+
+
+function updateHostButtons(){
+
+    const count =
+        1 + Object.keys(connections).length;
+
+    const startBtn =
+        document.getElementById("startOnlineBtn");
+
+    const cpuBtn =
+        document.getElementById("startCPUBtn");
+
+    if(count >= 2){
+
+        startBtn.classList.remove("hidden");
+
+    }else{
+
+        startBtn.classList.add("hidden");
+
+    }
+
+
+    if(mode === "onlineCPU"){
+
+        cpuBtn.classList.remove("hidden");
+
+    }else{
+
+        cpuBtn.classList.add("hidden");
+
+    }
+
+
+    if(count >= 4){
+
+        document.getElementById("hostStatus").textContent =
+            "🔥 SALA LLENA — 4/4 jugadores";
+
+    }else{
+
+        document.getElementById("hostStatus").textContent =
+            `Esperando jugadores... ${count}/4`;
+
+    }
+
+}
+
+
+/* =========================
+   INICIAR BATALLA ONLINE
+========================= */
+
+function startOnlineBattle(){
+
+    if(!isHost) return;
+
+    const count =
+        1 + Object.keys(connections).length;
+
+    if(count < 2) return;
+
+    createBattlePlayers(count);
+
+    state.started = true;
+
+    broadcast({
+        type:"start",
+        state:state
+    });
+
+    startBattleScreen();
+
+}
+
+
+/* =========================
+   ONLINE + CPU
+========================= */
+
+function startOnlineCPUFromRoom(){
+
+    if(!isHost) return;
+
+    const humanCount =
+        1 + Object.keys(connections).length;
+
+    createBattlePlayers(4);
+
+    for(let i=humanCount;i<4;i++){
+
+        state.players[i].cpu = true;
+
+    }
+
+    state.started = true;
+
+    broadcast({
+        type:"start",
+        state:state
+    });
+
+    startBattleScreen();
+
+}
+
+
+/* =========================
+   PANTALLA DE JUEGO
+========================= */
+
+function startBattleScreen(){
+
+    hideAllScreens();
+
+    document.getElementById("hud").classList.remove("hidden");
+    document.getElementById("menuGameBtn").classList.remove("hidden");
+    document.getElementById("mobileControls").classList.remove("hidden");
+    document.getElementById("message").classList.add("hidden");
+
+    running = true;
+    winner = null;
+
+    updateHUD();
+
+}
+
+
+/* =========================
+   REINICIAR
+========================= */
+
+function restartGame(){
+
+    document.getElementById("message").classList.add("hidden");
+
+    if(!isHost){
+
+        if(hostConnection){
+
+            hostConnection.send({
+                type:"restart"
+            });
+
+        }
+
+        return;
+    }
+
+
+    if(mode === "solo"){
+
+        createBattlePlayers(4);
+
+    }else{
+
+        const count =
+            mode === "onlineCPU"
+            ? 4
+            : 1 + Object.keys(connections).length;
+
+        createBattlePlayers(count);
+
+        if(mode === "onlineCPU"){
+
+            const humanCount =
+                1 + Object.keys(connections).length;
+
+            for(let i=humanCount;i<4;i++){
+
+                state.players[i].cpu = true;
+
+            }
+
+        }
+
+    }
+
+    running = true;
+    winner = null;
+
+    broadcast({
+        type:"start",
+        state:state
+    });
+
+}
+
+
+/* =========================
+   INPUT PC
+========================= */
+
+addEventListener("keydown",e=>{
+
+    keys[e.key.toLowerCase()] = true;
+
+    if(e.code === "Space"){
+
+        attackPressed = true;
+
+        e.preventDefault();
+
+    }
+
+});
+
+
+addEventListener("keyup",e=>{
+
+    keys[e.key.toLowerCase()] = false;
+
+    if(e.code === "Space"){
+
+        attackPressed = false;
+
+    }
+
+});
+
+
+function getInput(){
+
+    let x = 0;
+    let y = 0;
+
+    if(keys["w"] || keys["arrowup"]) y--;
+    if(keys["s"] || keys["arrowdown"]) y++;
+    if(keys["a"] || keys["arrowleft"]) x--;
+    if(keys["d"] || keys["arrowright"]) x++;
+
+    x += joystickX;
+    y += joystickY;
+
+    const len = Math.hypot(x,y);
+
+    if(len > 1){
+
+        x /= len;
+        y /= len;
+
+    }
+
+    return {
+        x:x,
+        y:y,
+        attack:attackPressed
+    };
+
+}
+
+
+/* =========================
+   JOYSTICK CELULAR
+========================= */
+
+const joystick =
+    document.getElementById("joystick");
+
+const stick =
+    document.getElementById("stick");
+
+
+function joystickMove(clientX,clientY){
+
+    const rect =
+        joystick.getBoundingClientRect();
+
+    const cx =
+        rect.left + rect.width/2;
+
+    const cy =
+        rect.top + rect.height/2;
+
+    let dx = clientX-cx;
+    let dy = clientY-cy;
+
+    const max = rect.width*.34;
+
+    const dist = Math.hypot(dx,dy);
+
+    if(dist > max){
+
+        dx = dx/dist*max;
+        dy = dy/dist*max;
+
+    }
+
+    joystickX = dx/max;
+    joystickY = dy/max;
+
+    stick.style.transform =
+        `translate(${dx}px,${dy}px)`;
+
+}
+
+
+function joystickEnd(){
+
+    joystickX = 0;
+    joystickY = 0;
+
+    stick.style.transform =
+        "translate(0,0)";
+
+}
+
+
+joystick.addEventListener("touchstart",e=>{
+
+    e.preventDefault();
+
+    const t = e.touches[0];
+
+    joystickMove(t.clientX,t.clientY);
+
+},{passive:false});
+
+
+joystick.addEventListener("touchmove",e=>{
+
+    e.preventDefault();
+
+    const t = e.touches[0];
+
+    joystickMove(t.clientX,t.clientY);
+
+},{passive:false});
+
+
+joystick.addEventListener("touchend",e=>{
+
+    e.preventDefault();
+
+    joystickEnd();
+
+},{passive:false});
+
+
+const attackButton =
+    document.getElementById("attack");
+
+
+attackButton.addEventListener("touchstart",e=>{
+
+    e.preventDefault();
+
+    attackPressed = true;
+
+},{passive:false});
+
+
+attackButton.addEventListener("touchend",e=>{
+
+    e.preventDefault();
+
+    attackPressed = false;
+
+},{passive:false});
+
+
+/* =========================
+   ACTUALIZACIÓN
+========================= */
+
+function update(dt){
+
+    if(!running) return;
+
+    if(isHost){
+
+        updateHost(dt);
+
+    }else{
+
+        sendLocalInput();
+
+    }
+
+}
+
+
+function updateHost(dt){
+
+    const speed = 250;
+
+    state.players.forEach((p,i)=>{
+
+        if(!p.alive) return;
+
+
+        let input = {
+            x:0,
+            y:0,
+            attack:false
+        };
+
+
+        if(i === 0){
+
+            input = getInput();
+
+        }else if(p.cpu){
+
+            input = cpuInput(p,i);
+
+        }else if(p.input){
+
+            input = p.input;
+
+        }
+
+
+        p.x += input.x * speed * dt;
+        p.y += input.y * speed * dt;
+
+        p.x = Math.max(80,Math.min(W-80,p.x));
+        p.y = Math.max(100,Math.min(H-80,p.y));
+
+        p.angle += 8*dt;
+
+        if(input.attack && p.attackCooldown <= 0){
+
+            p.attack = true;
+            p.attackCooldown = .35;
+
+        }else{
+
+            p.attack = false;
+
+        }
+
+        p.attackCooldown -= dt;
+
+    });
+
+
+    checkCollisions();
+
+    checkWinner();
+
+    broadcastState();
+
+}
+
+
+/* =========================
+   CPU
+========================= */
+
+function cpuInput(p,index){
+
+    let target = null;
+    let best = Infinity;
+
+    state.players.forEach((other,j)=>{
+
+        if(j===index || !other.alive) return;
+
+        const d =
+            Math.hypot(
+                other.x-p.x,
+                other.y-p.y
             );
+
+        if(d<best){
+
+            best=d;
+            target=other;
+
+        }
+
+    });
+
+
+    if(!target){
+
+        return {
+            x:0,
+            y:0,
+            attack:false
+        };
+
+    }
+
+
+    const dx =
+        target.x-p.x;
+
+    const dy =
+        target.y-p.y;
+
+    const d =
+        Math.hypot(dx,dy)||1;
+
+
+    return {
+        x:dx/d,
+        y:dy/d,
+        attack:d<110
+    };
+
+}
+
+
+/* =========================
+   COLISIONES
+========================= */
+
+function checkCollisions(){
+
+    for(let i=0;i<state.players.length;i++){
+
+        const a=state.players[i];
+
+        if(!a.alive) continue;
+
+
+        for(let j=i+1;j<state.players.length;j++){
+
+            const b=state.players[j];
+
+            if(!b.alive) continue;
+
+
+            const dx=b.x-a.x;
+            const dy=b.y-a.y;
+
+            const d=Math.hypot(dx,dy);
+
+
+            if(d<75){
+
+                if(a.attack){
+
+                    b.life -= 2.5;
+
+                }
+
+                if(b.attack){
+
+                    a.life -= 2.5;
+
+                }
+
+
+                if(a.attack || b.attack){
+
+                    const push = 9;
+
+                    if(a.attack){
+
+                        a.x -= dx/d*push;
+                        a.y -= dy/d*push;
+
+                    }
+
+                    if(b.attack){
+
+                        b.x += dx/d*push;
+                        b.y += dy/d*push;
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+
+    state.players.forEach(p=>{
+
+        if(p.life<=0){
+
+            p.life=0;
+            p.alive=false;
+
+        }
+
+    });
+
+}
+
+
+/* =========================
+   GANADOR
+========================= */
+
+function checkWinner(){
+
+    const alive =
+        state.players.filter(p=>p.alive);
+
+    if(alive.length <= 1 && state.players.length>1){
+
+        running=false;
+
+        if(alive.length===1){
+
+            winner=alive[0].id;
+
+            const title =
+                `🏆 JUGADOR ${winner+1} GANA`;
+
+            const text =
+                "¡El último Beyblade con vida ganó la batalla!";
+
+            showWinner(title,text);
+
+            broadcast({
+                type:"message",
+                title:title,
+                text:text
+            });
 
         }
 
@@ -2677,471 +1599,294 @@ function updateParticles(){
 }
 
 
-/* =====================================================
-   DIBUJAR ARENA
-===================================================== */
+/* =========================
+   RED
+========================= */
 
-function drawArena(){
+function broadcast(data){
 
-    /*
-       FONDO
-    */
+    Object.values(connections).forEach(conn=>{
 
-    const background =
-        ctx.createRadialGradient(
-            W/2,
-            H/2,
-            50,
-            W/2,
-            H/2,
-            Math.max(W,H)
-        );
+        try{
+            conn.send(data);
+        }catch(e){}
 
-
-    background.addColorStop(
-        0,
-        "#263e78"
-    );
-
-
-    background.addColorStop(
-        1,
-        "#060817"
-    );
-
-
-    ctx.fillStyle =
-        background;
-
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-
-    /*
-       ARENA
-    */
-
-    ctx.save();
-
-
-    ctx.shadowBlur =
-        35;
-
-    ctx.shadowColor =
-        "#249fff";
-
-
-    const arenaGradient =
-        ctx.createRadialGradient(
-            W/2,
-            H/2,
-            30,
-            W/2,
-            H/2,
-            arena.width
-        );
-
-
-    arenaGradient.addColorStop(
-        0,
-        "#29467e"
-    );
-
-
-    arenaGradient.addColorStop(
-        .65,
-        "#172b58"
-    );
-
-
-    arenaGradient.addColorStop(
-        1,
-        "#0b1430"
-    );
-
-
-    ctx.fillStyle =
-        arenaGradient;
-
-
-    ctx.beginPath();
-
-
-    ctx.roundRect(
-        arena.x,
-        arena.y,
-        arena.width,
-        arena.height,
-        55
-    );
-
-
-    ctx.fill();
-
-
-    ctx.shadowBlur =
-        0;
-
-
-    /*
-       BORDE
-    */
-
-    ctx.lineWidth =
-        5;
-
-
-    ctx.strokeStyle =
-        "rgba(75,210,255,.7)";
-
-
-    ctx.stroke();
-
-
-    /*
-       LINEAS
-    */
-
-    ctx.globalAlpha =
-        .14;
-
-
-    ctx.strokeStyle =
-        "#ffffff";
-
-
-    ctx.lineWidth =
-        2;
-
-
-    for(
-        let x =
-        arena.x + 50;
-
-        x <
-        arena.x +
-        arena.width;
-
-        x += 50
-    ){
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            x,
-            arena.y
-        );
-
-        ctx.lineTo(
-            x,
-            arena.y +
-            arena.height
-        );
-
-        ctx.stroke();
-
-    }
-
-
-    for(
-        let y =
-        arena.y + 50;
-
-        y <
-        arena.y +
-        arena.height;
-
-        y += 50
-    ){
-
-        ctx.beginPath();
-
-        ctx.moveTo(
-            arena.x,
-            y
-        );
-
-        ctx.lineTo(
-            arena.x +
-            arena.width,
-            y
-        );
-
-        ctx.stroke();
-
-    }
-
-
-    ctx.globalAlpha =
-        1;
-
-
-    /*
-       CIRCULO CENTRAL
-    */
-
-    ctx.strokeStyle =
-        "rgba(255,255,255,.16)";
-
-
-    ctx.lineWidth =
-        3;
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-        W/2,
-        H/2 + 25,
-        130,
-        0,
-        Math.PI*2
-    );
-
-
-    ctx.stroke();
-
-
-    ctx.restore();
+    });
 
 }
 
 
-/* =====================================================
-   DIBUJAR TROMPO
-===================================================== */
+function broadcastState(){
 
-function drawTop(
-    player,
-    type
-){
+    broadcast({
+        type:"state",
+        state:state
+    });
 
-    const isBlue =
-        type === "blue";
+}
 
 
-    const color =
-        isBlue
-        ?
-        "#29d3ff"
-        :
-        "#ff4d73";
+let lastSend=0;
+
+function sendLocalInput(){
+
+    if(!hostConnection) return;
+
+    const now=performance.now();
+
+    if(now-lastSend<40) return;
+
+    lastSend=now;
+
+    hostConnection.send({
+        type:"input",
+        input:getInput()
+    });
+
+}
 
 
-    const color2 =
-        isBlue
-        ?
-        "#0068ff"
-        :
-        "#b50039";
+/* =========================
+   HUD
+========================= */
+
+function updateHUD(){
+
+    const hud =
+        document.getElementById("playerHUD");
+
+    hud.innerHTML="";
+
+    state.players.forEach((p,i)=>{
+
+        const card =
+            document.createElement("div");
+
+        card.className="hudCard";
+
+        card.innerHTML=`
+
+            <div class="hudName">
+                <span style="
+                color:${colors[i]}
+                ">●</span>
+                JUGADOR ${i+1}
+                ${p.cpu ? " 🤖":""}
+            </div>
+
+            <div class="lifeBack">
+
+                <div
+                class="lifeBar"
+                style="
+                width:${p.life}%;
+                background:${colors[i]}
+                "
+                ></div>
+
+            </div>
+
+        `;
+
+        hud.appendChild(card);
+
+    });
+
+}
 
 
-    ctx.save();
+/* =========================
+   GANADOR VISUAL
+========================= */
+
+function showWinner(title,text){
+
+    running=false;
+
+    document.getElementById("messageTitle").textContent=title;
+    document.getElementById("messageText").textContent=text;
+
+    document.getElementById("message").classList.remove("hidden");
+
+}
 
 
-    ctx.translate(
-        player.x,
-        player.y
-    );
+/* =========================
+   COPIAR CÓDIGO
+========================= */
+
+function copyRoom(){
+
+    if(!roomID) return;
+
+    navigator.clipboard.writeText(roomID)
+    .then(()=>{
+
+        document.getElementById("hostStatus").textContent =
+            "✅ Código copiado. Envíalo a los otros jugadores.";
+
+    })
+    .catch(()=>{
+
+        document.getElementById("hostStatus").textContent =
+            "Copia manualmente el código.";
+
+    });
+
+}
 
 
-    ctx.rotate(
-        player.angle
-    );
+/* =========================
+   DIBUJO
+========================= */
+
+function drawArena(){
+
+    ctx.clearRect(0,0,W,H);
 
 
-    /*
-       AURA
-    */
-
-    ctx.shadowBlur =
-        30;
-
-
-    ctx.shadowColor =
-        color;
-
-
-    /*
-       SOMBRA
-    */
-
-    ctx.save();
-
-
-    ctx.rotate(
-        .3
-    );
-
-
-    ctx.scale(
-        1,
-        .35
-    );
-
-
-    ctx.fillStyle =
-        "rgba(0,0,0,.5)";
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-        0,
-        15,
-        48,
-        0,
-        Math.PI*2
-    );
-
-
-    ctx.fill();
-
-
-    ctx.restore();
-
-
-    /*
-       TROMPO
-    */
+    // Fondo
 
     const gradient =
         ctx.createRadialGradient(
-            -15,
-            -15,
-            5,
-            0,
-            0,
-            55
+            W/2,H/2,50,
+            W/2,H/2,Math.max(W,H)
         );
 
+    gradient.addColorStop(0,"#17233f");
+    gradient.addColorStop(1,"#050711");
 
-    gradient.addColorStop(
-        0,
-        "#ffffff"
-    );
-
-
-    gradient.addColorStop(
-        .2,
-        color
-    );
+    ctx.fillStyle=gradient;
+    ctx.fillRect(0,0,W,H);
 
 
-    gradient.addColorStop(
-        .7,
-        color2
-    );
+    // Arena
 
-
-    gradient.addColorStop(
-        1,
-        "#050711"
-    );
-
-
-    ctx.fillStyle =
-        gradient;
-
+    const radius =
+        Math.min(W,H)*.40;
 
     ctx.beginPath();
 
-
     ctx.arc(
-        0,
-        0,
-        48,
+        W/2,
+        H/2,
+        radius,
         0,
         Math.PI*2
     );
 
-
+    ctx.fillStyle="#101827";
     ctx.fill();
 
-
-    /*
-       PIEZAS
-    */
-
-    ctx.shadowBlur =
-        0;
+    ctx.strokeStyle="#425a80";
+    ctx.lineWidth=8;
+    ctx.stroke();
 
 
-    ctx.strokeStyle =
-        "rgba(255,255,255,.7)";
+    // Líneas
+
+    ctx.beginPath();
+
+    ctx.arc(
+        W/2,
+        H/2,
+        radius*.78,
+        0,
+        Math.PI*2
+    );
+
+    ctx.strokeStyle="#243a5b";
+    ctx.lineWidth=2;
+    ctx.stroke();
 
 
-    ctx.lineWidth =
-        4;
+    // Estrellas
 
+    for(let i=0;i<35;i++){
 
-    for(
-        let i=0;
-        i<8;
-        i++
-    ){
+        const x =
+            (i*97)%W;
 
-        ctx.rotate(
-            Math.PI/4
-        );
+        const y =
+            (i*53)%H;
 
+        ctx.fillStyle="#ffffff25";
 
-        ctx.beginPath();
-
-
-        ctx.moveTo(
-            0,
-            -8
-        );
-
-
-        ctx.lineTo(
-            0,
-            -40
-        );
-
-
-        ctx.stroke();
+        ctx.fillRect(x,y,2,2);
 
     }
 
+}
 
-    /*
-       CENTRO
-    */
 
-    ctx.fillStyle =
-        "#ffffff";
+function drawPlayer(p,i){
 
+    if(!p.alive) return;
+
+
+    ctx.save();
+
+    ctx.translate(p.x,p.y);
+
+    ctx.rotate(p.angle);
+
+
+    // Sombra
 
     ctx.beginPath();
 
-
-    ctx.arc(
+    ctx.ellipse(
+        4,
+        8,
+        31,
+        12,
         0,
-        0,
-        10,
         0,
         Math.PI*2
     );
 
-
+    ctx.fillStyle="#0008";
     ctx.fill();
 
 
-    ctx.fillStyle =
-        color2;
-
+    // Trompo
 
     ctx.beginPath();
 
+    ctx.arc(
+        0,
+        0,
+        30,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle=colors[i];
+    ctx.fill();
+
+
+    ctx.lineWidth=5;
+    ctx.strokeStyle="#ffffffaa";
+    ctx.stroke();
+
+
+    // Centro
+
+    ctx.beginPath();
+
+    ctx.arc(
+        0,
+        0,
+        11,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle="#ffffff";
+    ctx.fill();
+
+
+    ctx.beginPath();
 
     ctx.arc(
         0,
@@ -3151,567 +1896,78 @@ function drawTop(
         Math.PI*2
     );
 
-
+    ctx.fillStyle=colors[i];
     ctx.fill();
 
 
-    /*
-       BRILLO
-    */
+    // Ataque
 
-    ctx.globalAlpha =
-        .8;
-
-
-    ctx.fillStyle =
-        "#ffffff";
-
-
-    ctx.beginPath();
-
-
-    ctx.arc(
-        -17,
-        -17,
-        8,
-        0,
-        Math.PI*2
-    );
-
-
-    ctx.fill();
-
-
-    ctx.restore();
-
-}
-
-
-/* =====================================================
-   PARTICULAS
-===================================================== */
-
-function drawParticles(){
-
-    for(
-        const p of particles
-    ){
-
-        ctx.globalAlpha =
-            Math.max(
-                0,
-                p.life/50
-            );
-
-
-        ctx.fillStyle =
-            "#ffffff";
-
+    if(p.attack){
 
         ctx.beginPath();
 
-
         ctx.arc(
-            p.x,
-            p.y,
-            p.size,
+            0,
+            0,
+            42,
             0,
             Math.PI*2
         );
 
-
-        ctx.fill();
-
-    }
-
-
-    ctx.globalAlpha =
-        1;
-
-}
-
-
-/* =====================================================
-   VIDA
-===================================================== */
-
-function updateLifeBars(){
-
-    blueLifeBar.style.width =
-        state.blue.life +
-        "%";
-
-
-    redLifeBar.style.width =
-        state.red.life +
-        "%";
-
-}
-
-
-/* =====================================================
-   GANADOR
-===================================================== */
-
-function showWinner(){
-
-    gameMessage.style.display =
-        "block";
-
-
-    if(
-        soloMode
-    ){
-
-        if(
-            winner === "blue"
-        ){
-
-            winnerText.innerText =
-                "🏆 ¡GANASTE!";
-
-
-            resultText.innerText =
-                "⚡ ¡Derrotaste al trompo CPU!";
-
-        }
-        else{
-
-            winnerText.innerText =
-                "💥 ¡PERDISTE!";
-
-
-            resultText.innerText =
-                "🔴 La CPU dominó la arena.";
-
-        }
-
-        return;
+        ctx.strokeStyle="#fff";
+        ctx.lineWidth=5;
+        ctx.stroke();
 
     }
 
 
-    if(
-        winner === "blue"
-    ){
+    ctx.restore();
 
-        winnerText.innerText =
-            "🔵 ¡JUGADOR 1 GANA!";
 
+    // Nombre
 
-        resultText.innerText =
-            "⚡ ¡El trompo azul dominó la arena!";
+    ctx.font="bold 12px Arial";
+    ctx.textAlign="center";
 
-    }
-    else{
+    ctx.fillStyle="#fff";
 
-        winnerText.innerText =
-            "🔴 ¡JUGADOR 2 GANA!";
-
-
-        resultText.innerText =
-            "🔥 ¡El trompo rojo dominó la arena!";
-
-    }
-
-}
-
-
-/* =====================================================
-   OCULTAR GANADOR
-===================================================== */
-
-function hideGameMessage(){
-
-    gameMessage.style.display =
-        "none";
-
-}
-
-
-/* =====================================================
-   DESCONEXIÓN
-===================================================== */
-
-function showDisconnected(){
-
-    gameMessage.style.display =
-        "block";
-
-
-    winnerText.innerText =
-        "🔴 CONEXIÓN PERDIDA";
-
-
-    resultText.innerText =
-        "El otro jugador salió de la partida.";
-
-}
-
-
-/* =====================================================
-   REINICIAR
-===================================================== */
-
-restartBtn.addEventListener(
-    "click",
-    ()=>{
-
-        if(soloMode){
-
-            resetState();
-
-            gameStarted =
-                true;
-
-            return;
-
-        }
-
-
-        if(isHost){
-
-            resetState();
-
-            gameStarted =
-                true;
-
-            sendState();
-
-        }
-        else{
-
-            if(
-                connection
-                &&
-                connection.open
-            ){
-
-                connection.send({
-
-                    type:
-                    "restart"
-
-                });
-
-            }
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   COPIAR CÓDIGO
-===================================================== */
-
-copyBtn.addEventListener(
-    "click",
-    async()=>{
-
-        try{
-
-            await navigator.clipboard.writeText(
-                roomId
-            );
-
-
-            copyBtn.innerText =
-                "✅ ¡CÓDIGO COPIADO!";
-
-
-            setTimeout(
-                ()=>{
-
-                    copyBtn.innerText =
-                        "📋 COPIAR CÓDIGO";
-
-                },
-                1500
-            );
-
-        }
-        catch(error){
-
-            alert(
-                "Copia este código:\n\n"
-                +
-                roomId
-            );
-
-        }
-
-    }
-);
-
-
-/* =====================================================
-   VOLVER AL MENÚ
-===================================================== */
-
-menuBtn.addEventListener(
-    "click",
-    ()=>{
-
-        /*
-           CERRAR CONEXIÓN
-        */
-
-        if(connection){
-
-            try{
-
-                connection.close();
-
-            }
-            catch(e){}
-
-            connection =
-                null;
-
-        }
-
-
-        /*
-           CERRAR PEER
-        */
-
-        if(peer){
-
-            try{
-
-                peer.destroy();
-
-            }
-            catch(e){}
-
-            peer =
-                null;
-
-        }
-
-
-        soloMode =
-            false;
-
-        gameStarted =
-            false;
-
-        gameOver =
-            false;
-
-        winner =
-            null;
-
-
-        hideGameMessage();
-
-
-        game.style.display =
-            "none";
-
-
-        menu.style.display =
-            "flex";
-
-
-        hostArea.classList.remove(
-            "show"
-        );
-
-        joinArea.classList.remove(
-            "show"
-        );
-
-
-        codeInput.value =
-            "";
-
-
-        statusText.innerText =
-            "Elige cómo quieres jugar.";
-
-
-        connectionStatus.innerText =
-            "🌀 PREPARANDO ARENA...";
-
-
-        enableMenuButtons();
-
-    }
-);
-
-
-/* =====================================================
-   ACTIVAR BOTONES
-===================================================== */
-
-function enableMenuButtons(){
-
-    createBtn.disabled =
-        false;
-
-    joinShowBtn.disabled =
-        false;
-
-    soloBtn.disabled =
-        false;
-
-    joinBtn.disabled =
-        false;
-
-}
-
-
-/* =====================================================
-   BUCLE
-===================================================== */
-
-let lastStateSend =
-    0;
-
-
-function gameLoop(time){
-
-    updateLocalInput();
-
-
-    /*
-       SI NO HA EMPEZADO
-    */
-
-    if(!gameStarted){
-
-        drawArena();
-
-        requestAnimationFrame(
-            gameLoop
-        );
-
-        return;
-
-    }
-
-
-    /*
-       ENVIAR INPUT
-    */
-
-    sendLocalInput(
-        time
+    ctx.fillText(
+        p.cpu ? "🤖 CPU" : "JUGADOR "+(i+1),
+        p.x,
+        p.y-42
     );
 
-
-    /*
-       CALCULAR BATALLA
-
-       SOLO:
-
-       CPU
-
-       ONLINE:
-
-       HOST
-    */
-
-    if(
-        soloMode
-        ||
-        isHost
-    ){
-
-        if(!gameOver){
-
-            updateBattle();
-
-        }
-
-    }
+}
 
 
-    updateParticles();
+/* =========================
+   LOOP
+========================= */
 
+function loop(now){
 
-    /*
-       ENVIAR ESTADO ONLINE
-    */
+    const dt =
+        Math.min(.033,(now-lastTime)/1000);
 
-    if(
-        isHost
-        &&
-        !soloMode
-        &&
-        connection
-        &&
-        connection.open
-    ){
+    lastTime=now;
 
-        if(
-            time -
-            lastStateSend
-            >
-            50
-        ){
-
-            lastStateSend =
-                time;
-
-            sendState();
-
-        }
-
-    }
-
-
-    /*
-       DIBUJAR
-    */
+    update(dt);
 
     drawArena();
 
+    state.players.forEach((p,i)=>{
+        drawPlayer(p,i);
+    });
 
-    drawParticles();
+    updateHUD();
 
-
-    drawTop(
-        state.blue,
-        "blue"
-    );
-
-
-    drawTop(
-        state.red,
-        "red"
-    );
-
-
-    updateLifeBars();
-
-
-    requestAnimationFrame(
-        gameLoop
-    );
+    requestAnimationFrame(loop);
 
 }
 
-
-/* =====================================================
-   INICIO
-===================================================== */
-
-setupArena();
-
-
-resetState();
-
-
-requestAnimationFrame(
-    gameLoop
-);
+requestAnimationFrame(loop);
 
 </script>
 
 </body>
-
 </html>
