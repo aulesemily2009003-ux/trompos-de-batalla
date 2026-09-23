@@ -480,29 +480,29 @@ show("lobby");
 
 peer.on("connection",function(c){
 
-roomConnections.push(c);
+/* Guardamos TODAS las conexiones del anfitrión. */
+if(roomConnections.indexOf(c)===-1) roomConnections.push(c);
 
-// IMPORTANTE: escuchar DATA inmediatamente.
-// El jugador visitante manda "join" al abrir su conexión.
+c.on("open",function(){
+  /* El invitado enviará "join" inmediatamente después de abrirse. */
+  broadcastLobby();
+});
+
 c.on("data",function(data){
-hostMessage(c,data);
+  hostMessage(c,data);
 });
 
 c.on("close",function(){
-roomConnections=roomConnections.filter(function(x){return x!==c;});
-connectionClosed(c);
+  roomConnections=roomConnections.filter(function(x){return x!==c;});
+  connectionClosed(c);
+  broadcastLobby();
 });
 
 c.on("error",function(){
-connectionClosed(c);
+  roomConnections=roomConnections.filter(function(x){return x!==c;});
+  connectionClosed(c);
+  broadcastLobby();
 });
-
-// Si ya está abierta, también mandamos el lobby actual.
-if(c.open){
-setTimeout(function(){
-broadcastLobby();
-},50);
-}
 
 });
 
@@ -529,69 +529,105 @@ if(!data)return;
 
 if(data.type==="join"){
 
-if(Object.keys(players).length>=4){
+  /* Evitar registrar dos veces al mismo jugador. */
+  if(c.playerId && players[c.playerId]){
 
-c.send({type:"full"});
-return;
+    try{
+      if(c.open){
+        c.send({
+          type:"welcome",
+          id:c.playerId,
+          room:roomCode,
+          players:copyPlayers()
+        });
+      }
+    }catch(e){}
+    return;
+  }
 
+  if(Object.keys(players).length>=4){
+    try{ if(c.open)c.send({type:"full"}); }catch(e){}
+    return;
+  }
+
+  let id="p"+Math.random().toString(36).substring(2,9);
+  c.playerId=id;
+
+  let n=String(data.name||"Jugador").substring(0,14);
+
+  players[id]={
+    id:id,
+    name:n,
+    x:120+Math.random()*Math.max(100,W-240),
+    y:120+Math.random()*Math.max(100,H-240),
+    hp:100,
+    maxHp:100,
+    color:colors[Object.keys(players).length%colors.length],
+    alive:true,
+    cpu:false,
+    angle:Math.random()*6.28,
+    attack:false,
+    inputX:0,
+    inputY:0,
+    last:Date.now()
+  };
+
+  /* Primero confirmamos al invitado que ya pertenece a la sala. */
+  try{
+    if(c.open){
+      c.send({
+        type:"welcome",
+        id:id,
+        room:roomCode,
+        players:copyPlayers()
+      });
+    }
+  }catch(e){}
+
+  /* Después actualizamos a TODOS los jugadores. */
+  broadcastLobby();
+  updateLobby();
+
+  return;
 }
 
-if(c.playerId)return;
+if(data.type==="ready"){
+  if(c.playerId && players[c.playerId]){
+    players[c.playerId].ready=true;
+    players[c.playerId].cpu=false;
+    players[c.playerId].last=Date.now();
+  }
+  broadcastLobby();
+  return;
+}
 
-let id="p"+Math.random().toString(36).substring(2,9);
-
-c.playerId=id;
-
-let n=String(data.name||"Jugador").substring(0,14);
-
-players[id]={
-id:id,
-name:n,
-x:120+Math.random()*Math.max(100,W-240),
-y:120+Math.random()*Math.max(100,H-240),
-hp:100,
-maxHp:100,
-color:colors[Object.keys(players).length%colors.length],
-alive:true,
-cpu:false,
-angle:Math.random()*6.28,
-attack:false,
-inputX:0,
-inputY:0,
-last:Date.now()
-};
-
-c.send({
-type:"welcome",
-id:id,
-room:roomCode,
-players:copyPlayers()
-});
-
-updateLobby();
-broadcastLobby();
-
-return;
+if(data.type==="startAck"){
+  if(c.playerId && players[c.playerId]){
+    players[c.playerId].started=true;
+    players[c.playerId].cpu=false;
+    players[c.playerId].last=Date.now();
+  }
+  return;
 }
 
 if(data.type==="input"&&c.playerId&&players[c.playerId]){
 
-let p=players[c.playerId];
+  let pl=players[c.playerId];
 
-p.inputX=Math.max(-1,Math.min(1,Number(data.x)||0));
-p.inputY=Math.max(-1,Math.min(1,Number(data.y)||0));
+  pl.inputX=Math.max(-1,Math.min(1,Number(data.x)||0));
+  pl.inputY=Math.max(-1,Math.min(1,Number(data.y)||0));
 
-if(data.attack){
-p.attack=true;
-}
+  if(data.attack){
+    pl.attack=true;
+  }
 
-p.last=Date.now();
-p.cpu=false;
-
+  pl.last=Date.now();
+  pl.cpu=false;
+  return;
 }
 
 if(data.type==="again"){
-resetLobby();
+  resetLobby();
 }
 
 }
@@ -649,53 +685,23 @@ function broadcastLobby(){
 if(!host)return;
 
 let data={
-type:"lobby",
-room:roomCode,
-players:copyPlayers()
+  type:"lobby",
+  room:roomCode,
+  players:copyPlayers()
 };
 
-if(peer){
-
-peer.connections.forEach(list=>{
-
-list.forEach(c=>{
-
-if(c.open){
-
-try{
-c.send(data);
-}catch(e){}
-
-}
-
+/* Usamos una sola lista fiable: roomConnections. */
+roomConnections=roomConnections.filter(function(c){
+  return c && !c.destroyed;
 });
-
-});
-
-}
-
-updateLobby();
-
-}
-
-function broadcastGameState(){
-
-if(!host || !playing)return;
-
-let data={
-type:"state",
-players:copyPlayers()
-};
 
 roomConnections.forEach(function(c){
-
-if(c && c.open){
-
-try{c.send(data);}catch(e){}
-
-}
-
+  if(c && c.open){
+    try{ c.send(data); }catch(e){}
+  }
 });
+
+updateLobby();
 
 }
 
@@ -810,7 +816,7 @@ name:myName
 
 tries++;
 
-if(tries<6){
+if(tries<10){
 setTimeout(sendJoin,500);
 }
 
@@ -820,7 +826,9 @@ sendJoin();
 
 });
 
-conn.on("data",guestMessage);
+conn.on("data",function(data){
+guestMessage(data);
+});
 
 conn.on("close",function(){
 
@@ -895,12 +903,23 @@ return;
 
 if(data.type==="start"){
 
+/* El invitado entra al juego inmediatamente. */
 players=data.players||{};
 playing=true;
 ended=false;
 
 show("game");
+
 startCountdown();
+
+/* Confirmar al anfitrión que recibimos START. */
+if(conn && conn.open){
+
+try{
+conn.send({type:"startAck"});
+}catch(e){}
+
+}
 
 return;
 }
@@ -1010,35 +1029,51 @@ i++;
 /* Cuenta regresiva local del anfitrión. */
 startCountdown();
 
-/* Mandar START a los invitados. */
-if(peer && peer.connections){
+/* Mandar START a los invitados. Reintentamos para que el celular
+   no se quede en la sala si un mensaje se pierde. */
+function enviarInicio(){
 
-peer.connections.forEach(function(list){
+let estado=copyPlayers();
 
-(list||[]).forEach(function(c){
+if(roomConnections && roomConnections.length){
+
+roomConnections.forEach(function(c){
 
 if(c && c.open){
 
 try{
-
 c.send({
 type:"start",
-players:copyPlayers()
+players:estado
 });
-
 }catch(err){
-
 console.error(err);
-
 }
 
 }
 
 });
 
-});
+}
 
 }
+
+enviarInicio();
+
+let intentos=0;
+let startRetry=setInterval(function(){
+
+if(!playing || intentos>=8){
+
+clearInterval(startRetry);
+return;
+
+}
+
+enviarInicio();
+intentos++;
+
+},400);
 
 return false;
 
@@ -1071,6 +1106,21 @@ type:"input",
 x:x,
 y:y,
 attack:!!attack
+});
+}catch(e){}
+
+}
+
+function enviarAtaqueRemoto(){
+
+if(host || !conn || !conn.open || !playing || countdownActive)return;
+
+try{
+conn.send({
+type:"input",
+x:0,
+y:0,
+attack:true
 });
 }catch(e){}
 
@@ -1370,16 +1420,7 @@ players[myId].attack=true;
 
 if(conn&&conn.open){
 
-try{
-
-conn.send({
-type:"input",
-x:joyX,
-y:joyY,
-attack:true
-});
-
-}catch(e){}
+enviarAtaqueRemoto();
 
 }
 
