@@ -1,407 +1,163 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>GUERRA BEYBLADE</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{width:100%;height:100%;overflow:hidden;background:#050510;color:white;font-family:Arial,sans-serif}
-.screen{position:absolute;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center}
-.screen.active{display:flex}
-.box{width:92vw;max-width:500px;padding:30px;background:#0b0824ee;border:2px solid #ff42d5;border-radius:28px;text-align:center}
-h1{font-size:clamp(36px,8vw,60px);background:linear-gradient(90deg,#ff45d7,#7357ff,#31dcff,#ff45d7);background-size:300%;-webkit-background-clip:text;color:transparent;animation:rainbow 4s linear infinite;margin-bottom:10px}
-@keyframes rainbow{to{background-position:300%}}
-input{width:100%;padding:14px;margin:10px 0;border-radius:12px;border:2px solid #704cff;background:#100b2b;color:white;font-size:18px;text-align:center}
-button{width:100%;padding:14px;margin:6px 0;border:none;border-radius:12px;font-size:18px;font-weight:bold;color:white;background:linear-gradient(90deg,#8538ff,#ec31b7);cursor:pointer}
-button:active{transform:scale(.97)}
-canvas{position:absolute;inset:0;width:100%;height:100%;display:block;background:#08051d}
-#game{background:transparent}
-.info{margin-top:15px;padding:12px;background:#ffffff0a;border-radius:12px;font-size:14px;line-height:1.6;color:#ccc}
-.controles-movil{position:absolute;inset:0;pointer-events:none;z-index:10}
-.joystick{position:absolute;left:20px;bottom:30px;width:140px;height:140px;border-radius:50%;background:#ffffff15;border:3px solid #ffffff30;pointer-events:auto;touch-action:none}
-.palanca{position:absolute;width:60px;height:60px;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;background:linear-gradient(135deg,#ff45d7,#714dff);box-shadow:0 0 20px #ff36d7}
-.boton-ataque{position:absolute;right:25px;bottom:40px;width:110px;height:110px;border-radius:50%;background:linear-gradient(135deg,#ff398e,#ff812e);border:3px solid #fff;box-shadow:0 0 25px #ff4355;pointer-events:auto;font-size:20px;font-weight:bold;color:white;display:flex;align-items:center;justify-content:center}
-.controles-pc{position:absolute;bottom:8px;left:50%;transform:translateX(-50%);font-size:12px;color:#aaa;background:#00000060;padding:6px 12px;border-radius:8px;z-index:5}
-.contador{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:90px;font-weight:bold;text-shadow:0 0 20px #ff36d7;z-index:15;pointer-events:none}
-@media (min-width:701px){
-.joystick,.boton-ataque{display:none !important;}
-}
-@media (max-width:700px){
-.controles-pc{display:none !important;}
-}
-</style>
-</head>
-<body>
+from pathlib import Path
+import re
 
-<!-- PANTALLA DE INICIO -->
-<div id="menu" class="screen active">
-  <div class="box">
-    <h1>GUERRA BEYBLADE</h1>
-    <p style="color:#ddd;margin-bottom:20px">⚡ Batallas de trompos ⚡</p>
-    <input id="nombre" placeholder="ESCRIBE TU NOMBRE">
-    <button onclick="iniciarJuego()">⚔️ JUGAR SOLO</button>
-    <div class="info">
-      📱 CELULAR: Mueve la palanca + toca ⚡ ATAQUE<br>
-      🖥️ PC: Flechas ↑↓←→ o WASD + ESPACIO para atacar
-    </div>
-  </div>
-</div>
+src = Path("/mnt/data/Pegado text(1).txt")
+if not src.exists():
+    raise FileNotFoundError("No encuentro el archivo de código que enviaste.")
 
-<!-- PANTALLA DE JUEGO -->
-<div id="pantallaJuego" class="screen">
-  <canvas id="lienzo"></canvas>
-  <div class="contador" id="contador"></div>
-  <div class="controles-pc">FLECHAS / WASD = MOVER &nbsp;|&nbsp; ESPACIO = ATAQUE</div>
-  <div class="controles-movil">
-    <div class="joystick" id="palancaBase">
-      <div class="palanca" id="palancaMovil"></div>
-    </div>
-    <div class="boton-ataque" id="btnAtaque">⚡<br>ATAQUE</div>
-  </div>
-</div>
+s = src.read_text(encoding="utf-8")
 
-<script>
-const lienzo = document.getElementById('lienzo');
-const ctx = lienzo.getContext('2d');
-let ancho, alto;
-let jugadores = {};
-let miId = 'jugadorPrincipal';
-let jugando = false;
-let teclas = {};
-let palancaActiva = false;
-let palancaX = 0, palancaY = 0;
-let ultimoTiempo = 0;
-
-// Tamaño del lienzo
-function ajustarTamaño(){
-  ancho = innerWidth;
-  alto = innerHeight;
-  lienzo.width = ancho;
-  lienzo.height = alto;
-}
-window.addEventListener('resize', ajustarTamaño);
-ajustarTamaño();
-
-// CAMBIO DE PANTALLA
-function mostrarPantalla(id){
-  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
-}
-
-// INICIAR JUEGO
-function iniciarJuego(){
-  let nombre = document.getElementById('nombre').value.trim() || 'Jugador';
-  jugadores = {};
-  
-  // JUGADOR PRINCIPAL
-  jugadores[miId] = {
-    nombre: nombre,
-    x: ancho/2,
-    y: alto/2,
-    vida: 100,
-    color: '#ff3dd0',
-    vivo: true,
-    angulo: 0,
-    atacar: false
-  };
-  
-  // ENEMIGOS
-  let nombres = ['RAYO', 'FURIA', 'TORMENTA'];
-  let colores = ['#36ddff', '#8cff42', '#ffbd35'];
-  for(let i=0; i<3; i++){
-    jugadores['cpu'+i] = {
-      nombre: nombres[i],
-      x: 150 + Math.random()*(ancho-300),
-      y: 150 + Math.random()*(alto-300),
-      vida: 100,
-      color: colores[i],
-      vivo: true,
-      angulo: Math.random()*Math.PI*2,
-      atacar: false,
-      esCpu: true,
-      tiempoAtaque: 0
-    };
-  }
-  
-  jugando = true;
-  mostrarPantalla('pantallaJuego');
-  iniciarCuentaRegresiva();
-}
-
-// CUENTA REGRESIVA
-function iniciarCuentaRegresiva(){
-  let num = 3;
-  const cont = document.getElementById('contador');
-  cont.textContent = num;
-  let intervalo = setInterval(() => {
-    num--;
-    if(num > 0) cont.textContent = num;
-    else if(num === 0) cont.textContent = '¡YA!';
-    else { cont.textContent = ''; clearInterval(intervalo); }
-  }, 700);
-}
-
-// === CONTROLES: TECLADO ===
-window.addEventListener('keydown', e => {
+# PC keyboard controls: W/A/S/D + arrows, with reliable simultaneous movement.
+old = """window.addEventListener('keydown', e => {
   teclas[e.key.toLowerCase()] = true;
   if(e.code === 'Space'){ e.preventDefault(); atacar(); }
 });
 window.addEventListener('keyup', e => {
   teclas[e.key.toLowerCase()] = false;
-});
-
-// === CONTROLES: JOYSTICK TÁCTIL ===
-const palancaBase = document.getElementById('palancaBase');
-const palancaMovil = document.getElementById('palancaMovil');
-
-palancaBase.addEventListener('touchstart', e => {
-  e.preventDefault();
-  palancaActiva = true;
-  moverPalanca(e.touches[0]);
-});
-palancaBase.addEventListener('touchmove', e => {
-  if(palancaActiva){
+});"""
+new = """window.addEventListener('keydown', e => {
+  const k = e.key.toLowerCase();
+  if(['w','a','s','d','arrowup','arrowdown','arrowleft','arrowright',' '].includes(k) || e.code === 'Space'){
     e.preventDefault();
-    moverPalanca(e.touches[0]);
   }
+  teclas[k] = true;
+  if(e.code === 'Space') atacar();
 });
-palancaBase.addEventListener('touchend', () => {
-  palancaActiva = false;
-  palancaX = 0; palancaY = 0;
-  palancaMovil.style.left = '50%';
-  palancaMovil.style.top = '50%';
+window.addEventListener('keyup', e => {
+  teclas[e.key.toLowerCase()] = false;
 });
+window.addEventListener('blur', () => { teclas = {}; });"""
+s = s.replace(old, new)
 
-function moverPalanca(tactil){
-  const rect = palancaBase.getBoundingClientRect();
-  const centroX = rect.left + rect.width/2;
-  const centroY = rect.top + rect.height/2;
-  let dx = tactil.clientX - centroX;
-  let dy = tactil.clientY - centroY;
-  const max = rect.width * 0.32;
-  const distancia = Math.hypot(dx, dy);
-  if(distancia > max){
-    dx = dx / distancia * max;
-    dy = dy / distancia * max;
-  }
-  palancaX = dx / max;
-  palancaY = dy / max;
-  palancaMovil.style.left = `${50 + palancaX * 32}%`;
-  palancaMovil.style.top = `${50 + palancaY * 32}%`;
-}
-
-// === BOTÓN ATAQUE ===
-document.getElementById('btnAtaque').addEventListener('touchstart', e => {
-  e.preventDefault();
-  atacar();
-});
-document.getElementById('btnAtaque').addEventListener('mousedown', atacar);
-
-function atacar(){
-  if(!jugando) return;
-  if(jugadores[miId] && jugadores[miId].vivo){
-    jugadores[miId].atacar = true;
-  }
-}
-
-// === MOVIMIENTO ===
-function moverJugador(jug, x, y, tiempo){
-  const velocidad = 240;
-  jug.x += x * velocidad * tiempo;
-  jug.y += y * velocidad * tiempo;
-  // Limitar bordes
-  if(jug.x < 45) jug.x = 45;
-  if(jug.x > ancho - 45) jug.x = ancho - 45;
-  if(jug.y < 45) jug.y = 45;
-  if(jug.y > alto - 45) jug.y = alto - 45;
-  jug.angulo += tiempo * 8;
-}
-
-function distancia(a, b){
-  return Math.hypot(a.x - b.x, a.y - b.y);
-}
-
-// LÓGICA DE ENEMIGOS
-function actualizarCpu(jug, tiempo){
-  if(!jug.vivo) return;
-  // Buscar enemigo más cercano
-  let objetivo = null;
-  let distMin = Infinity;
-  for(let id in jugadores){
-    if(id === jug.id || !jugadores[id].vivo) continue;
-    let d = distancia(jug, jugadores[id]);
-    if(d < distMin){ distMin = d; objetivo = jugadores[id]; }
-  }
-  if(!objetivo) return;
-  // Mover hacia él
-  let dx = objetivo.x - jug.x;
-  let dy = objetivo.y - jug.y;
-  let len = Math.hypot(dx, dy) || 1;
-  moverJugador(jug, dx/len, dy/len, tiempo);
-  // Atacar si está cerca
-  jug.tiempoAtaque -= tiempo;
-  if(distMin < 130 && jug.tiempoAtaque <= 0){
-    jug.atacar = true;
-    jug.tiempoAtaque = 0.4 + Math.random()*0.4;
-  }
-  // Retroceder si está muy pegado
-  if(distMin < 65){
-    jug.x -= (dx/len) * 80 * tiempo;
-    jug.y -= (dy/len) * 80 * tiempo;
-  }
-}
-
-// GOLPE
-function comprobarGolpe(atacante){
-  if(!atacante.vivo) return;
-  for(let id in jugadores){
-    let victima = jugadores[id];
-    if(victima === atacante || !victima.vivo) continue;
-    if(distancia(atacante, victima) < 110){
-      victima.vida -= 12 + Math.random()*8;
-      if(victima.vida <= 0){
-        victima.vida = 0;
-        victima.vivo = false;
-      }
-    }
-  }
-}
-
-// === BUCLE PRINCIPAL ===
-function bucle(tiempoActual){
-  let tiempo = Math.min(0.035, (tiempoActual - ultimoTiempo)/1000 || 0.016);
-  ultimoTiempo = tiempoActual;
-  
-  if(jugando){
-    // CONTROLES DEL JUGADOR PRINCIPAL
-    let mx = 0, my = 0;
-    if(palancaActiva){
-      mx = palancaX;
-      my = palancaY;
-    } else {
-      if(teclas['a'] || teclas['arrowleft']) mx = -1;
+# Normalize keyboard movement so pressing two directions does not cancel out.
+old = """if(teclas['a'] || teclas['arrowleft']) mx = -1;
       if(teclas['d'] || teclas['arrowright']) mx = 1;
       if(teclas['w'] || teclas['arrowup']) my = -1;
-      if(teclas['s'] || teclas['arrowdown']) my = 1;
-      if(mx !== 0 || my !== 0){
-        let l = Math.hypot(mx, my);
-        mx /= l; my /= l;
-      }
-    }
-    if(jugadores[miId] && jugadores[miId].vivo){
-      moverJugador(jugadores[miId], mx, my, tiempo);
-    }
-    
-    // ACTUALIZAR CPU
-    for(let id in jugadores){
-      if(jugadores[id].esCpu) actualizarCpu(jugadores[id], tiempo);
-    }
-    
-    // COMPROBAR ATAQUES
-    for(let id in jugadores){
-      if(jugadores[id].atacar){
-        comprobarGolpe(jugadores[id]);
-        jugadores[id].atacar = false;
-      }
-    }
-    
-    // COMPROBAR GANADOR
-    let vivos = [];
-    for(let id in jugadores){
-      if(jugadores[id].vivo) vivos.push(jugadores[id]);
-    }
-    if(vivos.length === 1){
-      jugando = false;
-      setTimeout(() => {
-        alert(vivos[0].id === miId ? '🏆 ¡GANASTE!' : '💥 Perdiste: ' + vivos[0].nombre + ' ganó');
-        mostrarPantalla('menu');
-      }, 600);
-    }
-  }
-  
-  // DIBUJAR
-  dibujarFondo();
-  for(let id in jugadores) dibujarBey(jugadores[id]);
-  
-  requestAnimationFrame(bucle);
-}
+      if(teclas['s'] || teclas['arrowdown']) my = 1;"""
+new = """if(teclas['a'] || teclas['arrowleft']) mx -= 1;
+      if(teclas['d'] || teclas['arrowright']) mx += 1;
+      if(teclas['w'] || teclas['arrowup']) my -= 1;
+      if(teclas['s'] || teclas['arrowdown']) my += 1;"""
+s = s.replace(old, new)
 
-function dibujarFondo(){
-  let grad = ctx.createRadialGradient(ancho/2, alto/2, 30, ancho/2, alto/2, Math.max(ancho,alto)*0.7);
-  grad.addColorStop(0, '#17104f');
-  grad.addColorStop(0.5, '#08082a');
-  grad.addColorStop(1, '#02030b');
-  ctx.fillStyle = grad;
-  ctx.fillRect(0,0,ancho,alto);
-  // Líneas
-  ctx.globalAlpha = 0.12;
-  ctx.strokeStyle = '#49dcff';
-  ctx.lineWidth = 1;
-  for(let x=0; x<ancho; x+=55){ ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,alto); ctx.stroke(); }
-  ctx.strokeStyle = '#a94cff';
-  for(let y=0; y<alto; y+=55){ ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(ancho,y); ctx.stroke(); }
-  ctx.globalAlpha = 1;
-}
-
-function dibujarBey(jug){
+# CPU AI: select nearby opponents, including other CPUs, instead of always targeting the player.
+cpu_start = s.find("function actualizarCpu(jug, tiempo){")
+cpu_end = s.find("\n}\n\n// GOLPE", cpu_start)
+if cpu_start >= 0 and cpu_end >= 0:
+    cpu_func = """function actualizarCpu(jug, tiempo){
   if(!jug.vivo) return;
-  ctx.save();
-  ctx.translate(jug.x, jug.y);
-  ctx.rotate(jug.angulo);
-  
-  const radio = 40;
-  ctx.shadowBlur = 20;
-  ctx.shadowColor = jug.color;
-  let grad = ctx.createRadialGradient(-10,-10,4,0,0,radio);
-  grad.addColorStop(0, '#fff');
-  grad.addColorStop(0.2, jug.color);
-  grad.addColorStop(0.6, jug.color);
-  grad.addColorStop(1, '#000');
-  ctx.fillStyle = grad;
-  
-  ctx.beginPath();
-  for(let i=0; i<24; i++){
-    let ang = i * Math.PI*2/24;
-    let r = i%2 === 0 ? radio : radio*0.75;
-    let x = Math.cos(ang)*r;
-    let y = Math.sin(ang)*r;
-    i===0 ? ctx.moveTo(x,y) : ctx.lineTo(x,y);
-  }
-  ctx.closePath();
-  ctx.fill();
-  
-  ctx.shadowBlur = 0;
-  ctx.strokeStyle = jug.color;
-  ctx.lineWidth = 3;
-  ctx.stroke();
-  
-  ctx.fillStyle = '#111';
-  ctx.beginPath();
-  ctx.arc(0,0,15,0,Math.PI*2);
-  ctx.fill();
-  ctx.fillStyle = '#fff';
-  ctx.beginPath();
-  ctx.arc(0,0,7,0,Math.PI*2);
-  ctx.fill();
-  
-  ctx.restore();
-  
-  // Barra de vida
-  const anchoBarra = 80, altoBarra = 8;
-  const porcentaje = Math.max(0, jug.vida/100);
-  ctx.fillStyle = '#222';
-  ctx.fillRect(jug.x - anchoBarra/2, jug.y - 60, anchoBarra, altoBarra);
-  ctx.fillStyle = jug.color;
-  ctx.fillRect(jug.x - anchoBarra/2, jug.y - 60, anchoBarra*porcentaje, altoBarra);
-  ctx.textAlign = 'center';
-  ctx.fillStyle = '#fff';
-  ctx.font = 'bold 13px Arial';
-  ctx.fillText(jug.nombre, jug.x, jug.y - 68);
-}
 
-// INICIAR JUEGO
-requestAnimationFrame(bucle);
-</script>
-</body>
-</html>
+  if(!jug.objetivoId || !jugadores[jug.objetivoId] || !jugadores[jug.objetivoId].vivo || jug.cambioObjetivo <= 0){
+    let candidatos = Object.keys(jugadores).filter(id =>
+      id !== jug.id && jugadores[id] && jugadores[id].vivo
+    );
+
+    if(!candidatos.length) return;
+
+    // A veces busca al jugador y otras veces a otra CPU.
+    if(candidatos.length > 1 && Math.random() < 0.65){
+      let otrosCpu = candidatos.filter(id => jugadores[id].esCpu);
+      if(otrosCpu.length) candidatos = otrosCpu;
+    }
+
+    let objetivoId = candidatos[0];
+    let mejor = distancia(jug, jugadores[objetivoId]);
+
+    for(let i=1;i<candidatos.length;i++){
+      let d = distancia(jug, jugadores[candidatos[i]]);
+      if(d < mejor){
+        mejor = d;
+        objetivoId = candidatos[i];
+      }
+    }
+
+    jug.objetivoId = objetivoId;
+    jug.cambioObjetivo = 1.0 + Math.random()*1.8;
+  }
+
+  jug.cambioObjetivo -= tiempo;
+
+  let objetivo = jugadores[jug.objetivoId];
+  if(!objetivo || !objetivo.vivo) return;
+
+  let dx = objetivo.x - jug.x;
+  let dy = objetivo.y - jug.y;
+  let d = Math.hypot(dx,dy) || 1;
+
+  moverJugador(jug, dx/d, dy/d, tiempo);
+
+  jug.tiempoAtaque -= tiempo;
+
+  if(d < 125 && jug.tiempoAtaque <= 0){
+    jug.atacar = true;
+    jug.tiempoAtaque = 0.35 + Math.random()*0.45;
+  }
+
+  // Evita que se queden pegados.
+  if(d < 58){
+    jug.x -= (dx/d)*45*tiempo;
+    jug.y -= (dy/d)*45*tiempo;
+  }
+}"""
+    s = s[:cpu_start] + cpu_func + s[cpu_end+2:]
+
+# Countdown lock so nobody moves/attacks before GO.
+if "let cuentaActiva" not in s:
+    s = s.replace("let palancaActiva = false;", "let palancaActiva = false;\nlet cuentaActiva = false;")
+
+s = s.replace("""function atacar(){
+  if(!jugando) return;""", """function atacar(){
+  if(!jugando || cuentaActiva) return;""")
+
+count_start = s.find("function iniciarCuentaRegresiva(){")
+count_end = s.find("\n}", count_start) + 2
+if count_start >= 0:
+    countdown = """function iniciarCuentaRegresiva(){
+  let num = 3;
+  cuentaActiva = true;
+  const cont = document.getElementById('contador');
+  cont.textContent = num;
+
+  let intervalo = setInterval(() => {
+    num--;
+    if(num > 0){
+      cont.textContent = num;
+    }else if(num === 0){
+      cont.textContent = '¡YA!';
+      cuentaActiva = false;
+    }else{
+      cont.textContent = '';
+      clearInterval(intervalo);
+    }
+  }, 700);
+}"""
+    s = s[:count_start] + countdown + s[count_end:]
+
+# If the main game loop has a playing section, insert a countdown guard.
+marker = "if(jugando){"
+idx = s.find(marker)
+if idx >= 0 and "if(cuentaActiva)" not in s[idx:idx+2500]:
+    guard = """if(jugando){
+    if(cuentaActiva){
+      dibujarFondo();
+      for(let id in jugadores){
+        if(jugadores[id]) dibujarBey(jugadores[id]);
+      }
+      requestAnimationFrame(bucle);
+      return;
+    }"""
+    s = s[:idx] + s[idx:].replace(marker, guard, 1)
+
+# Ensure CPU objects have targeting state.
+s = s.replace("""esCpu: true,
+       tiempoAtaque: 0""", """esCpu: true,
+       tiempoAtaque: 0,
+       objetivoId: null,
+       cambioObjetivo: Math.random()*1.5""")
+
+out = Path("/mnt/data/GUERRA_BEYBLADE_MOVIMIENTO_Y_CPU_CORREGIDO.html")
+out.write_text(s, encoding="utf-8")
+
+print("Listo: corregí controles de PC, movimiento simultáneo, cuenta regresiva y CPU.")
+print(f"Archivo creado: {out}")
+
