@@ -351,6 +351,7 @@ let dpr=1;
 let peer=null;
 let conn=null;
 let host=false;
+let roomConnections=[];
 
 let roomCode="";
 let myId="";
@@ -419,6 +420,7 @@ if(peer)peer.destroy();
 conn=null;
 peer=null;
 host=false;
+roomConnections=[];
 }
 
 function randomRoom(){
@@ -478,41 +480,14 @@ show("lobby");
 
 peer.on("connection",function(c){
 
-let provisionalId="p"+Math.random().toString(36).substring(2,9);
-c.playerId=provisionalId;
-
-if(!playing && Object.keys(players).length<4){
-
-players[provisionalId]={
-id:provisionalId,
-name:"Jugador conectando...",
-x:120+Math.random()*Math.max(100,W-240),
-y:120+Math.random()*Math.max(100,H-240),
-hp:100,
-maxHp:100,
-color:colors[Object.keys(players).length%colors.length],
-alive:true,
-cpu:false,
-angle:Math.random()*6.28,
-attack:false,
-inputX:0,
-inputY:0,
-last:Date.now()
-};
-
-updateLobby();
-}
-
-c.on("open",function(){
-
-if(!playing){
-broadcastLobby();
-}
-
-});
+roomConnections.push(c);
 
 c.on("data",function(data){
 hostMessage(c,data);
+});
+
+c.on("open",function(){
+if(!playing) broadcastLobby();
 });
 
 c.on("close",function(){
@@ -524,6 +499,7 @@ connectionClosed(c);
 });
 
 });
+
 peer.on("error",function(e){
 
 if(e.type==="unavailable-id"){
@@ -535,6 +511,7 @@ setTimeout(createRoom,300);
 }else{
 
 document.getElementById("onlineStatus").textContent="No se pudo crear la sala.";
+
 }
 
 });
@@ -547,21 +524,29 @@ if(!data)return;
 
 if(data.type==="join"){
 
-if(Object.keys(players).length>4){
-c.send({type:"full"});
+let count=Object.keys(players).length;
+
+if(count>=4){
+try{c.send({type:"full"});}catch(e){}
 return;
 }
 
-let id=c.playerId;
+if(c.playerId && players[c.playerId]){
 
-if(!id || !players[id]){
+players[c.playerId].name=String(data.name||"Jugador").substring(0,14);
+players[c.playerId].last=Date.now();
+players[c.playerId].cpu=false;
 
-id="p"+Math.random().toString(36).substring(2,9);
+}else{
+
+let id="p"+Math.random().toString(36).substring(2,9);
+
 c.playerId=id;
 
 players[id]={
+
 id:id,
-name:"Jugador",
+name:String(data.name||"Jugador").substring(0,14),
 x:120+Math.random()*Math.max(100,W-240),
 y:120+Math.random()*Math.max(100,H-240),
 hp:100,
@@ -574,25 +559,41 @@ attack:false,
 inputX:0,
 inputY:0,
 last:Date.now()
+
 };
 
 }
 
-players[id].name=String(data.name||"Jugador").substring(0,14);
-players[id].cpu=false;
-players[id].last=Date.now();
+try{
 
 c.send({
 type:"welcome",
-id:id,
+id:c.playerId,
 room:roomCode,
 players:copyPlayers()
 });
 
+}catch(e){}
+
+updateLobby();
 broadcastLobby();
 
 return;
 }
+
+if(data.type==="leave"){
+
+if(c.playerId && players[c.playerId]){
+
+delete players[c.playerId];
+c.playerId=null;
+
+}
+
+broadcastLobby();
+return;
+}
+
 if(data.type==="input"&&c.playerId&&players[c.playerId]){
 
 let p=players[c.playerId];
@@ -600,26 +601,27 @@ let p=players[c.playerId];
 p.inputX=Math.max(-1,Math.min(1,Number(data.x)||0));
 p.inputY=Math.max(-1,Math.min(1,Number(data.y)||0));
 
-if(data.attack){
-p.attack=true;
-}
+if(data.attack)p.attack=true;
 
 p.last=Date.now();
 p.cpu=false;
 
+return;
 }
 
 if(data.type==="again"){
+
 resetLobby();
+return;
 }
 
 }
 
 function connectionClosed(c){
 
-if(!c.playerId)return;
-
 let id=c.playerId;
+
+if(!id)return;
 
 if(playing){
 
@@ -632,13 +634,21 @@ players[id].last=Date.now();
 
 }else{
 
-delete players[id];
-broadcastLobby();
+/*
+  Durante la sala NO borramos al jugador automáticamente.
+  Así un cierre momentáneo de PeerJS no hace que el contador
+  vuelva a 1/4 mientras el jugador sigue en la sala.
+*/
+
+updateLobby();
 
 }
 
-}
+roomConnections=roomConnections.filter(function(x){
+return x!==c;
+});
 
+}
 function copyPlayers(){
 
 let result={};
@@ -673,13 +683,9 @@ room:roomCode,
 players:copyPlayers()
 };
 
-if(peer){
+roomConnections.forEach(function(c){
 
-peer.connections.forEach(list=>{
-
-list.forEach(c=>{
-
-if(c.open){
+if(c && c.open){
 
 try{
 c.send(data);
@@ -689,14 +695,9 @@ c.send(data);
 
 });
 
-});
-
-}
-
 updateLobby();
 
 }
-
 function updateLobby(){
 
 let list=document.getElementById("playerList");
@@ -743,8 +744,8 @@ let code=document.getElementById("room").value.replace(/\D/g,"").substring(0,4);
 if(code.length!==4){
 
 document.getElementById("onlineStatus").textContent="Escribe exactamente 4 números.";
-
 return;
+
 }
 
 closeNetwork();
@@ -753,30 +754,58 @@ host=false;
 myName=getName();
 roomCode=code;
 
-document.getElementById("onlineStatus").textContent="Conectando...";
+document.getElementById("onlineStatus").textContent="Conectando a la sala...";
 
 peer=new Peer({
+
 debug:0,
+
 config:{
 iceServers:[
 {urls:"stun:stun.l.google.com:19302"},
 {urls:"stun:stun1.l.google.com:19302"}
 ]
 }
+
 });
 
-let timer=setTimeout(function(){
+let connected=false;
+let tries=0;
 
-if(!conn||!conn.open){
+let timer=setInterval(function(){
 
-document.getElementById("onlineStatus").textContent=
-"No se pudo entrar. Revisa el código.";
+if(connected || !conn || !conn.open){
 
-try{peer.destroy()}catch(e){}
+clearInterval(timer);
+return;
 
 }
 
-},15000);
+tries++;
+
+try{
+
+conn.send({
+type:"join",
+name:myName
+});
+
+}catch(e){}
+
+if(tries>=8){
+
+clearInterval(timer);
+
+if(!connected){
+
+document.getElementById("onlineStatus").textContent=
+"No se pudo entrar a la sala. Revisa el código.";
+
+}
+
+}
+
+},700);
 
 peer.on("open",function(){
 
@@ -787,45 +816,39 @@ serialization:"json"
 
 conn.on("open",function(){
 
-clearTimeout(timer);
+document.getElementById("onlineStatus").textContent=
+"Conectado. Entrando a la sala...";
 
-let joinSent=false;
+try{
 
-function sendJoin(){
-if(conn && conn.open && !joinSent){
 conn.send({
 type:"join",
 name:myName
 });
-}
-}
 
-sendJoin();
-
-let joinRepeat=setInterval(function(){
-if(joinSent || !conn || !conn.open){
-clearInterval(joinRepeat);
-return;
-}
-sendJoin();
-},700);
-
-conn.__joinRepeat=joinRepeat;
+}catch(e){}
 
 });
 
-conn.on("data",guestMessage);
+conn.on("data",function(data){
+
+if(data && data.type==="welcome"){
+
+connected=true;
+clearInterval(timer);
+
+}
+
+guestMessage(data);
+
+});
 
 conn.on("close",function(){
 
-if(playing){
+if(!playing){
 
-showResult("CONEXIÓN PERDIDA","Se perdió la conexión con la sala.");
-
-}else{
-
-document.getElementById("lobbyStatus").textContent=
-"Se perdió la conexión con el anfitrión.";
+document.getElementById("onlineStatus").textContent=
+"La conexión con la sala se cerró.";
 
 }
 
@@ -835,7 +858,7 @@ document.getElementById("lobbyStatus").textContent=
 
 peer.on("error",function(e){
 
-clearTimeout(timer);
+clearInterval(timer);
 
 document.getElementById("onlineStatus").textContent=
 "No se pudo conectar a la sala.";
@@ -843,7 +866,6 @@ document.getElementById("onlineStatus").textContent=
 });
 
 }
-
 function guestMessage(data){
 
 if(!data)return;
@@ -1116,6 +1138,14 @@ startLocal();
 }
 
 function leaveRoom(){
+
+if(!host && conn && conn.open){
+
+try{
+conn.send({type:"leave"});
+}catch(e){}
+
+}
 
 closeNetwork();
 
