@@ -12,21 +12,23 @@
 
 *{
     box-sizing:border-box;
-    user-select:none;
     -webkit-user-select:none;
-    touch-action:none;
+    user-select:none;
+    -webkit-touch-callout:none;
 }
 
 html,body{
     margin:0;
+    padding:0;
     width:100%;
     height:100%;
     overflow:hidden;
     font-family:Arial,sans-serif;
+    background:linear-gradient(135deg,#ff8dce,#7bdcff);
 }
 
-body{
-    background:linear-gradient(135deg,#ff8dcc,#8fdcff);
+button,input{
+    font-family:Arial,sans-serif;
 }
 
 /* ================= PANTALLAS ================= */
@@ -37,33 +39,33 @@ body{
     display:none;
     justify-content:center;
     align-items:center;
-    z-index:50;
+    z-index:20;
 }
 
 .screen.active{
     display:flex;
 }
 
-/* ================= MENÚ ================= */
+/* ================= TARJETAS ================= */
 
 .card{
-    width:min(92%,480px);
-    background:rgba(255,255,255,.95);
+    width:min(92%,500px);
+    background:rgba(255,255,255,.96);
     padding:28px;
-    border-radius:30px;
+    border-radius:28px;
     text-align:center;
-    box-shadow:0 15px 50px rgba(0,0,0,.25);
+    box-shadow:0 15px 45px rgba(0,0,0,.25);
 }
 
 .logo{
-    font-size:40px;
+    font-size:38px;
     font-weight:900;
-    color:#ff3c9d;
-    text-shadow:3px 3px #ffd5eb;
-    margin-bottom:8px;
+    color:#ff399f;
+    text-shadow:3px 3px #ffd7ec;
+    margin-bottom:10px;
 }
 
-.sub{
+.subtitle{
     color:#666;
     margin-bottom:22px;
 }
@@ -71,25 +73,26 @@ body{
 input{
     width:100%;
     padding:15px;
-    border:3px solid #ff9ed0;
+    border:3px solid #ff9bce;
     border-radius:15px;
     font-size:18px;
     text-align:center;
     outline:none;
-    margin-bottom:12px;
+    margin-bottom:10px;
 }
 
 button{
     width:100%;
-    border:0;
-    border-radius:18px;
     padding:15px;
     margin:6px 0;
+    border:0;
+    border-radius:17px;
     font-size:18px;
     font-weight:bold;
     color:white;
-    background:linear-gradient(135deg,#ff55a8,#9478ff);
-    box-shadow:0 5px 12px rgba(0,0,0,.18);
+    background:linear-gradient(135deg,#ff4fa7,#8d72ff);
+    box-shadow:0 5px 12px rgba(0,0,0,.2);
+    cursor:pointer;
 }
 
 button:active{
@@ -97,69 +100,80 @@ button:active{
 }
 
 .blue{
-    background:linear-gradient(135deg,#55cfff,#667fff);
+    background:linear-gradient(135deg,#4fcfff,#657dff);
+}
+
+.green{
+    background:linear-gradient(135deg,#55d86a,#20b96b);
 }
 
 .gray{
     background:#777;
 }
 
-/* ================= ONLINE ================= */
-
-#onlineScreen .card{
-    max-width:500px;
+.red{
+    background:linear-gradient(135deg,#ff687d,#e83c61);
 }
 
-.code{
+/* ================= ONLINE ================= */
+
+.roomCode{
     font-size:48px;
-    letter-spacing:10px;
     font-weight:900;
-    color:#ff369e;
+    letter-spacing:10px;
+    color:#ff399f;
     background:#ffe2f1;
-    padding:15px;
-    border-radius:20px;
+    border-radius:18px;
+    padding:13px;
     margin:15px 0;
 }
 
 .status{
-    min-height:25px;
-    margin:8px 0;
     color:#555;
+    min-height:24px;
+    margin:8px 0;
 }
 
-.waiting{
-    background:#fff2f8;
+.playersBox{
+    background:#fff3f9;
     border-radius:18px;
     padding:15px;
-    margin:15px 0;
     text-align:left;
+    margin:15px 0;
 }
 
-.player{
-    padding:10px;
+.playerItem{
     background:white;
+    padding:10px;
     border-radius:12px;
-    margin:5px 0;
+    margin:6px 0;
     font-weight:bold;
+}
+
+.hostTag{
+    color:#ff3e9f;
+    font-size:12px;
 }
 
 /* ================= JUEGO ================= */
 
 #gameScreen{
-    background:#61bd50;
+    background:#65c653;
 }
 
 #canvas{
-    position:absolute;
-    inset:0;
+    position:fixed;
+    left:0;
+    top:0;
     width:100%;
     height:100%;
+    display:block;
 }
 
-/* ================= UI ================= */
+/* ================= INFORMACIÓN ================= */
 
 #gameUI{
-    position:absolute;
+    position:fixed;
     top:8px;
     left:8px;
     right:8px;
@@ -174,14 +188,14 @@ button:active{
     display:flex;
     flex-wrap:wrap;
     gap:5px;
-    max-width:75%;
+    max-width:80%;
 }
 
 .score{
-    background:rgba(255,255,255,.9);
-    padding:7px 10px;
+    background:rgba(255,255,255,.92);
     border-radius:12px;
-    min-width:100px;
+    padding:6px 9px;
+    min-width:95px;
 }
 
 .scoreName{
@@ -190,12 +204,12 @@ button:active{
 }
 
 .hpBar{
-    width:90px;
+    width:85px;
     height:8px;
-    margin-top:3px;
     background:#ddd;
     border-radius:10px;
     overflow:hidden;
+    margin-top:3px;
 }
 
 .hpFill{
@@ -203,65 +217,69 @@ button:active{
     background:#ff4f83;
 }
 
-#pause{
-    pointer-events:auto;
+#pauseButton{
     width:auto;
     margin:0;
     padding:9px 13px;
     font-size:14px;
+    pointer-events:auto;
 }
 
 /* ================= CONTROLES ================= */
 
-#mobileControls{
-    position:absolute;
-    bottom:15px;
+#controls{
+    position:fixed;
     left:15px;
     right:15px;
-    z-index:20;
+    bottom:15px;
+    z-index:15;
     display:none;
     justify-content:space-between;
     align-items:center;
+    pointer-events:none;
 }
 
-.joy{
+#joystick{
     width:125px;
     height:125px;
     border-radius:50%;
-    background:rgba(255,255,255,.28);
-    border:3px solid rgba(255,255,255,.65);
+    background:rgba(255,255,255,.25);
+    border:3px solid rgba(255,255,255,.7);
     position:relative;
+    pointer-events:auto;
+    touch-action:none;
 }
 
-.knob{
+#knob{
     position:absolute;
-    width:55px;
-    height:55px;
     left:32px;
     top:32px;
+    width:55px;
+    height:55px;
     border-radius:50%;
-    background:#ff4fa9;
+    background:#ff4fa7;
     border:3px solid white;
 }
 
-.attack{
+#attackButton{
     width:100px;
     height:100px;
     border-radius:50%;
+    background:linear-gradient(135deg,#ff4b9e,#ff8bc8);
     border:4px solid white;
-    background:linear-gradient(135deg,#ff4c9d,#ff8bc6);
     color:white;
-    font-weight:bold;
-    font-size:15px;
     display:flex;
     justify-content:center;
     align-items:center;
     text-align:center;
+    font-weight:bold;
+    pointer-events:auto;
+    touch-action:none;
 }
 
 /* ================= PAUSA ================= */
 
-#pauseScreen{
+#pauseOverlay{
     position:fixed;
     inset:0;
     background:rgba(0,0,0,.55);
@@ -271,13 +289,9 @@ button:active{
     align-items:center;
 }
 
-#pauseScreen .card{
-    max-width:350px;
-}
+/* ================= FINAL ================= */
 
-/* ================= GANADOR ================= */
-
-#winnerScreen{
+#resultOverlay{
     position:fixed;
     inset:0;
     background:rgba(0,0,0,.65);
@@ -287,14 +301,15 @@ button:active{
     align-items:center;
 }
 
-#winnerScreen .card{
-    max-width:360px;
+#resultOverlay .card{
+    max-width:380px;
 }
 
 #winnerText{
-    font-size:30px;
-    color:#ff3e9f;
+    font-size:27px;
+    color:#ff3d9f;
     font-weight:bold;
+    margin:15px 0;
 }
 
 /* ================= CELULAR ================= */
@@ -309,22 +324,23 @@ button:active{
         padding:22px;
     }
 
-    .code{
-        font-size:40px;
+    .roomCode{
+        font-size:39px;
     }
 
     #scoreBoard{
-        max-width:70%;
+        max-width:72%;
     }
 
     .score{
-        min-width:82px;
+        min-width:78px;
         padding:5px;
     }
 
     .hpBar{
-        width:70px;
+        width:68px;
     }
+
 }
 
 </style>
@@ -332,9 +348,9 @@ button:active{
 
 <body>
 
-<!-- =====================================================
-     MENÚ PRINCIPAL
-===================================================== -->
+<!-- ======================================================
+     MENÚ
+====================================================== -->
 
 <div id="menuScreen" class="screen active">
 
@@ -344,8 +360,8 @@ button:active{
             ⚡ GUERRA BEYBLADE ⚡
         </div>
 
-        <div class="sub">
-            ¡Haz girar tu trompo y gana!
+        <div class="subtitle">
+            ¡Haz girar tu trompo y gana la batalla!
         </div>
 
         <input
@@ -354,7 +370,7 @@ button:active{
             placeholder="Escribe tu nombre"
         >
 
-        <button onclick="soloGame()">
+        <button onclick="startSolo()">
             🎮 JUGAR SOLO
         </button>
 
@@ -366,9 +382,10 @@ button:active{
 
 </div>
 
-<!-- =====================================================
+
+<!-- ======================================================
      ONLINE
-===================================================== -->
+====================================================== -->
 
 <div id="onlineScreen" class="screen">
 
@@ -388,23 +405,23 @@ button:active{
             🏠 CREAR SALA
         </button>
 
-        <div style="margin:12px;color:#777;">
-            O entrar a una sala
+        <div style="color:#777;margin:10px;">
+            O entra a una sala
         </div>
 
         <input
-            id="roomCodeInput"
+            id="roomInput"
             maxlength="4"
             inputmode="numeric"
             placeholder="CÓDIGO DE 4 NÚMEROS"
-            oninput="onlyNumbers(this)"
+            oninput="numbersOnly(this)"
         >
 
         <button class="blue" onclick="joinRoom()">
             🚀 ENTRAR A SALA
         </button>
 
-        <div id="onlineMessage" class="status"></div>
+        <div id="onlineStatus" class="status"></div>
 
         <button class="gray" onclick="backMenu()">
             ⬅ VOLVER
@@ -414,23 +431,24 @@ button:active{
 
 </div>
 
-<!-- =====================================================
+
+<!-- ======================================================
      SALA DE ESPERA
-===================================================== -->
+====================================================== -->
 
 <div id="lobbyScreen" class="screen">
 
     <div class="card">
 
         <div class="logo">
-            ⚔️ SALA
+            ⚔️ SALA DE BATALLA
         </div>
 
         <div>
             Código de reunión:
         </div>
 
-        <div id="roomCodeShow" class="code">
+        <div id="roomCode" class="roomCode">
             0000
         </div>
 
@@ -438,23 +456,29 @@ button:active{
             Esperando jugadores...
         </div>
 
-        <div class="waiting">
+        <div class="playersBox">
 
-            <b>👥 Jugadores en la sala:</b>
+            <b>👥 Jugadores en la sala</b>
 
-            <div id="playersWaiting"></div>
+            <div id="playerList"></div>
 
         </div>
 
+        <!-- SOLO EL ANFITRIÓN VE ESTE BOTÓN -->
+
         <button
-            id="startButton"
-            onclick="hostStartGame()"
+            id="startMatchButton"
+            class="green"
+            onclick="hostStartMatch()"
             style="display:none;"
         >
-            ⚔️ COMENZAR BATALLA
+            ⚔️ INICIAR PARTIDA
         </button>
 
-        <button class="gray" onclick="leaveRoom()">
+        <button
+            class="gray"
+            onclick="leaveRoom()"
+        >
             🚪 SALIR DE LA SALA
         </button>
 
@@ -462,9 +486,10 @@ button:active{
 
 </div>
 
-<!-- =====================================================
+
+<!-- ======================================================
      JUEGO
-===================================================== -->
+====================================================== -->
 
 <div id="gameScreen" class="screen">
 
@@ -474,28 +499,24 @@ button:active{
 
         <div id="scoreBoard"></div>
 
-        <button id="pause" onclick="togglePause()">
+        <button
+            id="pauseButton"
+            onclick="togglePause()"
+        >
             ⏸
         </button>
 
     </div>
 
-    <div id="mobileControls">
+    <div id="controls">
 
-        <div
-            id="joystick"
-            class="joy"
-        >
-            <div
-                id="knob"
-                class="knob"
-            ></div>
+        <div id="joystick">
+
+            <div id="knob"></div>
+
         </div>
 
-        <div
-            id="attackButton"
-            class="attack"
-        >
+        <div id="attackButton">
             ⚡<br>
             ATACAR
         </div>
@@ -504,11 +525,12 @@ button:active{
 
 </div>
 
-<!-- =====================================================
-     PAUSA
-===================================================== -->
 
-<div id="pauseScreen">
+<!-- ======================================================
+     PAUSA
+====================================================== -->
+
+<div id="pauseOverlay">
 
     <div class="card">
 
@@ -528,22 +550,49 @@ button:active{
 
 </div>
 
-<!-- =====================================================
-     GANADOR
-===================================================== -->
 
-<div id="winnerScreen">
+<!-- ======================================================
+     RESULTADO
+====================================================== -->
+
+<div id="resultOverlay">
 
     <div class="card">
 
         <div class="logo">
-            🏆 GANADOR
+            🏆 BATALLA TERMINADA
         </div>
 
-        <div id="winnerText"></div>
+        <div id="winnerText">
+            Ganador
+        </div>
 
-        <button onclick="returnMenu()">
-            🏠 VOLVER AL MENÚ
+        <!-- ANFITRIÓN -->
+
+        <button
+            id="hostAgainButton"
+            class="green"
+            onclick="hostBackToLobby()"
+        >
+            🔄 VOLVER A JUGAR
+        </button>
+
+        <!-- INVITADO -->
+
+        <button
+            id="guestAgainButton"
+            class="green"
+            onclick="guestBackToLobby()"
+            style="display:none;"
+        >
+            🔄 VOLVER A LA SALA
+        </button>
+
+        <button
+            class="red"
+            onclick="leaveFromResult()"
+        >
+            🚪 SALIR DE LA SALA
         </button>
 
     </div>
@@ -553,194 +602,221 @@ button:active{
 
 <script>
 
-/* =====================================================
+/* ======================================================
    CANVAS
-===================================================== */
+====================================================== */
 
-const canvas=document.getElementById("canvas");
-const ctx=canvas.getContext("2d");
+const canvas =
+    document.getElementById("canvas");
 
-let W=innerWidth;
-let H=innerHeight;
+const ctx =
+    canvas.getContext("2d");
 
-function resize(){
+let W = innerWidth;
+let H = innerHeight;
 
-    W=innerWidth;
-    H=innerHeight;
+function resizeCanvas(){
 
-    canvas.width=W;
-    canvas.height=H;
+    W = innerWidth;
+    H = innerHeight;
+
+    canvas.width = W;
+    canvas.height = H;
+
 }
 
-resize();
+resizeCanvas();
 
-addEventListener("resize",resize);
-
-
-/* =====================================================
-   VARIABLES
-===================================================== */
-
-let peer=null;
-
-let hostConnection=null;
-
-let connections=[];
-
-let roomCode="";
-
-let isHost=false;
-
-let myId=0;
-
-let myName="Jugador";
-
-let players=[];
-
-let gameRunning=false;
-
-let paused=false;
-
-let gameMode="";
-
-let keys={};
-
-let moveX=0;
-let moveY=0;
-
-let attackPressed=false;
-
-let lastTime=performance.now();
-
-let attackTimer=0;
+window.addEventListener(
+    "resize",
+    resizeCanvas
+);
 
 
-/* =====================================================
+/* ======================================================
+   VARIABLES DE RED
+====================================================== */
+
+let peer = null;
+
+let hostConnection = null;
+
+let guestConnections = [];
+
+let roomCode = "";
+
+let isHost = false;
+
+let myId = 0;
+
+let myName = "Jugador";
+
+
+/* ======================================================
+   JUEGO
+====================================================== */
+
+let players = [];
+
+let gameMode = "";
+
+let gameRunning = false;
+
+let paused = false;
+
+let lastTime = 0;
+
+let attackCooldown = 0;
+
+
+/* ======================================================
+   CONTROLES
+====================================================== */
+
+let keys = {};
+
+let moveX = 0;
+
+let moveY = 0;
+
+let attackRequest = false;
+
+
+/* ======================================================
    COLORES
-===================================================== */
+====================================================== */
 
-const COLORS=[
-    "#ff4fa3",
-    "#657dff",
-    "#55d85b",
-    "#ffad3d"
+const COLORS = [
+    "#ff4fa5",
+    "#667dff",
+    "#52d35e",
+    "#ffae3d"
 ];
 
 
-/* =====================================================
+/* ======================================================
    PANTALLAS
-===================================================== */
+====================================================== */
 
-function show(id){
+function showScreen(id){
 
-    document.querySelectorAll(".screen")
-        .forEach(x=>x.classList.remove("active"));
+    document
+        .querySelectorAll(".screen")
+        .forEach(screen=>{
+            screen.classList.remove("active");
+        });
 
-    document.getElementById(id)
+    document
+        .getElementById(id)
         .classList.add("active");
+
 }
 
 
-/* =====================================================
-   NOMBRE
-===================================================== */
+/* ======================================================
+   NÚMERO
+====================================================== */
 
-function getName(){
+function numbersOnly(input){
 
-    let n=document.getElementById("nameInput")
-        .value.trim();
+    input.value =
+        input.value
+        .replace(/[^0-9]/g,"")
+        .slice(0,4);
 
-    if(!n)n="Jugador";
-
-    return n.substring(0,12);
 }
 
 
-/* =====================================================
-   ONLINE
-===================================================== */
+/* ======================================================
+   MENÚ ONLINE
+====================================================== */
 
 function openOnline(){
 
-    const n=getName();
+    const name =
+        document
+        .getElementById("nameInput")
+        .value
+        .trim();
 
-    document.getElementById("onlineName")
-        .value=n;
+    document
+        .getElementById("onlineName")
+        .value =
+        name || "";
 
-    show("onlineScreen");
+    showScreen("onlineScreen");
+
 }
 
 
-function onlyNumbers(input){
-
-    input.value=input.value
-        .replace(/[^0-9]/g,"")
-        .slice(0,4);
-}
-
-
-/* =====================================================
+/* ======================================================
    CREAR CÓDIGO
-===================================================== */
+====================================================== */
 
-function randomCode(){
+function makeRoomCode(){
 
     return String(
         Math.floor(
-            1000+
+            1000 +
             Math.random()*9000
         )
     );
+
 }
 
 
-/* =====================================================
+/* ======================================================
    CREAR SALA
-===================================================== */
+====================================================== */
 
 function createRoom(){
 
-    myName=document.getElementById("onlineName")
-        .value.trim();
+    myName =
+        document
+        .getElementById("onlineName")
+        .value
+        .trim();
 
     if(!myName){
-        myName="Jugador";
+
+        myName = "Jugador";
+
     }
 
-    myName=myName.substring(0,12);
+    myName =
+        myName.substring(0,12);
 
-    isHost=true;
+    isHost = true;
 
-    gameMode="online";
+    gameMode = "online";
 
-    connections=[];
+    createHostPeer(0);
 
-    document.getElementById("onlineMessage")
-        .textContent="Creando sala...";
-
-    createPeerRoom(0);
 }
 
 
-/* =====================================================
-   PEER DEL HOST
-===================================================== */
+/* ======================================================
+   PEER DEL ANFITRIÓN
+====================================================== */
 
-function createPeerRoom(attempt){
+function createHostPeer(attempt){
 
-    if(attempt>20){
+    if(attempt > 20){
 
-        document.getElementById("onlineMessage")
-            .textContent=
-            "No se pudo crear la sala. Intenta otra vez.";
+        document
+        .getElementById("onlineStatus")
+        .textContent =
+        "No se pudo crear la sala.";
 
         return;
+
     }
 
-    roomCode=randomCode();
+    roomCode = makeRoomCode();
 
-    const internalId=
-        "beyblade"+roomCode;
+    const internalId =
+        "beyblade" + roomCode;
+
 
     if(peer){
 
@@ -748,10 +824,18 @@ function createPeerRoom(attempt){
             peer.destroy();
         }catch(e){}
 
-        peer=null;
+        peer = null;
+
     }
 
-    peer=new Peer(
+
+    document
+    .getElementById("onlineStatus")
+    .textContent =
+    "Creando sala...";
+
+
+    peer = new Peer(
         internalId,
         {
             debug:1
@@ -759,89 +843,99 @@ function createPeerRoom(attempt){
     );
 
 
-    /* SALA CREADA */
+    /* SALA LISTA */
 
     peer.on("open",()=>{
 
-        console.log(
-            "Sala:",
-            roomCode,
-            "ID interno:",
-            internalId
-        );
+        players = [];
 
-        players=[];
+        guestConnections = [];
 
-        addHost();
+        addHostPlayer();
 
-        document.getElementById(
-            "roomCodeShow"
-        ).textContent=roomCode;
 
-        document.getElementById(
-            "lobbyStatus"
-        ).textContent=
-            "Comparte el código. Esperando jugadores...";
+        document
+        .getElementById("roomCode")
+        .textContent =
+        roomCode;
+
+
+        document
+        .getElementById("lobbyStatus")
+        .textContent =
+        "Comparte el código y espera a tus jugadores.";
+
 
         updateLobby();
 
-        show("lobbyScreen");
+
+        showScreen("lobbyScreen");
 
     });
 
 
-    /* ALGUIEN ENTRA */
+    /* ENTRA UN JUGADOR */
 
-    peer.on("connection",connection=>{
+    peer.on("connection",conn=>{
 
-        console.log("Nueva conexión");
+        if(
+            guestConnections.length >= 3
+        ){
 
-        if(connections.length>=3){
+            conn.on("open",()=>{
 
-            connection.on("open",()=>{
-
-                connection.send({
-                    type:"roomFull"
+                conn.send({
+                    type:"full"
                 });
 
                 setTimeout(()=>{
-                    connection.close();
+                    conn.close();
                 },500);
 
             });
 
             return;
+
         }
 
-        setupGuest(connection);
+
+        guestConnections.push(conn);
+
+        setupGuestConnection(conn);
 
     });
 
 
+    /* ERROR */
+
     peer.on("error",error=>{
 
-        console.log("Peer error:",error);
+        console.log("HOST ERROR",error);
+
 
         if(
-            error.type==="unavailable-id"
+            error.type === "unavailable-id"
         ){
 
             try{
                 peer.destroy();
             }catch(e){}
 
+
             setTimeout(()=>{
-                createPeerRoom(
+
+                createHostPeer(
                     attempt+1
                 );
-            },200);
+
+            },300);
 
         }else{
 
-            document.getElementById(
-                "onlineMessage"
-            ).textContent=
-                "Error de conexión.";
+            document
+            .getElementById("onlineStatus")
+            .textContent =
+            "Error de conexión.";
 
         }
 
@@ -850,11 +944,11 @@ function createPeerRoom(attempt){
 }
 
 
-/* =====================================================
-   HOST
-===================================================== */
+/* ======================================================
+   AGREGAR ANFITRIÓN
+====================================================== */
 
-function addHost(){
+function addHostPlayer(){
 
     players.push({
 
@@ -872,6 +966,8 @@ function addHost(){
 
         hp:100,
 
+        maxHp:100,
+
         alive:true,
 
         color:COLORS[0],
@@ -882,30 +978,33 @@ function addHost(){
             x:0,
             y:0,
             attack:false
-        },
-
-        cpu:false
+        }
 
     });
 
-    myId=0;
+    myId = 0;
+
 }
 
 
-/* =====================================================
-   INVITADO
-===================================================== */
+/* ======================================================
+   CONEXIÓN DE INVITADO
+====================================================== */
 
-function setupGuest(connection){
+function setupGuestConnection(conn){
 
-    connections.push(connection);
+    conn.on("open",()=>{
 
-    connection.on("open",()=>{
+        /*
+          ID del invitado:
+          1, 2 o 3
+        */
 
-        const id=
-            connections.length;
+        const id =
+            players.length;
 
-        connection.playerId=id;
+        conn.playerId = id;
+
 
         players.push({
 
@@ -923,6 +1022,8 @@ function setupGuest(connection){
 
             hp:100,
 
+            maxHp:100,
+
             alive:true,
 
             color:COLORS[id],
@@ -933,31 +1034,29 @@ function setupGuest(connection){
                 x:0,
                 y:0,
                 attack:false
-            },
-
-            cpu:false
+            }
 
         });
 
 
         /*
-          Le decimos al nuevo jugador
-          quién es y quién está en la sala.
+          Le mandamos su ID.
         */
 
-        connection.send({
+        conn.send({
 
             type:"welcome",
 
-            id:id,
+            myId:id,
 
-            players:getLobbyPlayers()
+            players:getLobbyData()
 
         });
 
 
         /*
-          Le decimos a TODOS que alguien entró.
+          Actualizamos la sala
+          para TODOS.
         */
 
         broadcastLobby();
@@ -967,78 +1066,92 @@ function setupGuest(connection){
     });
 
 
-    connection.on("data",data=>{
+    conn.on("data",data=>{
 
         /* NOMBRE */
 
-        if(data.type==="name"){
+        if(data.type === "name"){
 
-            const p=players.find(
-                x=>x.id===connection.playerId
-            );
+            const p =
+                players.find(
+                    x =>
+                    x.id === conn.playerId
+                );
 
             if(p){
 
-                p.name=
-                    String(data.name||"Jugador")
-                    .substring(0,12);
+                p.name =
+                    String(
+                        data.name ||
+                        "Jugador"
+                    ).substring(0,12);
 
                 broadcastLobby();
 
                 updateLobby();
+
             }
+
         }
 
 
-        /* CONTROL */
+        /* CONTROLES */
 
-        if(data.type==="input"){
+        if(data.type === "input"){
 
-            const p=players.find(
-                x=>x.id===connection.playerId
-            );
+            const p =
+                players.find(
+                    x =>
+                    x.id === conn.playerId
+                );
 
             if(p){
 
-                p.input.x=
-                    Number(data.x)||0;
+                p.input.x =
+                    Number(data.x) || 0;
 
-                p.input.y=
-                    Number(data.y)||0;
+                p.input.y =
+                    Number(data.y) || 0;
 
-                p.input.attack=
+                p.input.attack =
                     Boolean(data.attack);
+
             }
+
         }
 
 
-        /* INVITADO PIDE COMENZAR */
+        /* VOLVER A SALA */
 
-        if(data.type==="requestStart"){
+        if(
+            data.type ===
+            "guestReady"
+        ){
 
-            if(isHost){
+            broadcastLobby();
 
-                hostStartGame();
-            }
         }
 
     });
 
 
-    connection.on("close",()=>{
+    conn.on("close",()=>{
 
-        const id=
-            connection.playerId;
+        const id =
+            conn.playerId;
 
-        connections=
-            connections.filter(
-                c=>c!==connection
+
+        guestConnections =
+            guestConnections.filter(
+                c=>c !== conn
             );
 
-        players=
+
+        players =
             players.filter(
-                p=>p.id!==id
+                p=>p.id !== id
             );
+
 
         broadcastLobby();
 
@@ -1049,11 +1162,11 @@ function setupGuest(connection){
 }
 
 
-/* =====================================================
-   INFORMACIÓN DEL LOBBY
-===================================================== */
+/* ======================================================
+   DATOS DE LA SALA
+====================================================== */
 
-function getLobbyPlayers(){
+function getLobbyData(){
 
     return players.map(p=>({
 
@@ -1068,28 +1181,32 @@ function getLobbyPlayers(){
 }
 
 
-/* =====================================================
-   AVISAR A TODOS
-===================================================== */
+/* ======================================================
+   ENVIAR SALA
+====================================================== */
 
 function broadcastLobby(){
 
     if(!isHost)return;
 
-    const message={
+
+    const message = {
 
         type:"lobby",
 
-        players:getLobbyPlayers()
+        players:getLobbyData()
 
     };
 
-    connections.forEach(c=>{
 
-        if(c.open){
+    guestConnections.forEach(conn=>{
+
+        if(conn.open){
 
             try{
-                c.send(message);
+
+                conn.send(message);
+
             }catch(e){}
 
         }
@@ -1099,47 +1216,54 @@ function broadcastLobby(){
 }
 
 
-/* =====================================================
-   UNIRSE A SALA
-===================================================== */
+/* ======================================================
+   UNIRSE
+====================================================== */
 
 function joinRoom(){
 
-    const code=document
-        .getElementById("roomCodeInput")
+    const code =
+        document
+        .getElementById("roomInput")
         .value
         .replace(/[^0-9]/g,"");
 
-    if(code.length!==4){
 
-        document.getElementById(
-            "onlineMessage"
-        ).textContent=
-            "Debes escribir 4 números.";
+    if(code.length !== 4){
+
+        document
+        .getElementById("onlineStatus")
+        .textContent =
+        "Escribe exactamente 4 números.";
 
         return;
+
     }
 
-    myName=document
+
+    myName =
+        document
         .getElementById("onlineName")
-        .value.trim();
+        .value
+        .trim();
+
 
     if(!myName){
-        myName="Jugador";
+
+        myName = "Jugador";
+
     }
 
-    myName=myName.substring(0,12);
 
-    roomCode=code;
+    myName =
+        myName.substring(0,12);
 
-    isHost=false;
 
-    gameMode="online";
+    roomCode = code;
 
-    document.getElementById(
-        "onlineMessage"
-    ).textContent=
-        "Conectando a la sala...";
+    isHost = false;
+
+    gameMode = "online";
 
 
     if(peer){
@@ -1151,23 +1275,36 @@ function joinRoom(){
     }
 
 
+    document
+    .getElementById("onlineStatus")
+    .textContent =
+    "Conectando...";
+
+
     /*
-      El invitado crea su propio Peer.
+      El invitado crea su Peer.
     */
 
-    peer=new Peer({
-        debug:1
-    });
+    peer =
+        new Peer({
+            debug:1
+        });
 
 
     peer.on("open",()=>{
 
-        const internalId=
-            "beyblade"+roomCode;
+        /*
+          Conecta con:
 
-        hostConnection=
+          beyblade + código
+
+          Ejemplo:
+          beyblade4827
+        */
+
+        hostConnection =
             peer.connect(
-                internalId,
+                "beyblade"+roomCode,
                 {
                     reliable:true
                 }
@@ -1176,9 +1313,9 @@ function joinRoom(){
 
         hostConnection.on("open",()=>{
 
-            console.log(
-                "Conectado al anfitrión"
-            );
+            /*
+              Mandamos nuestro nombre.
+            */
 
             hostConnection.send({
 
@@ -1188,16 +1325,20 @@ function joinRoom(){
 
             });
 
-            document.getElementById(
-                "roomCodeShow"
-            ).textContent=roomCode;
 
-            document.getElementById(
-                "lobbyStatus"
-            ).textContent=
-                "Conectado. Esperando al anfitrión...";
+            document
+            .getElementById("roomCode")
+            .textContent =
+            roomCode;
 
-            show("lobbyScreen");
+
+            document
+            .getElementById("lobbyStatus")
+            .textContent =
+            "Conectado. Esperando al anfitrión...";
+
+
+            showScreen("lobbyScreen");
 
         });
 
@@ -1206,25 +1347,30 @@ function joinRoom(){
 
             /* SALA LLENA */
 
-            if(data.type==="roomFull"){
+            if(data.type === "full"){
 
-                document.getElementById(
-                    "lobbyStatus"
-                ).textContent=
-                    "❌ La sala está llena.";
+                document
+                .getElementById("lobbyStatus")
+                .textContent =
+                "❌ La sala está llena.";
 
                 return;
+
             }
 
 
             /* BIENVENIDA */
 
-            if(data.type==="welcome"){
+            if(
+                data.type ===
+                "welcome"
+            ){
 
-                myId=data.id;
+                myId =
+                    data.myId;
 
-                players=
-                    convertLobbyPlayers(
+                players =
+                    createLobbyPlayers(
                         data.players
                     );
 
@@ -1233,12 +1379,15 @@ function joinRoom(){
             }
 
 
-            /* CAMBIO DE JUGADORES */
+            /* ACTUALIZAR SALA */
 
-            if(data.type==="lobby"){
+            if(
+                data.type ===
+                "lobby"
+            ){
 
-                players=
-                    convertLobbyPlayers(
+                players =
+                    createLobbyPlayers(
                         data.players
                     );
 
@@ -1247,40 +1396,96 @@ function joinRoom(){
             }
 
 
-            /* COMENZÓ LA BATALLA */
+            /* TODOS COMIENZAN */
 
-            if(data.type==="start"){
+            if(
+                data.type ===
+                "startGame"
+            ){
 
-                myId=data.myId;
+                myId =
+                    data.myId;
 
-                players=
+                players =
                     data.players;
 
-                startOnlineGame();
+                startOnline();
 
             }
 
 
-            /* ESTADO DEL JUEGO */
+            /* ESTADO */
 
-            if(data.type==="state"){
+            if(
+                data.type ===
+                "state"
+            ){
 
-                players=
+                players =
                     data.players;
 
             }
 
 
-            /* FINAL */
+            /* PAUSA */
 
-            if(data.type==="finish"){
+            if(
+                data.type ===
+                "pause"
+            ){
 
-                players=
+                paused =
+                    data.paused;
+
+            }
+
+
+            /* VOLVER A SALA */
+
+            if(
+                data.type ===
+                "backLobby"
+            ){
+
+                gameRunning = false;
+
+                document
+                .getElementById(
+                    "resultOverlay"
+                )
+                .style.display =
+                "none";
+
+
+                players =
+                    createLobbyPlayers(
+                        data.players
+                    );
+
+
+                updateLobby();
+
+
+                showScreen(
+                    "lobbyScreen"
+                );
+
+            }
+
+
+            /* GANADOR */
+
+            if(
+                data.type ===
+                "winner"
+            ){
+
+                gameRunning = false;
+
+                players =
                     data.players;
 
-                gameRunning=false;
-
-                showWinner(
+                showResult(
                     data.winner
                 );
 
@@ -1291,12 +1496,12 @@ function joinRoom(){
 
         hostConnection.on("close",()=>{
 
-            gameRunning=false;
+            gameRunning = false;
 
-            document.getElementById(
-                "lobbyStatus"
-            ).textContent=
-                "❌ El anfitrión salió de la sala.";
+            document
+            .getElementById("lobbyStatus")
+            .textContent =
+            "❌ El anfitrión salió de la sala.";
 
         });
 
@@ -1305,23 +1510,27 @@ function joinRoom(){
 
     peer.on("error",error=>{
 
-        console.log(error);
+        console.log(
+            "GUEST ERROR",
+            error
+        );
 
-        document.getElementById(
-            "onlineMessage"
-        ).textContent=
-            "❌ No se pudo encontrar esa sala.";
+
+        document
+        .getElementById("onlineStatus")
+        .textContent =
+        "❌ No se encontró esa sala.";
 
     });
 
 }
 
 
-/* =====================================================
-   CONVERTIR JUGADORES
-===================================================== */
+/* ======================================================
+   CREAR JUGADORES DEL LOBBY
+====================================================== */
 
-function convertLobbyPlayers(list){
+function createLobbyPlayers(list){
 
     return list.map(p=>({
 
@@ -1339,6 +1548,8 @@ function convertLobbyPlayers(list){
 
         hp:100,
 
+        maxHp:100,
+
         alive:true,
 
         color:p.color,
@@ -1349,105 +1560,125 @@ function convertLobbyPlayers(list){
             x:0,
             y:0,
             attack:false
-        },
-
-        cpu:false
+        }
 
     }));
 
 }
 
 
-/* =====================================================
-   ACTUALIZAR LOBBY
-===================================================== */
+/* ======================================================
+   MOSTRAR LOBBY
+====================================================== */
 
 function updateLobby(){
 
-    const box=
-        document.getElementById(
-            "playersWaiting"
+    const box =
+        document
+        .getElementById(
+            "playerList"
         );
 
-    box.innerHTML="";
+
+    box.innerHTML = "";
 
 
-    players.forEach((p,i)=>{
+    players.forEach(p=>{
 
-        const div=
-            document.createElement("div");
+        const div =
+            document.createElement(
+                "div"
+            );
 
-        div.className="player";
 
-        if(p.id===0){
+        div.className =
+            "playerItem";
 
-            div.innerHTML=
-                "👑 "+p.name+
-                " <small>(Anfitrión)</small>";
+
+        if(p.id === 0){
+
+            div.innerHTML =
+                "👑 "+
+                p.name+
+                ' <span class="hostTag">(ANFITRIÓN)</span>';
 
         }else{
 
-            div.innerHTML=
-                "⚡ "+p.name+
-                " <small>(Jugador "+(i+1)+")</small>";
+            div.innerHTML =
+                "⚡ "+
+                p.name;
 
         }
+
 
         box.appendChild(div);
 
     });
 
 
+    /*
+      BOTÓN DEL ANFITRIÓN
+    */
+
     if(isHost){
 
-        document.getElementById(
+        document
+        .getElementById(
             "lobbyStatus"
-        ).textContent=
-            players.length+
-            "/4 jugadores en la sala";
+        )
+        .textContent =
+        players.length+
+        "/4 jugadores en la sala";
 
-        /*
-          El botón solamente aparece
-          al anfitrión.
-        */
 
-        document.getElementById(
-            "startButton"
-        ).style.display=
-            players.length>=2
-            ? "block"
-            : "none";
+        document
+        .getElementById(
+            "startMatchButton"
+        )
+        .style.display =
+        players.length >= 2
+        ? "block"
+        : "none";
 
     }else{
 
-        document.getElementById(
-            "startButton"
-        ).style.display="none";
+        document
+        .getElementById(
+            "startMatchButton"
+        )
+        .style.display =
+        "none";
 
-        document.getElementById(
+
+        document
+        .getElementById(
             "lobbyStatus"
-        ).textContent=
-            "👑 Esperando que el anfitrión comience...";
+        )
+        .textContent =
+        "👑 Esperando al anfitrión para iniciar...";
+
     }
 
 }
 
 
-/* =====================================================
-   ANFITRIÓN COMIENZA
-===================================================== */
+/* ======================================================
+   ANFITRIÓN INICIA
+====================================================== */
 
-function hostStartGame(){
+function hostStartMatch(){
 
     if(!isHost)return;
 
-    if(players.length<2){
+
+    if(players.length < 2){
 
         alert(
-            "Debe haber al menos 2 jugadores."
+            "Necesitas al menos 2 jugadores."
         );
 
         return;
+
     }
 
 
@@ -1455,23 +1686,19 @@ function hostStartGame(){
 
 
     /*
-      Enviamos a cada jugador:
-
-      - sus datos
-      - todos los jugadores
-      - su ID
-      - orden de comenzar
+      A CADA JUGADOR LE MANDAMOS
+      SU PROPIO ID.
     */
 
-    connections.forEach(c=>{
+    guestConnections.forEach(conn=>{
 
-        if(c.open){
+        if(conn.open){
 
-            c.send({
+            conn.send({
 
-                type:"start",
+                type:"startGame",
 
-                myId:c.playerId,
+                myId:conn.playerId,
 
                 players:players
 
@@ -1482,72 +1709,52 @@ function hostStartGame(){
     });
 
 
-    startOnlineGame();
+    /*
+      EL HOST TAMBIÉN ENTRA.
+    */
+
+    startOnline();
 
 }
 
 
-/* =====================================================
-   INICIAR ONLINE
-===================================================== */
-
-function startOnlineGame(){
-
-    gameRunning=true;
-
-    paused=false;
-
-    document.getElementById(
-        "pauseScreen"
-    ).style.display="none";
-
-    document.getElementById(
-        "winnerScreen"
-    ).style.display="none";
-
-    document.getElementById(
-        "mobileControls"
-    ).style.display="flex";
-
-    show("gameScreen");
-
-    lastTime=performance.now();
-
-    requestAnimationFrame(gameLoop);
-
-}
-
-
-/* =====================================================
-   PREPARAR JUGADORES
-===================================================== */
+/* ======================================================
+   PREPARAR PARTIDA
+====================================================== */
 
 function preparePlayers(){
 
+    const radius =
+        Math.min(W,H)*.28;
+
+
     players.forEach((p,i)=>{
 
-        const angle=
+        const angle =
             (Math.PI*2/players.length)*i;
 
-        const radius=
-            Math.min(W,H)*.28;
 
-        p.x=
+        p.x =
             W/2+
             Math.cos(angle)*radius;
 
-        p.y=
+
+        p.y =
             H/2+
             Math.sin(angle)*radius;
+
 
         p.vx=0;
         p.vy=0;
 
         p.hp=100;
 
+        p.maxHp=100;
+
         p.alive=true;
 
         p.attack=false;
+
 
         p.input={
             x:0,
@@ -1560,24 +1767,96 @@ function preparePlayers(){
 }
 
 
-/* =====================================================
-   SOLO
-===================================================== */
+/* ======================================================
+   START ONLINE
+====================================================== */
 
-function soloGame(){
+function startOnline(){
 
-    myName=getName();
+    gameRunning = true;
 
-    isHost=true;
+    paused = false;
 
-    gameMode="solo";
+    attackCooldown = 0;
+
+
+    document
+    .getElementById(
+        "resultOverlay"
+    )
+    .style.display =
+    "none";
+
+
+    document
+    .getElementById(
+        "controls"
+    )
+    .style.display =
+    "flex";
+
+
+    showScreen("gameScreen");
+
+
+    lastTime =
+        performance.now();
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
+
+}
+
+
+/* ======================================================
+   JUGAR SOLO
+====================================================== */
+
+function startSolo(){
+
+    myName =
+        document
+        .getElementById(
+            "nameInput"
+        )
+        .value
+        .trim();
+
+
+    if(!myName){
+
+        myName =
+            "Jugador";
+
+    }
+
+
+    myName =
+        myName.substring(
+            0,12
+        );
+
+
+    gameMode =
+        "solo";
+
+
+    isHost = true;
+
 
     players=[];
 
-    addHost();
+
+    addHostPlayer();
 
 
-    for(let i=1;i<4;i++){
+    for(
+        let i=1;
+        i<4;
+        i++
+    ){
 
         players.push({
 
@@ -1594,6 +1873,8 @@ function soloGame(){
             vy:0,
 
             hp:100,
+
+            maxHp:100,
 
             alive:true,
 
@@ -1616,40 +1897,59 @@ function soloGame(){
 
     preparePlayers();
 
+
     gameRunning=true;
 
     paused=false;
 
-    document.getElementById(
-        "mobileControls"
-    ).style.display="flex";
 
-    show("gameScreen");
+    document
+    .getElementById(
+        "controls"
+    )
+    .style.display =
+    "flex";
 
-    lastTime=performance.now();
 
-    requestAnimationFrame(gameLoop);
+    showScreen(
+        "gameScreen"
+    );
+
+
+    lastTime =
+        performance.now();
+
+
+    requestAnimationFrame(
+        gameLoop
+    );
 
 }
 
 
-/* =====================================================
-   LOOP
-===================================================== */
+/* ======================================================
+   GAME LOOP
+====================================================== */
 
 function gameLoop(time){
 
     if(!gameRunning)return;
 
-    const dt=
+
+    const dt =
         Math.min(
             (time-lastTime)/16.67,
             2
         );
 
+
     lastTime=time;
 
+
     if(!paused){
+
+        updateLocalControl();
+
 
         if(gameMode==="solo"){
 
@@ -1659,15 +1959,12 @@ function gameLoop(time){
 
             if(isHost){
 
-                updateOnlineHost(dt);
-
-            }else{
-
-                updateLocalInput();
+                updateHostOnline(dt);
 
             }
 
         }
+
 
         draw();
 
@@ -1675,170 +1972,95 @@ function gameLoop(time){
 
     }
 
-    requestAnimationFrame(gameLoop);
+
+    requestAnimationFrame(
+        gameLoop
+    );
 
 }
 
 
-/* =====================================================
-   SOLO UPDATE
-===================================================== */
+/* ======================================================
+   CONTROL DEL JUGADOR
+====================================================== */
 
-function updateSolo(dt){
-
-    updateLocalInput();
-
-    players.forEach(p=>{
-
-        if(!p.alive)return;
-
-        if(p.cpu){
-
-            cpuControl(p);
-
-        }
-
-        move(p,dt);
-
-    });
-
-    combat();
-
-    checkWinner();
-
-}
-
-
-/* =====================================================
-   ONLINE HOST UPDATE
-===================================================== */
-
-function updateOnlineHost(dt){
-
-    players.forEach(p=>{
-
-        if(!p.alive)return;
-
-        move(p,dt);
-
-    });
-
-
-    combat();
-
-
-    const alive=
-        players.filter(
-            p=>p.alive
-        );
-
-
-    if(alive.length<=1){
-
-        const winner=
-            alive.length
-            ? alive[0].name
-            : "Nadie";
-
-
-        gameRunning=false;
-
-
-        connections.forEach(c=>{
-
-            if(c.open){
-
-                c.send({
-
-                    type:"finish",
-
-                    players:players,
-
-                    winner:winner
-
-                });
-
-            }
-
-        });
-
-
-        showWinner(winner);
-
-        return;
-    }
-
-
-    /*
-      Mandamos la posición
-      de todos a los celulares.
-    */
-
-    broadcastState();
-
-}
-
-
-/* =====================================================
-   MOVIMIENTO LOCAL
-===================================================== */
-
-function updateLocalInput(){
+function updateLocalControl(){
 
     let x=moveX;
+
     let y=moveY;
 
 
-    if(keys["arrowleft"]||keys["a"])
+    if(
+        keys["arrowleft"]||
+        keys["a"]
+    ){
         x-=1;
+    }
 
-    if(keys["arrowright"]||keys["d"])
+
+    if(
+        keys["arrowright"]||
+        keys["d"]
+    ){
         x+=1;
+    }
 
-    if(keys["arrowup"]||keys["w"])
+
+    if(
+        keys["arrowup"]||
+        keys["w"]
+    ){
         y-=1;
+    }
 
-    if(keys["arrowdown"]||keys["s"])
+
+    if(
+        keys["arrowdown"]||
+        keys["s"]
+    ){
         y+=1;
+    }
 
 
-    const length=
+    const len =
         Math.hypot(x,y);
 
 
-    if(length>1){
+    if(len>1){
 
-        x/=length;
-        y/=length;
+        x/=len;
+        y/=len;
 
     }
 
 
-    const p=
+    const p =
         players.find(
-            x=>x.id===myId
+            p=>p.id===myId
         );
 
 
-    if(p){
+    if(!p)return;
 
-        p.input.x=x;
-        p.input.y=y;
 
-        if(attackPressed){
+    p.input.x=x;
 
-            p.input.attack=true;
+    p.input.y=y;
 
-            attackPressed=false;
 
-        }
+    if(attackRequest){
+
+        p.input.attack=true;
+
+        attackRequest=false;
 
     }
 
 
     /*
-      Si soy invitado,
-      envío mis controles al host.
+      INVITADO MANDA SUS CONTROLES
+      AL HOST CONSTANTEMENTE.
     */
 
     if(
@@ -1855,31 +2077,132 @@ function updateLocalInput(){
 
             y:y,
 
-            attack:p ? p.input.attack:false
+            attack:p.input.attack
 
         });
 
 
-        if(p){
-            p.input.attack=false;
-        }
+        /*
+          No dejamos el ataque
+          activado permanentemente.
+        */
+
+        p.input.attack=false;
 
     }
 
 }
 
 
-/* =====================================================
-   MOVIMIENTO
-===================================================== */
+/* ======================================================
+   UPDATE HOST
+====================================================== */
 
-function move(p,dt){
+function updateHostOnline(dt){
 
-    let x=p.input.x||0;
-    let y=p.input.y||0;
+    players.forEach(p=>{
+
+        if(!p.alive)return;
+
+        movePlayer(
+            p,
+            dt
+        );
+
+    });
 
 
-    const len=
+    doCombat();
+
+
+    const alive =
+        players.filter(
+            p=>p.alive
+        );
+
+
+    if(alive.length<=1){
+
+        finishOnline(
+            alive.length
+            ? alive[0].name
+            : "Nadie"
+        );
+
+        return;
+
+    }
+
+
+    broadcastGameState();
+
+}
+
+
+/* ======================================================
+   UPDATE SOLO
+====================================================== */
+
+function updateSolo(dt){
+
+    players.forEach(p=>{
+
+        if(!p.alive)return;
+
+
+        if(p.cpu){
+
+            cpuMove(p);
+
+        }
+
+
+        movePlayer(
+            p,
+            dt
+        );
+
+    });
+
+
+    doCombat();
+
+
+    const alive =
+        players.filter(
+            p=>p.alive
+        );
+
+
+    if(alive.length<=1){
+
+        gameRunning=false;
+
+        showResult(
+            alive.length
+            ? alive[0].name
+            : "Nadie"
+        );
+
+    }
+
+}
+
+
+/* ======================================================
+   MOVER
+====================================================== */
+
+function movePlayer(p,dt){
+
+    let x =
+        Number(p.input.x)||0;
+
+    let y =
+        Number(p.input.y)||0;
+
+
+    const len =
         Math.hypot(x,y);
 
 
@@ -1891,15 +2214,17 @@ function move(p,dt){
     }
 
 
-    p.vx+=x*.75;
-    p.vy+=y*.75;
+    p.vx += x*.78;
+
+    p.vy += y*.78;
 
 
-    p.vx*=.91;
-    p.vy*=.91;
+    p.vx *= .91;
+
+    p.vy *= .91;
 
 
-    const speed=
+    const speed =
         Math.hypot(
             p.vx,
             p.vy
@@ -1908,46 +2233,54 @@ function move(p,dt){
 
     if(speed>6){
 
-        p.vx=
+        p.vx =
             p.vx/speed*6;
 
-        p.vy=
+        p.vy =
             p.vy/speed*6;
 
     }
 
 
-    p.x+=p.vx*dt;
-    p.y+=p.vy*dt;
+    p.x += p.vx*dt;
+
+    p.y += p.vy*dt;
 
 
-    const r=32;
+    const r=31;
 
 
     if(p.x<r){
 
         p.x=r;
+
         p.vx*=-.5;
 
     }
+
 
     if(p.x>W-r){
 
         p.x=W-r;
+
         p.vx*=-.5;
 
     }
 
+
     if(p.y<r){
 
         p.y=r;
+
         p.vy*=-.5;
 
     }
 
+
     if(p.y>H-r){
 
         p.y=H-r;
+
         p.vy*=-.5;
 
     }
@@ -1955,37 +2288,44 @@ function move(p,dt){
 }
 
 
-/* =====================================================
+/* ======================================================
    CPU
-===================================================== */
+====================================================== */
 
-function cpuControl(p){
+function cpuMove(p){
 
-    const enemies=
+    const enemies =
         players.filter(
-            x=>x.id!==p.id&&x.alive
+            e =>
+            e.id!==p.id &&
+            e.alive
         );
 
 
     if(!enemies.length)return;
 
 
-    let target=enemies[0];
+    let target =
+        enemies[0];
 
-    let best=Infinity;
+
+    let closest =
+        Infinity;
 
 
     enemies.forEach(e=>{
 
-        const d=
+        const d =
             Math.hypot(
                 e.x-p.x,
                 e.y-p.y
             );
 
-        if(d<best){
 
-            best=d;
+        if(d<closest){
+
+            closest=d;
+
             target=e;
 
         }
@@ -1993,27 +2333,39 @@ function cpuControl(p){
     });
 
 
-    const dx=
+    const dx =
         target.x-p.x;
 
-    const dy=
+    const dy =
         target.y-p.y;
 
-    const d=
-        Math.hypot(dx,dy)||1;
+
+    const d =
+        Math.hypot(
+            dx,dy
+        )||1;
 
 
     if(d>75){
 
-        p.input.x=dx/d;
-        p.input.y=dy/d;
+        p.input.x =
+            dx/d;
+
+        p.input.y =
+            dy/d;
 
     }else{
 
-        p.input.x=-dy/d;
-        p.input.y=dx/d;
+        p.input.x =
+            -dy/d;
 
-        if(Math.random()<.08){
+        p.input.y =
+            dx/d;
+
+
+        if(
+            Math.random()<.08
+        ){
 
             p.input.attack=true;
 
@@ -2024,27 +2376,32 @@ function cpuControl(p){
 }
 
 
-/* =====================================================
+/* ======================================================
    COMBATE
-===================================================== */
+====================================================== */
 
-function combat(){
+function doCombat(){
 
-    if(attackTimer>0){
+    if(attackCooldown>0){
 
-        attackTimer--;
+        attackCooldown--;
 
     }
 
 
     players.forEach(p=>{
 
-        if(!p.alive)return;
+        if(
+            !p.alive
+        )return;
 
 
-        if(p.input.attack){
+        if(
+            p.input.attack &&
+            attackCooldown<=0
+        ){
 
-            attack(p);
+            performAttack(p);
 
             p.input.attack=false;
 
@@ -2053,9 +2410,7 @@ function combat(){
     });
 
 
-    /*
-      Empujones entre trompos
-    */
+    /* EMPUJONES */
 
     for(
         let i=0;
@@ -2070,6 +2425,7 @@ function combat(){
         ){
 
             const a=players[i];
+
             const b=players[j];
 
 
@@ -2079,28 +2435,33 @@ function combat(){
             )continue;
 
 
-            const dx=b.x-a.x;
-            const dy=b.y-a.y;
+            const dx =
+                b.x-a.x;
+
+            const dy =
+                b.y-a.y;
 
 
-            const d=
-                Math.hypot(dx,dy);
+            const d =
+                Math.hypot(
+                    dx,dy
+                );
 
 
             if(d<55){
 
-                const nx=
+                const nx =
                     dx/(d||1);
 
-                const ny=
+                const ny =
                     dy/(d||1);
 
 
-                a.vx-=nx*.5;
-                a.vy-=ny*.5;
+                a.vx -= nx*.5;
+                a.vy -= ny*.5;
 
-                b.vx+=nx*.5;
-                b.vy+=ny*.5;
+                b.vx += nx*.5;
+                b.vy += ny*.5;
 
             }
 
@@ -2111,15 +2472,13 @@ function combat(){
 }
 
 
-/* =====================================================
+/* ======================================================
    ATAQUE
-===================================================== */
+====================================================== */
 
-function attack(p){
+function performAttack(p){
 
-    if(attackTimer>0)return;
-
-    attackTimer=12;
+    attackCooldown=8;
 
     p.attack=true;
 
@@ -2128,7 +2487,7 @@ function attack(p){
 
         p.attack=false;
 
-    },150);
+    },130);
 
 
     players.forEach(enemy=>{
@@ -2139,34 +2498,39 @@ function attack(p){
         )return;
 
 
-        const dx=
+        const dx =
             enemy.x-p.x;
 
-        const dy=
+        const dy =
             enemy.y-p.y;
 
 
-        const d=
-            Math.hypot(dx,dy);
+        const d =
+            Math.hypot(
+                dx,dy
+            );
 
 
         if(d<72){
 
-            enemy.hp-=15;
+            enemy.hp -= 15;
 
 
-            const nx=
+            const nx =
                 dx/(d||1);
 
-            const ny=
+            const ny =
                 dy/(d||1);
 
 
-            enemy.vx+=nx*5;
-            enemy.vy+=ny*5;
+            enemy.vx += nx*5;
+
+            enemy.vy += ny*5;
 
 
-            if(enemy.hp<=0){
+            if(
+                enemy.hp<=0
+            ){
 
                 enemy.hp=0;
 
@@ -2181,41 +2545,13 @@ function attack(p){
 }
 
 
-/* =====================================================
-   GANADOR
-===================================================== */
+/* ======================================================
+   ENVIAR ESTADO
+====================================================== */
 
-function checkWinner(){
+function broadcastGameState(){
 
-    const alive=
-        players.filter(
-            p=>p.alive
-        );
-
-
-    if(alive.length<=1){
-
-        gameRunning=false;
-
-        const winner=
-            alive.length
-            ? alive[0].name
-            : "Nadie";
-
-        showWinner(winner);
-
-    }
-
-}
-
-
-/* =====================================================
-   ESTADO ONLINE
-===================================================== */
-
-function broadcastState(){
-
-    const message={
+    const data={
 
         type:"state",
 
@@ -2224,13 +2560,13 @@ function broadcastState(){
     };
 
 
-    connections.forEach(c=>{
+    guestConnections.forEach(conn=>{
 
-        if(c.open){
+        if(conn.open){
 
             try{
 
-                c.send(message);
+                conn.send(data);
 
             }catch(e){}
 
@@ -2241,9 +2577,523 @@ function broadcastState(){
 }
 
 
-/* =====================================================
+/* ======================================================
+   TERMINAR ONLINE
+====================================================== */
+
+function finishOnline(winner){
+
+    gameRunning=false;
+
+
+    guestConnections.forEach(conn=>{
+
+        if(conn.open){
+
+            conn.send({
+
+                type:"winner",
+
+                winner:winner,
+
+                players:players
+
+            });
+
+        }
+
+    });
+
+
+    showResult(
+        winner
+    );
+
+}
+
+
+/* ======================================================
+   RESULTADO
+====================================================== */
+
+function showResult(winner){
+
+    gameRunning=false;
+
+
+    document
+    .getElementById(
+        "winnerText"
+    )
+    .textContent =
+    "🏆 "+winner+" ganó";
+
+
+    document
+    .getElementById(
+        "resultOverlay"
+    )
+    .style.display =
+    "flex";
+
+
+    /*
+      Botones diferentes para
+      anfitrión e invitado.
+    */
+
+    document
+    .getElementById(
+        "hostAgainButton"
+    )
+    .style.display =
+    isHost
+    ? "block"
+    : "none";
+
+
+    document
+    .getElementById(
+        "guestAgainButton"
+    )
+    .style.display =
+    isHost
+    ? "none"
+    : "block";
+
+}
+
+
+/* ======================================================
+   ANFITRIÓN VOLVER A JUGAR
+====================================================== */
+
+function hostBackToLobby(){
+
+    if(!isHost)return;
+
+
+    document
+    .getElementById(
+        "resultOverlay"
+    )
+    .style.display =
+    "none";
+
+
+    /*
+      Reiniciamos los jugadores
+      pero NO cerramos las conexiones.
+    */
+
+    players.forEach(p=>{
+
+        p.hp=100;
+
+        p.alive=true;
+
+        p.vx=0;
+
+        p.vy=0;
+
+        p.attack=false;
+
+        p.input={
+            x:0,
+            y:0,
+            attack:false
+        };
+
+    });
+
+
+    broadcastLobby();
+
+
+    guestConnections.forEach(conn=>{
+
+        if(conn.open){
+
+            conn.send({
+
+                type:"backLobby",
+
+                players:
+                    getLobbyData()
+
+            });
+
+        }
+
+    });
+
+
+    updateLobby();
+
+
+    showScreen(
+        "lobbyScreen"
+    );
+
+}
+
+
+/* ======================================================
+   INVITADO VOLVER
+====================================================== */
+
+function guestBackToLobby(){
+
+    document
+    .getElementById(
+        "resultOverlay"
+    )
+    .style.display =
+    "none";
+
+
+    if(
+        hostConnection &&
+        hostConnection.open
+    ){
+
+        hostConnection.send({
+
+            type:"guestReady"
+
+        });
+
+    }
+
+
+    document
+    .getElementById(
+        "lobbyStatus"
+    )
+    .textContent =
+    "👑 Esperando al anfitrión...";
+
+
+    showScreen(
+        "lobbyScreen"
+    );
+
+}
+
+
+/* ======================================================
+   SALIR DESDE RESULTADO
+====================================================== */
+
+function leaveFromResult(){
+
+    document
+    .getElementById(
+        "resultOverlay"
+    )
+    .style.display =
+    "none";
+
+
+    leaveRoom();
+
+}
+
+
+/* ======================================================
+   SALIR DE SALA
+====================================================== */
+
+function leaveRoom(){
+
+    cleanupNetwork();
+
+
+    document
+    .getElementById(
+        "resultOverlay"
+    )
+    .style.display =
+    "none";
+
+
+    document
+    .getElementById(
+        "controls"
+    )
+    .style.display =
+    "none";
+
+
+    showScreen(
+        "onlineScreen"
+    );
+
+}
+
+
+/* ======================================================
+   PAUSA
+====================================================== */
+
+function togglePause(){
+
+    if(!gameRunning)return;
+
+
+    /*
+      En online solamente
+      el anfitrión puede pausar.
+    */
+
+    if(
+        gameMode==="online" &&
+        !isHost
+    ){
+
+        return;
+
+    }
+
+
+    paused =
+        !paused;
+
+
+    document
+    .getElementById(
+        "pauseOverlay"
+    )
+    .style.display =
+    paused
+    ? "flex"
+    : "none";
+
+
+    /*
+      Avisamos a los celulares.
+    */
+
+    if(
+        gameMode==="online" &&
+        isHost
+    ){
+
+        guestConnections.forEach(conn=>{
+
+            if(conn.open){
+
+                conn.send({
+
+                    type:"pause",
+
+                    paused:paused
+
+                });
+
+            }
+
+        });
+
+    }
+
+}
+
+
+/* ======================================================
+   TECLADO
+====================================================== */
+
+window.addEventListener(
+    "keydown",
+    e=>{
+
+        keys[
+            e.key.toLowerCase()
+        ]=true;
+
+
+        if(e.key===" "){
+
+            e.preventDefault();
+
+            attackRequest=true;
+
+        }
+
+    }
+);
+
+
+window.addEventListener(
+    "keyup",
+    e=>{
+
+        keys[
+            e.key.toLowerCase()
+        ]=false;
+
+    }
+);
+
+
+/* ======================================================
+   JOYSTICK
+====================================================== */
+
+const joystick =
+    document.getElementById(
+        "joystick"
+    );
+
+const knob =
+    document.getElementById(
+        "knob"
+    );
+
+
+let joystickActive=false;
+
+
+function moveJoystick(e){
+
+    if(!joystickActive)return;
+
+
+    e.preventDefault();
+
+
+    const touch =
+        e.touches[0];
+
+
+    const rect =
+        joystick.getBoundingClientRect();
+
+
+    const centerX =
+        rect.left+
+        rect.width/2;
+
+
+    const centerY =
+        rect.top+
+        rect.height/2;
+
+
+    let dx =
+        touch.clientX-
+        centerX;
+
+
+    let dy =
+        touch.clientY-
+        centerY;
+
+
+    const max=42;
+
+
+    const len =
+        Math.hypot(
+            dx,dy
+        );
+
+
+    if(len>max){
+
+        dx =
+            dx/len*max;
+
+        dy =
+            dy/len*max;
+
+    }
+
+
+    knob.style.left =
+        (32+dx)+"px";
+
+
+    knob.style.top =
+        (32+dy)+"px";
+
+
+    moveX =
+        dx/max;
+
+    moveY =
+        dy/max;
+
+}
+
+
+joystick.addEventListener(
+    "touchstart",
+    e=>{
+
+        joystickActive=true;
+
+        moveJoystick(e);
+
+    },
+    {passive:false}
+);
+
+
+joystick.addEventListener(
+    "touchmove",
+    e=>{
+
+        moveJoystick(e);
+
+    },
+    {passive:false}
+);
+
+
+joystick.addEventListener(
+    "touchend",
+    e=>{
+
+        joystickActive=false;
+
+        moveX=0;
+
+        moveY=0;
+
+
+        knob.style.left="32px";
+
+        knob.style.top="32px";
+
+    },
+    {passive:false}
+);
+
+
+/* ======================================================
+   BOTÓN ATAQUE
+====================================================== */
+
+document
+.getElementById("attackButton")
+.addEventListener(
+    "touchstart",
+    e=>{
+
+        e.preventDefault();
+
+        attackRequest=true;
+
+    },
+    {passive:false}
+);
+
+
+/* ======================================================
    DIBUJAR
-===================================================== */
+====================================================== */
 
 function draw(){
 
@@ -2257,7 +3107,8 @@ function draw(){
 
     /* PISO */
 
-    ctx.fillStyle="#69c856";
+    ctx.fillStyle =
+        "#69c858";
 
     ctx.fillRect(
         0,
@@ -2269,7 +3120,7 @@ function draw(){
 
     /* CUADRÍCULA */
 
-    ctx.strokeStyle=
+    ctx.strokeStyle =
         "rgba(255,255,255,.10)";
 
     ctx.lineWidth=2;
@@ -2284,6 +3135,7 @@ function draw(){
         ctx.beginPath();
 
         ctx.moveTo(x,0);
+
         ctx.lineTo(x,H);
 
         ctx.stroke();
@@ -2300,6 +3152,7 @@ function draw(){
         ctx.beginPath();
 
         ctx.moveTo(0,y);
+
         ctx.lineTo(W,y);
 
         ctx.stroke();
@@ -2309,7 +3162,7 @@ function draw(){
 
     /* ARENA */
 
-    const radius=
+    const radius =
         Math.min(W,H)*.42;
 
 
@@ -2323,11 +3176,15 @@ function draw(){
         Math.PI*2
     );
 
-    ctx.fillStyle="#8ddd6b";
+
+    ctx.fillStyle =
+        "#91df6d";
 
     ctx.fill();
 
-    ctx.strokeStyle="white";
+
+    ctx.strokeStyle =
+        "white";
 
     ctx.lineWidth=7;
 
@@ -2349,13 +3206,14 @@ function draw(){
 }
 
 
-/* =====================================================
+/* ======================================================
    TROMPO
-===================================================== */
+====================================================== */
 
 function drawTrompo(p){
 
     ctx.save();
+
 
     ctx.translate(
         p.x,
@@ -2363,12 +3221,10 @@ function drawTrompo(p){
     );
 
 
-    const rotation=
+    ctx.rotate(
         performance.now()/75+
-        p.id;
-
-
-    ctx.rotate(rotation);
+        p.id
+    );
 
 
     /* SOMBRA */
@@ -2377,7 +3233,7 @@ function drawTrompo(p){
 
     ctx.ellipse(
         0,
-        8,
+        9,
         31,
         13,
         0,
@@ -2385,41 +3241,59 @@ function drawTrompo(p){
         Math.PI*2
     );
 
-    ctx.fillStyle=
+    ctx.fillStyle =
         "rgba(0,0,0,.18)";
 
     ctx.fill();
 
 
-    /* TROMPO */
+    /* CUERPO */
 
     ctx.beginPath();
 
-    ctx.moveTo(0,-34);
+    ctx.moveTo(
+        0,-34
+    );
 
-    ctx.lineTo(25,-11);
+    ctx.lineTo(
+        25,-11
+    );
 
-    ctx.lineTo(30,10);
+    ctx.lineTo(
+        30,10
+    );
 
-    ctx.lineTo(15,29);
+    ctx.lineTo(
+        15,29
+    );
 
-    ctx.lineTo(0,34);
+    ctx.lineTo(
+        0,34
+    );
 
-    ctx.lineTo(-15,29);
+    ctx.lineTo(
+        -15,29
+    );
 
-    ctx.lineTo(-30,10);
+    ctx.lineTo(
+        -30,10
+    );
 
-    ctx.lineTo(-25,-11);
+    ctx.lineTo(
+        -25,-11
+    );
 
     ctx.closePath();
 
 
-    ctx.fillStyle=p.color;
+    ctx.fillStyle =
+        p.color;
 
     ctx.fill();
 
 
-    ctx.strokeStyle="white";
+    ctx.strokeStyle =
+        "white";
 
     ctx.lineWidth=3;
 
@@ -2438,7 +3312,8 @@ function drawTrompo(p){
         Math.PI*2
     );
 
-    ctx.fillStyle="white";
+    ctx.fillStyle =
+        "white";
 
     ctx.fill();
 
@@ -2455,12 +3330,13 @@ function drawTrompo(p){
         ctx.arc(
             p.x,
             p.y,
-            47,
+            48,
             0,
             Math.PI*2
         );
 
-        ctx.strokeStyle="#fff";
+        ctx.strokeStyle =
+            "white";
 
         ctx.lineWidth=5;
 
@@ -2471,11 +3347,15 @@ function drawTrompo(p){
 
     /* NOMBRE */
 
-    ctx.fillStyle="white";
+    ctx.fillStyle =
+        "white";
 
-    ctx.font="bold 13px Arial";
+    ctx.font =
+        "bold 13px Arial";
 
-    ctx.textAlign="center";
+    ctx.textAlign =
+        "center";
+
 
     ctx.fillText(
         p.name,
@@ -2486,13 +3366,13 @@ function drawTrompo(p){
 }
 
 
-/* =====================================================
-   MARCADORES
-===================================================== */
+/* ======================================================
+   MARCADOR
+====================================================== */
 
 function updateScore(){
 
-    const board=
+    const board =
         document.getElementById(
             "scoreBoard"
         );
@@ -2506,13 +3386,17 @@ function updateScore(){
         if(!p.alive)return;
 
 
-        const div=
-            document.createElement("div");
+        const div =
+            document.createElement(
+                "div"
+            );
 
-        div.className="score";
+
+        div.className =
+            "score";
 
 
-        div.innerHTML=`
+        div.innerHTML = `
 
             <div class="scoreName">
                 ${p.name}
@@ -2537,300 +3421,38 @@ function updateScore(){
 }
 
 
-/* =====================================================
-   TECLADO
-===================================================== */
-
-addEventListener(
-    "keydown",
-    e=>{
-
-        keys[
-            e.key.toLowerCase()
-        ]=true;
-
-
-        if(e.key===" "){
-
-            e.preventDefault();
-
-            attackPressed=true;
-
-        }
-
-    }
-);
-
-
-addEventListener(
-    "keyup",
-    e=>{
-
-        keys[
-            e.key.toLowerCase()
-        ]=false;
-
-    }
-);
-
-
-/* =====================================================
-   JOYSTICK CELULAR
-===================================================== */
-
-const joystick=
-    document.getElementById(
-        "joystick"
-    );
-
-const knob=
-    document.getElementById(
-        "knob"
-    );
-
-
-let joystickActive=false;
-
-
-function joystickMove(e){
-
-    if(!joystickActive)return;
-
-    const touch=
-        e.touches[0];
-
-
-    const rect=
-        joystick.getBoundingClientRect();
-
-
-    const centerX=
-        rect.left+
-        rect.width/2;
-
-    const centerY=
-        rect.top+
-        rect.height/2;
-
-
-    let dx=
-        touch.clientX-
-        centerX;
-
-    let dy=
-        touch.clientY-
-        centerY;
-
-
-    const max=42;
-
-
-    const length=
-        Math.hypot(dx,dy);
-
-
-    if(length>max){
-
-        dx=
-            dx/length*max;
-
-        dy=
-            dy/length*max;
-
-    }
-
-
-    knob.style.left=
-        (32+dx)+"px";
-
-    knob.style.top=
-        (32+dy)+"px";
-
-
-    moveX=dx/max;
-    moveY=dy/max;
-
-}
-
-
-joystick.addEventListener(
-    "touchstart",
-    e=>{
-
-        e.preventDefault();
-
-        joystickActive=true;
-
-        joystickMove(e);
-
-    },
-    {passive:false}
-);
-
-
-joystick.addEventListener(
-    "touchmove",
-    e=>{
-
-        e.preventDefault();
-
-        joystickMove(e);
-
-    },
-    {passive:false}
-);
-
-
-joystick.addEventListener(
-    "touchend",
-    e=>{
-
-        e.preventDefault();
-
-        joystickActive=false;
-
-        moveX=0;
-        moveY=0;
-
-        knob.style.left="32px";
-        knob.style.top="32px";
-
-    },
-    {passive:false}
-);
-
-
-/* =====================================================
-   BOTÓN ATAQUE CELULAR
-===================================================== */
-
-document.getElementById(
-    "attackButton"
-).addEventListener(
-    "touchstart",
-    e=>{
-
-        e.preventDefault();
-
-        attackPressed=true;
-
-    },
-    {passive:false}
-);
-
-
-/* =====================================================
-   PAUSA
-===================================================== */
-
-function togglePause(){
-
-    if(
-        gameMode==="online" &&
-        !isHost
-    ){
-        return;
-    }
-
-
-    if(!gameRunning)return;
-
-
-    paused=!paused;
-
-
-    document.getElementById(
-        "pauseScreen"
-    ).style.display=
-        paused
-        ? "flex"
-        : "none";
-
-}
-
-
-/* =====================================================
-   GANADOR
-===================================================== */
-
-function showWinner(name){
-
-    gameRunning=false;
-
-    document.getElementById(
-        "mobileControls"
-    ).style.display="none";
-
-
-    document.getElementById(
-        "winnerText"
-    ).textContent=
-        "🎉 "+name+" ganó la batalla";
-
-
-    document.getElementById(
-        "winnerScreen"
-    ).style.display="flex";
-
-}
-
-
-/* =====================================================
-   SALIR
-===================================================== */
-
-function leaveRoom(){
-
-    cleanupNetwork();
-
-    show("onlineScreen");
-
-}
-
+/* ======================================================
+   VOLVER AL MENÚ
+====================================================== */
 
 function backMenu(){
 
     cleanupNetwork();
 
-    show("menuScreen");
+    showScreen(
+        "menuScreen"
+    );
 
 }
 
 
-function returnMenu(){
-
-    gameRunning=false;
-
-    paused=false;
-
-    document.getElementById(
-        "pauseScreen"
-    ).style.display="none";
-
-    document.getElementById(
-        "winnerScreen"
-    ).style.display="none";
-
-    cleanupNetwork();
-
-    show("menuScreen");
-
-}
-
-
-/* =====================================================
-   LIMPIAR CONEXIONES
-===================================================== */
+/* ======================================================
+   LIMPIAR RED
+====================================================== */
 
 function cleanupNetwork(){
 
     gameRunning=false;
 
+    paused=false;
+
 
     if(hostConnection){
 
         try{
+
             hostConnection.close();
+
         }catch(e){}
 
         hostConnection=null;
@@ -2838,22 +3460,26 @@ function cleanupNetwork(){
     }
 
 
-    connections.forEach(c=>{
+    guestConnections.forEach(conn=>{
 
         try{
-            c.close();
+
+            conn.close();
+
         }catch(e){}
 
     });
 
 
-    connections=[];
+    guestConnections=[];
 
 
     if(peer){
 
         try{
+
             peer.destroy();
+
         }catch(e){}
 
         peer=null;
@@ -2868,11 +3494,43 @@ function cleanupNetwork(){
 }
 
 
-/* =====================================================
-   INICIO
-===================================================== */
+/* ======================================================
+   MENÚ
+====================================================== */
 
-show("menuScreen");
+function returnMenu(){
+
+    cleanupNetwork();
+
+    document
+    .getElementById(
+        "pauseOverlay"
+    )
+    .style.display =
+    "none";
+
+
+    document
+    .getElementById(
+        "resultOverlay"
+    )
+    .style.display =
+    "none";
+
+
+    document
+    .getElementById(
+        "controls"
+    )
+    .style.display =
+    "none";
+
+
+    showScreen(
+        "menuScreen"
+    );
+
+}
 
 </script>
 
