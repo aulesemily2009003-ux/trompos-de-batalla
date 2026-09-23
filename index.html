@@ -2,290 +2,179 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
 <title>GUERRA BEYBLADE</title>
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 
 <style>
-*{box-sizing:border-box}
-html,body{
-margin:0;
-width:100%;
-height:100%;
-overflow:hidden;
-font-family:Arial,sans-serif;
-color:white;
-background:#030511;
-touch-action:none
-}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#070817;color:white}
+body{touch-action:none}
+
 .screen{
-position:absolute;
-inset:0;
-display:none;
-align-items:center;
-justify-content:center
+ position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+ background:
+ radial-gradient(circle at 50% 35%,#25276c 0,#10133b 35%,#060713 75%);
 }
 .screen.active{display:flex}
 
-#menu{
-background:
-radial-gradient(circle at 50% 35%,#314ee8 0%,#111b68 28%,#070a2c 58%,#02030d 100%);
-overflow:hidden
+.screen:before{
+ content:"";position:absolute;inset:0;pointer-events:none;
+ background-image:
+ radial-gradient(circle,rgba(255,255,255,.9) 1px,transparent 1px),
+ radial-gradient(circle,rgba(90,200,255,.6) 1px,transparent 1px);
+ background-size:90px 90px,150px 150px;
+ animation:stars 18s linear infinite;
+ opacity:.35;
 }
+@keyframes stars{to{background-position:90px 90px,-150px 150px}}
 
-#menu:before{
-content:"";
-position:absolute;
-inset:-50%;
-background:
-radial-gradient(circle,#fff8 0 1px,transparent 2px) 0 0/90px 90px,
-radial-gradient(circle,#4cefff99 0 1px,transparent 2px) 45px 40px/120px 120px;
-animation:stars 18s linear infinite;
-opacity:.55
-}
-
-@keyframes stars{
-to{transform:translate(90px,90px)}
-}
-
-.panel{
-position:relative;
-z-index:2;
-width:min(94%,570px);
-padding:30px;
-border-radius:30px;
-background:linear-gradient(145deg,#091039ee,#070a25ee);
-border:2px solid #6176ff;
-box-shadow:
-0 0 20px #4861ff88,
-0 0 70px #334eff55,
-inset 0 0 30px #ffffff08;
-text-align:center
+.menuBox,.lobbyBox{
+ position:relative;z-index:2;width:min(92%,520px);padding:30px;
+ border:2px solid #6570ff;border-radius:30px;
+ background:rgba(8,10,35,.88);
+ box-shadow:0 0 35px #4654ff66, inset 0 0 30px #ffffff08;
+ text-align:center;
 }
 
 .title{
-font-size:clamp(45px,11vw,82px);
-font-weight:1000;
-line-height:.82;
-letter-spacing:2px;
-background:linear-gradient(180deg,#fff,#5ff5ff 42%,#6b72ff 80%,#d03cff);
--webkit-background-clip:text;
-color:transparent;
-filter:drop-shadow(0 0 12px #00eaff);
-margin-bottom:18px
+ font-size:clamp(42px,9vw,75px);
+ font-weight:1000;
+ letter-spacing:3px;
+ color:#fff;
+ text-shadow:0 0 8px #fff,0 0 25px #6c63ff,0 0 50px #ff3de8;
 }
-
-.subtitle{
-font-size:19px;
-font-weight:bold;
-color:#cdd5ff;
-letter-spacing:3px;
-margin-bottom:25px
-}
-
-button{
-border:0;
-border-radius:16px;
-padding:15px 22px;
-margin:6px;
-font-size:17px;
-font-weight:900;
-color:white;
-cursor:pointer;
-transition:.15s;
-box-shadow:0 7px 18px #0008
-}
-
-button:hover{transform:translateY(-2px);filter:brightness(1.12)}
-button:active{transform:scale(.96)}
-
-.blue{background:linear-gradient(135deg,#2879ff,#20dfff)}
-.green{background:linear-gradient(135deg,#08c98a,#43ef70)}
-.red{background:linear-gradient(135deg,#ff315e,#ff7934)}
-.purple{background:linear-gradient(135deg,#814dff,#d23cff)}
-.gray{background:linear-gradient(135deg,#303958,#4d587f)}
+.sub{color:#b9c7ff;margin:10px 0 25px;font-size:16px}
 
 input{
-width:100%;
-padding:15px;
-margin:7px 0;
-border-radius:14px;
-border:2px solid #4359af;
-background:#101633;
-color:white;
-font-size:18px;
-text-align:center;
-outline:none
+ width:100%;padding:16px;margin:7px 0;border:2px solid #5663ff;
+ border-radius:15px;background:#090c2c;color:white;font-size:20px;
+ text-align:center;outline:none;
 }
+input:focus{box-shadow:0 0 18px #6570ff}
 
-input:focus{
-border-color:#45e8ff;
-box-shadow:0 0 15px #35dfff55
+button{
+ width:100%;padding:16px;margin:7px 0;border:0;border-radius:16px;
+ font-size:18px;font-weight:900;color:white;cursor:pointer;
+ background:linear-gradient(135deg,#7357ff,#e83cff);
+ box-shadow:0 7px 20px #5d3cff55;
+ transition:.15s;
 }
+button:active{transform:scale(.97)}
+button:hover{filter:brightness(1.15)}
 
-.status{
-min-height:25px;
-color:#7feeff;
-font-weight:bold;
-margin:12px
-}
+.btnBlue{background:linear-gradient(135deg,#287bff,#20d9ff)}
+.btnGreen{background:linear-gradient(135deg,#00bd77,#00e6a1)}
+.btnRed{background:linear-gradient(135deg,#ff315d,#ff6b36)}
 
-.room{
-padding:18px;
-border-radius:20px;
-background:linear-gradient(145deg,#101945,#090e2b);
-border:2px solid #566dff;
-margin:15px 0;
-box-shadow:inset 0 0 20px #4c5dff18
-}
+.small{font-size:14px;color:#aeb7dc;margin-top:10px}
+.error{color:#ff738d;min-height:24px;margin-top:8px;font-weight:bold}
+.success{color:#54ffc1;min-height:24px;margin-top:8px;font-weight:bold}
 
-.code{
-font-size:48px;
-font-weight:1000;
-letter-spacing:10px;
-color:#70efff;
-text-shadow:0 0 16px #00dfff
+#lobbyCode{
+ font-size:42px;font-weight:1000;letter-spacing:10px;
+ color:#62eaff;text-shadow:0 0 20px #00d9ff;
+ margin:12px 0;
 }
 
 .players{
-background:#080e2b;
-border-radius:18px;
-padding:15px;
-margin:15px 0;
-text-align:left;
-border:1px solid #4255a5
+ display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:18px 0;
 }
-
-.player{
-display:flex;
-justify-content:space-between;
-padding:12px;
-margin:7px 0;
-border-radius:12px;
-background:linear-gradient(90deg,#172152,#10183c);
-border:1px solid #34478e
+.playerSlot{
+ padding:13px;border-radius:14px;background:#151942;
+ border:1px solid #414b91;color:#dbe2ff;font-weight:bold;
 }
+.playerSlot.ready{border-color:#20e6a1;box-shadow:0 0 12px #20e6a144}
 
 #game{
-background:#02040b
+ background:#050611;
 }
 
-#canvas{
-position:absolute;
-inset:0;
-width:100%;
-height:100%
+canvas{
+ position:absolute;inset:0;width:100%;height:100%;
 }
 
 .hud{
-position:absolute;
-z-index:5;
-top:12px;
-left:50%;
-transform:translateX(-50%);
-width:min(95%,760px);
-display:flex;
-justify-content:space-between;
-pointer-events:none
+ position:absolute;z-index:5;top:10px;left:50%;
+ transform:translateX(-50%);
+ display:flex;gap:8px;pointer-events:none;
 }
-
-.hud div{
-background:linear-gradient(145deg,#090f2ee8,#111941e8);
-border:2px solid #526aff;
-border-radius:15px;
-padding:9px 15px;
-font-weight:900;
-box-shadow:0 0 18px #4058ff55
+.hudBox{
+ min-width:105px;padding:8px 12px;border-radius:13px;
+ background:#090c25dd;border:1px solid #5964c9;
+ text-align:center;font-size:12px;
+ box-shadow:0 0 15px #3344aa55;
 }
+.hudBox b{font-size:18px;color:#fff}
 
-.pause{
-position:absolute;
-right:12px;
-top:12px;
-z-index:10;
-font-size:14px
+#message{
+ position:absolute;z-index:8;top:50%;left:50%;
+ transform:translate(-50%,-50%);
+ font-size:clamp(45px,12vw,110px);
+ font-weight:1000;color:white;
+ text-shadow:0 0 15px #fff,0 0 40px #8d55ff;
+ pointer-events:none;
+ opacity:0;
+}
+#message.show{animation:msg 1s ease}
+@keyframes msg{
+ 0%{opacity:0;transform:translate(-50%,-50%) scale(.5)}
+ 25%,75%{opacity:1;transform:translate(-50%,-50%) scale(1)}
+ 100%{opacity:0;transform:translate(-50%,-50%) scale(1.2)}
 }
 
 #touch{
-position:absolute;
-inset:0;
-z-index:8;
-pointer-events:none
+ position:absolute;z-index:10;inset:0;pointer-events:none;
+}
+#joy{
+ position:absolute;left:25px;bottom:25px;width:135px;height:135px;
+ border-radius:50%;background:#ffffff12;border:2px solid #ffffff44;
+ box-shadow:0 0 25px #5264ff66;pointer-events:auto;
+}
+#stick{
+ position:absolute;width:58px;height:58px;left:37px;top:37px;
+ border-radius:50%;background:linear-gradient(135deg,#6d65ff,#e33dff);
+ box-shadow:0 0 20px #9a5cff;
+}
+#attack{
+ position:absolute;right:28px;bottom:42px;width:105px;height:105px;
+ border-radius:50%;border:3px solid #fff;background:linear-gradient(135deg,#ff3068,#ff8b38);
+ box-shadow:0 0 30px #ff416c;
+ font-size:15px;pointer-events:auto;
 }
 
-.joy{
-position:absolute;
-left:24px;
-bottom:25px;
-width:130px;
-height:130px;
-border-radius:50%;
-background:radial-gradient(circle,#6174ff44,#18204d33);
-border:2px solid #ffffff40;
-box-shadow:0 0 30px #425dff44;
-pointer-events:auto
+#gameButtons{
+ position:absolute;z-index:10;right:15px;top:15px;display:flex;gap:7px;
+}
+#gameButtons button{
+ width:auto;padding:9px 13px;margin:0;font-size:13px;
 }
 
-.stick{
-position:absolute;
-width:54px;
-height:54px;
-left:36px;
-top:36px;
-border-radius:50%;
-background:linear-gradient(145deg,#7c8cff,#3a51df);
-box-shadow:0 0 25px #536bff
+#resultBox{
+ position:absolute;z-index:20;display:none;
+ width:min(90%,440px);padding:28px;border-radius:25px;
+ background:#080a25ee;border:2px solid #6874ff;
+ box-shadow:0 0 40px #5464ff77;text-align:center;
 }
+#resultBox h2{font-size:38px;margin-bottom:12px}
+#resultText{color:#cbd3ff;margin-bottom:15px}
 
-.attack{
-position:absolute;
-right:25px;
-bottom:30px;
-width:110px;
-height:110px;
-border-radius:50%;
-display:flex;
-align-items:center;
-justify-content:center;
-font-weight:1000;
-font-size:15px;
-background:radial-gradient(circle at 35% 30%,#ffbb40,#ff4d45 55%,#c81562);
-border:3px solid #ffb55c;
-box-shadow:0 0 30px #ff4c4c99;
-pointer-events:auto
+#connecting{
+ position:fixed;z-index:100;inset:0;display:none;
+ align-items:center;justify-content:center;
+ background:#050614eF;text-align:center;
 }
-
-.overlay{
-display:none;
-position:absolute;
-inset:0;
-z-index:30;
-background:#020414dd;
-align-items:center;
-justify-content:center;
-backdrop-filter:blur(5px)
+.loader{
+ width:65px;height:65px;border-radius:50%;
+ border:6px solid #31375f;border-top-color:#65e8ff;
+ animation:spin .8s linear infinite;margin:auto auto 18px;
 }
+@keyframes spin{to{transform:rotate(360deg)}}
 
-.overlay.show{display:flex}
-
-.result{
-width:min(92%,460px);
-padding:30px;
-border-radius:27px;
-background:linear-gradient(145deg,#0c1541,#070b28);
-border:2px solid #687aff;
-box-shadow:0 0 45px #465dff88;
-text-align:center
-}
-
-.big{
-font-size:34px;
-font-weight:1000;
-margin-bottom:10px
-}
-
-@media(min-width:800px){
-#touch{display:none}
+@media(max-width:600px){
+ .menuBox,.lobbyBox{padding:22px}
+ .players{grid-template-columns:1fr}
+ .title{font-size:43px}
 }
 </style>
 </head>
@@ -293,2353 +182,1256 @@ margin-bottom:10px
 <body>
 
 <div id="menu" class="screen active">
-<div class="panel">
+ <div class="menuBox">
+  <div class="title">GUERRA<br>BEYBLADE</div>
+  <div class="sub">⚡ Batallas de trompos • Hasta 4 jugadores ⚡</div>
 
-<div class="title">
-GUERRA<br>BEYBLADE
-</div>
+  <input id="nameInput" maxlength="12" placeholder="PON TU NOMBRE">
 
-<div class="subtitle">⚡ BATALLA DE TROMPOS ⚡</div>
+  <button class="btnGreen" onclick="solo()">⚔️ JUGAR SOLO</button>
+  <button class="btnBlue" onclick="showOnline()">🌐 JUGAR ONLINE</button>
 
-<button class="blue" onclick="solo()">⚔️ JUGAR SOLO</button>
-<button class="green" onclick="onlineMenu()">🌐 JUGAR ONLINE</button>
-<button class="purple" onclick="instructions()">❓ ¿CÓMO JUGAR?</button>
-
-</div>
+  <div class="small">PC 💻 y celular 📱</div>
+ </div>
 </div>
 
 <div id="online" class="screen">
-<div class="panel">
+ <div class="menuBox">
+  <h1>🌐 MODO ONLINE</h1>
+  <div class="sub">Crea una sala o entra usando un código de 4 números.</div>
 
-<h2>🌐 GUERRA ONLINE</h2>
+  <input id="hostName" maxlength="12" placeholder="TU NOMBRE">
 
-<input id="name" maxlength="14" placeholder="✏️ Escribe tu nombre">
+  <button class="btnGreen" onclick="createRoom()">➕ CREAR SALA</button>
 
-<button class="green" onclick="createRoom()">🏠 CREAR SALA</button>
+  <input id="roomCodeInput" maxlength="4" inputmode="numeric"
+         placeholder="CÓDIGO DE 4 NÚMEROS"
+         oninput="this.value=this.value.replace(/[^0-9]/g,'').slice(0,4)">
 
-<div style="color:#aab8ea;margin:10px">O entra a una sala</div>
+  <input id="guestName" maxlength="12" placeholder="TU NOMBRE">
 
-<input id="codeInput"
-inputmode="numeric"
-maxlength="4"
-placeholder="🔢 Código de 4 números"
-oninput="numbersOnly(this)">
+  <button class="btnBlue" onclick="joinRoom()">🚀 ENTRAR A SALA</button>
+  <button class="btnRed" onclick="backMenu()">⬅ VOLVER</button>
 
-<button class="blue" onclick="joinRoom()">🚀 ENTRAR A SALA</button>
-
-<div id="onlineStatus" class="status"></div>
-
-<button class="gray" onclick="goMenu()">↩️ VOLVER</button>
-
-</div>
+  <div id="onlineError" class="error"></div>
+ </div>
 </div>
 
 <div id="lobby" class="screen">
-<div class="panel">
+ <div class="lobbyBox">
+  <h1>⚡ SALA DE BATALLA ⚡</h1>
+  <div class="small">CÓDIGO DE LA SALA</div>
+  <div id="lobbyCode">----</div>
 
-<h2>⚔️ SALA DE BATALLA</h2>
+  <div id="lobbyStatus" class="success">Esperando jugadores...</div>
 
-<div class="room">
-<div>CÓDIGO DE LA SALA</div>
-<div id="roomCode" class="code">----</div>
-</div>
+  <div class="players" id="playersList"></div>
 
-<div id="lobbyStatus" class="status">
-Esperando jugadores...
-</div>
+  <button id="startBtn" class="btnGreen" onclick="startOnline()" style="display:none">
+   🚀 INICIAR PARTIDA
+  </button>
 
-<div class="players">
-<strong>👥 JUGADORES EN LA SALA</strong>
-<div id="playerList"></div>
-</div>
-
-<button id="startButton"
-class="green"
-onclick="startOnline()"
-disabled>
-ESPERANDO JUGADORES...
-</button>
-
-<br>
-
-<button class="red" onclick="leaveRoom()">🚪 SALIR DE LA SALA</button>
-
-</div>
+  <button class="btnRed" onclick="leaveLobby()">⬅ SALIR DE LA SALA</button>
+ </div>
 </div>
 
 <div id="game" class="screen">
+ <canvas id="canvas"></canvas>
 
-<canvas id="canvas"></canvas>
+ <div class="hud">
+  <div class="hudBox">JUGADORES<br><b id="countHud">1</b></div>
+  <div class="hudBox">VIDA<br><b id="lifeHud">100</b></div>
+  <div class="hudBox">SALA<br><b id="roomHud">SOLO</b></div>
+ </div>
 
-<div class="hud">
-<div id="life">❤️ 100</div>
-<div id="alive">⚔️ 0 vivos</div>
+ <div id="gameButtons">
+  <button class="btnRed" onclick="exitGame()">☰ MENÚ</button>
+ </div>
+
+ <div id="message"></div>
+
+ <div id="touch">
+  <div id="joy"><div id="stick"></div></div>
+  <button id="attack">⚡<br>ATAQUE</button>
+ </div>
+
+ <div id="resultBox">
+  <h2 id="resultTitle">🏆 FIN</h2>
+  <div id="resultText"></div>
+  <button class="btnGreen" onclick="playAgain()">🔄 VOLVER A JUGAR</button>
+  <button class="btnRed" onclick="leaveAfterGame()">🚪 SALIR DE LA SALA</button>
+ </div>
 </div>
 
-<button class="pause gray" onclick="pauseGame()">⏸ PAUSA</button>
-
-<div id="touch">
-
-<div id="joy" class="joy">
-<div id="stick" class="stick"></div>
-</div>
-
-<div id="attack" class="attack">
-⚡ ATAQUE
-</div>
-
-</div>
-
-<div id="pauseOverlay" class="overlay">
-<div class="result">
-
-<div class="big">⏸ PAUSA</div>
-
-<button class="green" onclick="pauseGame()">
-▶ CONTINUAR
-</button>
-
-<button class="red" onclick="leaveGame()">
-🚪 SALIR
-</button>
-
-</div>
-</div>
-
-<div id="resultOverlay" class="overlay">
-<div class="result">
-
-<div id="resultTitle" class="big"></div>
-
-<div id="resultInfo"></div>
-
-<br>
-
-<button id="againHost"
-class="green"
-onclick="again()">
-🔄 VOLVER A JUGAR
-</button>
-
-<button id="againGuest"
-class="green"
-onclick="again()"
-style="display:none">
-🔄 VOLVER A LA SALA
-</button>
-
-<br>
-
-<button class="red" onclick="leaveRoom()">
-🚪 SALIR DE LA SALA
-</button>
-
-</div>
-</div>
-
+<div id="connecting">
+ <div>
+  <div class="loader"></div>
+  <h2 id="connectingText">CONECTANDO...</h2>
+  <p class="small">Espera unos segundos</p>
+ </div>
 </div>
 
 <script>
-
 const canvas=document.getElementById("canvas");
 const ctx=canvas.getContext("2d");
 
-let W=innerWidth;
-let H=innerHeight;
-
-let peer=null;
-let hostConn=null;
-let connections=[];
-
-let room="";
-let isHost=false;
-let mode="";
-let myId=0;
-
-let players=[];
-
-let running=false;
-let paused=false;
-let finished=false;
-
-let keys={};
-
-let input={
-x:0,
-y:0,
-attack:false
-};
-
+let W=innerWidth,H=innerHeight,DPR=1;
+let peer=null,conn=null;
+let isHost=false,running=false;
+let roomCode="";
+let myId="";
+let myName="";
+let players={};
 let lastFrame=performance.now();
-let lastState=0;
-let lastInput=0;
+let attackPressed=false;
+let onlineMode=false;
+let roomReady=false;
+let connectionTimeout=null;
+
+const colors=["#ff3d81","#42e8ff","#b15cff","#ffd83d"];
 
 function resize(){
-
-W=innerWidth;
-H=innerHeight;
-
-const d=Math.min(devicePixelRatio||1,2);
-
-canvas.width=W*d;
-canvas.height=H*d;
-
-canvas.style.width=W+"px";
-canvas.style.height=H+"px";
-
-ctx.setTransform(d,0,0,d,0,0);
+ DPR=Math.min(devicePixelRatio||1,2);
+ W=innerWidth;H=innerHeight;
+ canvas.width=W*DPR;
+ canvas.height=H*DPR;
+ canvas.style.width=W+"px";
+ canvas.style.height=H+"px";
+ ctx.setTransform(DPR,0,0,DPR,0,0);
 }
-
 addEventListener("resize",resize);
 resize();
 
-function screen(id){
-
-document.querySelectorAll(".screen")
-.forEach(x=>x.classList.remove("active"));
-
-document.getElementById(id).classList.add("active");
-
+function show(id){
+ document.querySelectorAll(".screen").forEach(x=>x.classList.remove("active"));
+ document.getElementById(id).classList.add("active");
 }
 
-function numbersOnly(x){
-
-x.value=x.value
-.replace(/[^0-9]/g,"")
-.slice(0,4);
-
+function backMenu(){
+ closeConnection();
+ show("menu");
 }
 
-function randomCode(){
-
-return String(
-Math.floor(1000+Math.random()*9000)
-);
-
+function showOnline(){
+ show("online");
+ document.getElementById("onlineError").textContent="";
+ document.getElementById("hostName").value=document.getElementById("nameInput").value;
 }
 
-function color(){
-
-return [
-"#25dfff",
-"#ff3b75",
-"#9b5cff",
-"#3bea72"
-][Math.floor(Math.random()*4)];
-
+function setConnecting(v,text="CONECTANDO..."){
+ document.getElementById("connecting").style.display=v?"flex":"none";
+ document.getElementById("connectingText").textContent=text;
 }
 
-function makePlayer(id,name,cpu=false){
-
-return{
-
-id:id,
-name:name,
-
-x:W*.5,
-y:H*.5,
-
-vx:0,
-vy:0,
-
-hp:100,
-maxHp:100,
-
-color:color(),
-
-angle:Math.random()*6.28,
-
-attack:0,
-cool:0,
-
-alive:true,
-
-cpu:cpu,
-
-ix:0,
-iy:0,
-ia:false,
-
-last:Date.now()
-
-};
-
+function error(msg){
+ document.getElementById("onlineError").textContent=msg;
+ setConnecting(false);
 }
 
-function onlineMenu(){
-
-cleanup();
-
-document.getElementById("onlineStatus").textContent="";
-
-screen("online");
-
+function closeConnection(){
+ clearTimeout(connectionTimeout);
+ if(conn){
+  try{conn.close()}catch(e){}
+  conn=null;
+ }
+ if(peer){
+  try{peer.destroy()}catch(e){}
+  peer=null;
+ }
 }
 
-function goMenu(){
-
-cleanup();
-
-screen("menu");
-
+function cleanName(n){
+ n=(n||"Jugador").trim().slice(0,12);
+ return n||"Jugador";
 }
 
-function instructions(){
-
-alert(
-"⚡ GUERRA BEYBLADE ⚡\n\n"+
-"💻 PC:\n"+
-"WASD o flechas para moverte.\n"+
-"ESPACIO para atacar.\n\n"+
-"📱 CELULAR:\n"+
-"Usa el joystick para moverte.\n"+
-"Pulsa ATAQUE para atacar.\n\n"+
-"🌐 ONLINE:\n"+
-"Máximo 4 jugadores.\n\n"+
-"Si un celular se desconecta,\n"+
-"su Beyblade continúa como CPU."
-);
-
+function makeRoomCode(){
+ return String(Math.floor(1000+Math.random()*9000));
 }
 
 function solo(){
-
-cleanup();
-
-mode="solo";
-isHost=true;
-myId=1;
-
-players=[
-makePlayer(1,"TÚ"),
-makePlayer(2,"CPU 1",true),
-makePlayer(3,"CPU 2",true),
-makePlayer(4,"CPU 3",true)
-];
-
-placePlayers();
-
-beginGame();
-
+ myName=cleanName(document.getElementById("nameInput").value);
+ onlineMode=false;
+ isHost=false;
+ roomCode="SOLO";
+ createSoloPlayers();
+ show("game");
+ startGame();
 }
 
-function placePlayers(){
+function createSoloPlayers(){
+ players={};
 
-const pos=[
-[W*.5,H*.5],
-[W*.25,H*.3],
-[W*.75,H*.3],
-[W*.5,H*.75]
-];
+ players.p1={
+  id:"p1",name:myName,x:W*.5,y:H*.5,
+  vx:0,vy:0,hp:100,color:colors[0],
+  human:true,cpu:false,last:Date.now(),angle:0
+ };
 
-players.forEach((p,i)=>{
+ const names=["RIVAL","TORNADO","FURIA"];
 
-p.x=pos[i][0];
-p.y=pos[i][1];
+ for(let i=0;i<3;i++){
+  players["cpu"+i]={
+   id:"cpu"+i,
+   name:names[i],
+   x:W*.2+i*W*.3,
+   y:H*.28+(i%2)*H*.45,
+   vx:0,vy:0,hp:100,
+   color:colors[i+1],
+   human:false,cpu:true,
+   last:Date.now(),angle:Math.random()*6
+  };
+ }
 
-p.vx=0;
-p.vy=0;
-
-p.hp=100;
-p.alive=true;
-
-p.attack=0;
-p.cool=0;
-
-p.ix=0;
-p.iy=0;
-p.ia=false;
-
-p.last=Date.now();
-
-});
-
+ myId="p1";
 }
 
 function createRoom(){
+ myName=cleanName(document.getElementById("hostName").value);
+ document.getElementById("onlineError").textContent="";
+ setConnecting(true,"CREANDO SALA...");
 
-const n=(
-document.getElementById("name").value.trim()
-||"Jugador 1"
-).slice(0,14);
+ closeConnection();
 
-cleanup();
+ isHost=true;
+ onlineMode=true;
+ roomReady=false;
 
-mode="online";
-isHost=true;
+ const code=makeRoomCode();
+ roomCode=code;
+ const peerId="gb"+code;
 
-room=randomCode();
+ peer=new Peer(peerId,{
+  debug:0,
+  config:{
+   iceServers:[
+    {urls:"stun:stun.l.google.com:19302"},
+    {urls:"stun:global.stun.twilio.com:3478"}
+   ]
+  }
+ });
 
-document.getElementById("onlineStatus").textContent=
-"Creando sala...";
+ peer.on("open",id=>{
+  clearTimeout(connectionTimeout);
+  myId="host";
+  players={
+   host:{
+    id:"host",name:myName,x:W*.5,y:H*.5,
+    vx:0,vy:0,hp:100,color:colors[0],
+    human:true,cpu:false,last:Date.now(),angle:0
+   }
+  };
 
-createHost(n);
+  setConnecting(false);
+  showLobby();
+ });
 
+ peer.on("connection",c=>{
+  c.on("open",()=>{
+   if(Object.keys(players).length>=4){
+    c.send({type:"full"});
+    setTimeout(()=>c.close(),500);
+    return;
+   }
+
+   const id="p"+Date.now()+Math.random().toString(16).slice(2);
+
+   const p={
+    id,
+    name:cleanName(c.metadata?.name||"Jugador"),
+    x:W*.5+(Math.random()-.5)*180,
+    y:H*.5+(Math.random()-.5)*180,
+    vx:0,vy:0,hp:100,
+    color:colors[Object.keys(players).length%colors.length],
+    human:true,cpu:false,last:Date.now(),angle:Math.random()*6
+   };
+
+   c.playerId=id;
+   c.playerName=p.name;
+   players[id]=p;
+
+   connections.push(c);
+
+   c.send({
+    type:"welcome",
+    id,
+    code:roomCode,
+    players:copyPlayers()
+   });
+
+   broadcastLobby();
+
+   c.on("data",data=>hostReceive(c,data));
+   c.on("close",()=>guestDisconnected(c));
+   c.on("error",()=>guestDisconnected(c));
+  });
+ });
+
+ peer.on("error",e=>{
+  clearTimeout(connectionTimeout);
+  setConnecting(false);
+
+  if(e.type==="unavailable-id"){
+   setTimeout(createRoom,100);
+   return;
+  }
+
+  error("NO SE PUDO CREAR LA SALA. INTENTA OTRA VEZ.");
+ });
+
+ connectionTimeout=setTimeout(()=>{
+  if(!peer||!peer.open){
+   closeConnection();
+   error("EL SERVIDOR TARDÓ DEMASIADO. INTENTA DE NUEVO.");
+  }
+ },15000);
 }
 
-function createHost(n){
-
-const id="bb"+room;
-
-peer=new Peer(id,{
-debug:0,
-config:{
-iceServers:[
-{urls:"stun:stun.l.google.com:19302"},
-{urls:"stun:stun1.l.google.com:19302"}
-]
-}
-});
-
-let retry=false;
-
-peer.on("open",()=>{
-
-players=[
-makePlayer(1,n,false)
-];
-
-myId=1;
-
-document.getElementById("roomCode").textContent=room;
-
-document.getElementById("lobbyStatus").textContent=
-"Sala creada. Comparte el código.";
-
-updateLobby();
-
-screen("lobby");
-
-});
-
-peer.on("connection",conn=>{
-
-if(connections.length>=3){
-
-setTimeout(()=>{
-try{conn.close()}catch(e){}
-},300);
-
-return;
-
-}
-
-connections.push(conn);
-
-conn.on("open",()=>{
-conn.__opened=true;
-});
-
-conn.on("data",data=>{
-hostData(conn,data);
-});
-
-conn.on("close",()=>{
-guestDisconnected(conn);
-});
-
-conn.on("error",()=>{
-guestDisconnected(conn);
-});
-
-});
-
-peer.on("error",e=>{
-
-if(e.type==="unavailable-id"&&!retry){
-
-retry=true;
-
-try{peer.destroy()}catch(x){}
-
-room=randomCode();
-
-setTimeout(()=>{
-createHost(n);
-},300);
-
-return;
-
-}
-
-document.getElementById("onlineStatus").textContent=
-"No se pudo crear la sala.";
-
-});
-
-}
+let connections=[];
 
 function joinRoom(){
+ const code=document.getElementById("roomCodeInput").value.trim();
+ myName=cleanName(document.getElementById("guestName").value||document.getElementById("nameInput").value);
 
-const n=(
-document.getElementById("name").value.trim()
-||"Jugador"
-).slice(0,14);
+ document.getElementById("onlineError").textContent="";
 
-const c=
-document.getElementById("codeInput").value.trim();
+ if(code.length!==4){
+  error("ESCRIBE EXACTAMENTE 4 NÚMEROS.");
+  return;
+ }
 
-if(!/^[0-9]{4}$/.test(c)){
+ setConnecting(true,"ENTRANDO A LA SALA...");
 
-document.getElementById("onlineStatus").textContent=
-"El código debe tener exactamente 4 números.";
+ closeConnection();
 
-return;
+ isHost=false;
+ onlineMode=true;
+ roomCode=code;
+ roomReady=false;
 
+ peer=new Peer(undefined,{
+  debug:0,
+  config:{
+   iceServers:[
+    {urls:"stun:stun.l.google.com:19302"},
+    {urls:"stun:global.stun.twilio.com:3478"}
+   ]
+  }
+ });
+
+ peer.on("open",()=>{
+  const target="gb"+code;
+
+  conn=peer.connect(target,{
+   reliable:true,
+   serialization:"json",
+   metadata:{name:myName}
+  });
+
+  conn.on("open",()=>{
+   clearTimeout(connectionTimeout);
+
+   conn.send({
+    type:"join",
+    name:myName
+   });
+
+   setConnecting(true,"SALA ENCONTRADA...");
+  });
+
+  conn.on("data",guestReceive);
+
+  conn.on("close",()=>{
+   setConnecting(false);
+   if(running){
+    showResult("CONEXIÓN TERMINADA","La conexión con la sala se cerró.");
+   }else{
+    error("LA CONEXIÓN CON LA SALA SE CERRÓ.");
+   }
+  });
+
+  conn.on("error",()=>{
+   setConnecting(false);
+   error("NO SE PUDO CONECTAR A ESA SALA.");
+  });
+ });
+
+ peer.on("error",e=>{
+  clearTimeout(connectionTimeout);
+  setConnecting(false);
+
+  if(e.type==="peer-unavailable"){
+   error("NO EXISTE ESA SALA. REVISA EL CÓDIGO.");
+  }else{
+   error("NO SE PUDO ENTRAR. INTENTA DE NUEVO.");
+  }
+ });
+
+ connectionTimeout=setTimeout(()=>{
+  if(!conn||!conn.open){
+   closeConnection();
+   error("NO SE PUDO ENTRAR A LA SALA. REVISA EL CÓDIGO.");
+  }
+ },15000);
 }
 
-cleanup();
-
-mode="online";
-isHost=false;
-room=c;
-
-document.getElementById("onlineStatus").textContent=
-"Conectando...";
-
-peer=new Peer({
-debug:0,
-config:{
-iceServers:[
-{urls:"stun:stun.l.google.com:19302"},
-{urls:"stun:stun1.l.google.com:19302"}
-]
-}
-});
-
-let timed=false;
-
-const timer=setTimeout(()=>{
-
-if(timed)return;
-
-timed=true;
-
-document.getElementById("onlineStatus").textContent=
-"No se pudo conectar. Revisa el código.";
-
-try{peer.destroy()}catch(e){}
-
-},12000);
-
-peer.on("open",()=>{
-
-if(timed)return;
-
-const conn=peer.connect(
-"bb"+room,
-{
-reliable:true,
-serialization:"json"
-}
-);
-
-hostConn=conn;
-
-conn.on("open",()=>{
-
-clearTimeout(timer);
-
-send(conn,{
-type:"join",
-name:n
-});
-
-document.getElementById("onlineStatus").textContent=
-"¡Conectado!";
-
-});
-
-conn.on("data",data=>{
-guestData(data);
-});
-
-conn.on("close",()=>{
-
-if(!finished){
-
-alert("Se perdió la conexión con la sala.");
-
-goMenu();
-
+function showLobby(){
+ show("lobby");
+ document.getElementById("lobbyCode").textContent=roomCode;
+ renderLobby();
 }
 
-});
+function renderLobby(){
+ const list=document.getElementById("playersList");
+ list.innerHTML="";
 
-});
+ Object.values(players).forEach((p,i)=>{
+  const div=document.createElement("div");
+  div.className="playerSlot ready";
+  div.textContent=(i===0?"👑 ":"🎮 ")+p.name;
+  list.appendChild(div);
+ });
 
-peer.on("error",e=>{
+ for(let i=Object.keys(players).length;i<4;i++){
+  const div=document.createElement("div");
+  div.className="playerSlot";
+  div.textContent="⌛ ESPERANDO...";
+  list.appendChild(div);
+ }
 
-if(timed)return;
+ document.getElementById("lobbyStatus").textContent=
+  Object.keys(players).length>=4?
+  "¡SALA COMPLETA!":
+  "Esperando jugadores... "+Object.keys(players).length+"/4";
 
-if(e.type==="peer-unavailable"){
-
-clearTimeout(timer);
-
-timed=true;
-
-document.getElementById("onlineStatus").textContent=
-"No existe esa sala.";
-
-try{peer.destroy()}catch(x){}
-
+ document.getElementById("startBtn").style.display=isHost?"block":"none";
 }
 
-});
+function hostReceive(c,data){
+ if(!data)return;
 
+ if(data.type==="join"){
+  if(Object.keys(players).length>=4){
+   c.send({type:"full"});
+   c.close();
+   return;
+  }
+
+  if(c.playerId&&players[c.playerId])return;
+
+  const id="p"+Date.now()+Math.random().toString(16).slice(2);
+
+  c.playerId=id;
+  c.playerName=cleanName(data.name);
+
+  players[id]={
+   id,
+   name:c.playerName,
+   x:W*.5+(Math.random()-.5)*180,
+   y:H*.5+(Math.random()-.5)*180,
+   vx:0,vy:0,hp:100,
+   color:colors[Object.keys(players).length%colors.length],
+   human:true,cpu:false,last:Date.now(),angle:Math.random()*6
+  };
+
+  if(!connections.includes(c))connections.push(c);
+
+  c.send({
+   type:"welcome",
+   id,
+   code:roomCode,
+   players:copyPlayers()
+  });
+
+  broadcastLobby();
+ }
+
+ if(data.type==="input"&&c.playerId&&players[c.playerId]){
+  const p=players[c.playerId];
+
+  p.last=Date.now();
+
+  p.inputX=Math.max(-1,Math.min(1,Number(data.x)||0));
+  p.inputY=Math.max(-1,Math.min(1,Number(data.y)||0));
+
+  if(data.attack){
+   p.attack=true;
+  }
+ }
+
+ if(data.type==="again"){
+  resetToLobby();
+ }
 }
 
-function hostData(conn,data){
+function guestReceive(data){
+ if(!data)return;
 
-if(!data||typeof data!=="object")return;
+ if(data.type==="full"){
+  setConnecting(false);
+  error("LA SALA YA TIENE 4 JUGADORES.");
+  closeConnection();
+  return;
+ }
 
-if(data.type==="join"){
+ if(data.type==="welcome"){
+  myId=data.id;
+  roomCode=data.code;
+  players=data.players||{};
+  setConnecting(false);
+  showLobby();
+  return;
+ }
 
-if(players.length>=4)return;
+ if(data.type==="lobby"){
+  if(running)return;
 
-let p=players.find(x=>x.conn===conn);
+  players=data.players||{};
+  setConnecting(false);
+  showLobby();
+  return;
+ }
 
-if(!p){
+ if(data.type==="start"){
+  players=data.players||{};
+  myId=data.id||myId;
+  setConnecting(false);
+  show("game");
+  startGame();
+  return;
+ }
 
-const id=nextId();
+ if(data.type==="state"){
+  players=data.players||players;
 
-if(!id)return;
+  if(data.finished){
+   showResult(data.winner,data.message);
+  }
 
-p=makePlayer(
-id,
-data.name||("Jugador "+id),
-false
-);
+  updateHud();
+  return;
+ }
 
-p.conn=conn;
-
-players.push(p);
-
+ if(data.type==="result"){
+  showResult(data.title,data.message);
+ }
 }
 
-p.name=(
-data.name||p.name
-).slice(0,14);
-
-p.cpu=false;
-p.last=Date.now();
-
-conn.__playerId=p.id;
-
-send(conn,{
-type:"lobby",
-players:lobbyData()
-});
-
-broadcastLobby();
-
-return;
-
-}
-
-if(data.type==="input"){
-
-const p=players.find(
-x=>x.id===conn.__playerId
-);
-
-if(!p)return;
-
-p.last=Date.now();
-p.cpu=false;
-
-p.ix=Math.max(
--1,
-Math.min(1,Number(data.x)||0)
-);
-
-p.iy=Math.max(
--1,
-Math.min(1,Number(data.y)||0)
-);
-
-p.ia=!!data.attack;
-
-return;
-
-}
-
-if(data.type==="ready"){
-
-const p=players.find(
-x=>x.id===conn.__playerId
-);
-
-if(p){
-
-p.cpu=false;
-p.last=Date.now();
-
-}
-
-}
-
-}
-
-function guestData(data){
-
-if(!data||typeof data!=="object")return;
-
-if(data.type==="lobby"){
-
-if(running)return;
-
-players=data.players.map(p=>({
-
-id:p.id,
-name:p.name,
-color:p.color,
-
-x:0,
-y:0,
-
-vx:0,
-vy:0,
-
-hp:100,
-maxHp:100,
-
-angle:0,
-attack:0,
-cool:0,
-
-alive:true,
-cpu:false,
-
-ix:0,
-iy:0,
-ia:false,
-
-last:Date.now()
-
-}));
-
-updateLobby();
-
-screen("lobby");
-
-return;
-
-}
-
-if(data.type==="start"){
-
-players=data.players;
-myId=data.myId;
-
-beginGame();
-
-return;
-
-}
-
-if(data.type==="state"){
-
-if(!running)return;
-
-players=data.players;
-
-return;
-
-}
-
-if(data.type==="result"){
-
-finished=true;
-running=false;
-
-showResult(data.winner);
-
-return;
-
-}
-
-if(data.type==="back"){
-
-finished=false;
-running=false;
-
-players=data.players;
-
-document.getElementById(
-"resultOverlay"
-).classList.remove("show");
-
-updateLobby();
-
-screen("lobby");
-
-return;
-
-}
-
-if(data.type==="hostLeft"){
-
-alert("El anfitrión salió de la sala.");
-
-goMenu();
-
-}
-
-}
-
-function nextId(){
-
-for(let i=2;i<=4;i++){
-
-if(!players.some(p=>p.id===i))
-return i;
-
-}
-
-return null;
-
-}
-
-function lobbyData(){
-
-return players.map(p=>({
-id:p.id,
-name:p.name,
-color:p.color
-}));
-
+function broadcast(data){
+ connections=connections.filter(c=>c&&c.open);
+
+ connections.forEach(c=>{
+  try{c.send(data)}catch(e){}
+ });
 }
 
 function broadcastLobby(){
+ if(!isHost)return;
 
-const data={
-type:"lobby",
-players:lobbyData()
-};
+ broadcast({
+  type:"lobby",
+  code:roomCode,
+  players:copyPlayers()
+ });
 
-connections.forEach(c=>{
-
-if(c.open)
-send(c,data);
-
-});
-
-updateLobby();
-
-}
-
-function updateLobby(){
-
-const list=
-document.getElementById("playerList");
-
-list.innerHTML="";
-
-players.forEach(p=>{
-
-const div=document.createElement("div");
-
-div.className="player";
-
-const a=document.createElement("span");
-
-a.textContent=
-"⚡ "+p.name+
-(p.id===1?" 👑":"");
-
-const b=document.createElement("span");
-
-b.textContent="Jugador "+p.id;
-
-div.appendChild(a);
-div.appendChild(b);
-
-list.appendChild(div);
-
-});
-
-const button=
-document.getElementById("startButton");
-
-if(isHost){
-
-if(players.length>=2){
-
-button.disabled=false;
-button.textContent=
-"⚔️ INICIAR PARTIDA";
-
-}else{
-
-button.disabled=true;
-button.textContent=
-"ESPERANDO JUGADORES...";
-
-}
-
-}else{
-
-button.disabled=true;
-button.textContent=
-"ESPERANDO AL ANFITRIÓN...";
-
-}
-
+ renderLobby();
 }
 
 function startOnline(){
+ if(!isHost)return;
 
-if(!isHost||players.length<2)return;
+ if(Object.keys(players).length<1)return;
 
-placePlayers();
+ Object.values(players).forEach(p=>{
+  p.hp=100;
+  p.human=true;
+  p.cpu=false;
+  p.last=Date.now();
+  p.x=W*.5+(Math.random()-.5)*Math.min(W*.45,300);
+  p.y=H*.5+(Math.random()-.5)*Math.min(H*.35,220);
+  p.vx=0;p.vy=0;
+  p.inputX=0;p.inputY=0;
+ });
 
-players.forEach(p=>{
-p.cpu=false;
-});
+ running=true;
+ onlineMode=true;
 
-connections.forEach(c=>{
+ const data={
+  type:"start",
+  id:"",
+  players:copyPlayers()
+ };
 
-if(c.open){
+ connections.forEach(c=>{
+  try{
+   c.send({...data,id:c.playerId});
+  }catch(e){}
+ });
 
-const p=
-players.find(x=>x.id===c.__playerId);
-
-if(p){
-
-send(c,{
-type:"start",
-players:copyPlayers(),
-myId:p.id
-});
-
+ startGame();
 }
 
-}
+function startGame(){
+ running=true;
+ document.getElementById("resultBox").style.display="none";
+ show("game");
 
-});
+ const msg=document.getElementById("message");
 
-beginGame();
+ msg.textContent="3";
+ msg.classList.remove("show");
+ void msg.offsetWidth;
+ msg.classList.add("show");
 
+ setTimeout(()=>{
+  msg.textContent="2";
+  msg.classList.remove("show");
+  void msg.offsetWidth;
+  msg.classList.add("show");
+ },700);
+
+ setTimeout(()=>{
+  msg.textContent="1";
+  msg.classList.remove("show");
+  void msg.offsetWidth;
+  msg.classList.add("show");
+ },1400);
+
+ setTimeout(()=>{
+  msg.textContent="¡YA!";
+  msg.classList.remove("show");
+  void msg.offsetWidth;
+  msg.classList.add("show");
+ },2100);
 }
 
 function copyPlayers(){
+ const out={};
 
-return players.map(p=>({
+ Object.keys(players).forEach(id=>{
+  const p=players[id];
+  out[id]={
+   id:p.id,name:p.name,x:p.x,y:p.y,
+   vx:p.vx,vy:p.vy,hp:p.hp,
+   color:p.color,human:p.human,cpu:p.cpu,
+   angle:p.angle||0
+  };
+ });
 
-id:p.id,
-name:p.name,
-
-x:p.x,
-y:p.y,
-
-vx:0,
-vy:0,
-
-hp:100,
-maxHp:100,
-
-color:p.color,
-
-angle:p.angle,
-
-attack:0,
-cool:0,
-
-alive:true,
-
-cpu:false,
-
-ix:0,
-iy:0,
-ia:false,
-
-last:Date.now()
-
-}));
-
+ return out;
 }
 
-function beginGame(){
-
-running=true;
-paused=false;
-finished=false;
-
-document.getElementById(
-"pauseOverlay"
-).classList.remove("show");
-
-document.getElementById(
-"resultOverlay"
-).classList.remove("show");
-
-screen("game");
-
-resize();
-
-lastFrame=performance.now();
-
-requestAnimationFrame(loop);
-
-}
-
-function loop(now){
-
-if(!running)return;
-
-const dt=Math.min(
-2,
-Math.max(.2,(now-lastFrame)/16.67)
-);
-
-lastFrame=now;
-
-if(!paused){
-
-if(mode==="solo"||isHost){
-
-updateGame(dt);
-
-}else{
-
-updateGuest();
-
-}
-
-}
-
-draw();
-
-requestAnimationFrame(loop);
-
-}
-
-function updateGame(dt){
-
-if(mode==="online")
-checkOffline();
-
-players.forEach(p=>{
-
-if(!p.alive)return;
-
-if(p.cpu){
-
-cpuMove(p,dt);
-
-}else{
-
-if(p.id===myId){
-
-readKeyboard();
-
-move(
-p,
-input.x,
-input.y,
-dt
-);
-
-p.ix=input.x;
-p.iy=input.y;
-p.ia=input.attack;
-
-}else{
-
-move(
-p,
-p.ix,
-p.iy,
-dt
-);
-
-}
-
-if(p.ia&&p.cool<=0){
-
-hit(p);
-
-p.cool=35;
-
-}
-
-}
-
-p.cool=Math.max(
-0,
-p.cool-dt
-);
-
-p.attack=Math.max(
-0,
-p.attack-dt*.1
-);
-
-p.angle+=.25*dt;
-
-limit(p);
-
-});
-
-checkWinner();
-
-if(mode==="online"){
-
-if(performance.now()-lastState>55){
-
-lastState=performance.now();
-
-broadcastState();
-
-}
-
-}
-
-}
-
-function checkOffline(){
-
-const now=Date.now();
-
-players.forEach(p=>{
-
-if(
-p.id===1||
-!p.alive||
-p.cpu
-)return;
-
-if(now-p.last>5000){
-
-p.cpu=true;
-
-p.ix=0;
-p.iy=0;
-p.ia=false;
-
-}
-
-});
-
-}
-
-function updateGuest(){
-
-readKeyboard();
-
-if(performance.now()-lastInput>40){
-
-lastInput=performance.now();
-
-if(hostConn&&hostConn.open){
-
-send(hostConn,{
-type:"input",
-x:input.x,
-y:input.y,
-attack:input.attack
-});
-
-}
-
-}
-
-}
-
-function broadcastState(){
-
-const data={
-type:"state",
-players:players.map(p=>({
-
-id:p.id,
-name:p.name,
-
-x:p.x,
-y:p.y,
-
-vx:p.vx,
-vy:p.vy,
-
-hp:p.hp,
-maxHp:p.maxHp,
-
-color:p.color,
-
-angle:p.angle,
-
-attack:p.attack,
-
-alive:p.alive,
-
-cpu:p.cpu
-
-}))
-};
-
-connections.forEach(c=>{
-
-if(c.open)
-send(c,data);
-
-});
-
-}
-
-function send(c,data){
-
-try{
-
-if(c&&c.open)
-c.send(data);
-
-}catch(e){}
-
-}
-
-function move(p,x,y,dt){
-
-p.vx+=x*.75*dt;
-p.vy+=y*.75*dt;
-
-p.vx*=Math.pow(.91,dt);
-p.vy*=Math.pow(.91,dt);
-
-const s=Math.hypot(
-p.vx,
-p.vy
-);
-
-if(s>5.5){
-
-p.vx=p.vx/s*5.5;
-p.vy=p.vy/s*5.5;
-
-}
-
-p.x+=p.vx*dt;
-p.y+=p.vy*dt;
-
+function update(dt){
+ if(!running)return;
+
+ if(isHost){
+  const now=Date.now();
+
+  Object.values(players).forEach(p=>{
+   if(p.hp<=0)return;
+
+   if(p.human&&!p.cpu&&p.id!=="host"&&now-p.last>5000){
+    p.cpu=true;
+    p.inputX=0;
+    p.inputY=0;
+   }
+
+   if(p.human&&!p.cpu){
+    let ix=p.inputX||0;
+    let iy=p.inputY||0;
+
+    if(p.id==="host"){
+     ix=keyboard.x;
+     iy=keyboard.y;
+    }
+
+    const len=Math.hypot(ix,iy)||1;
+    p.vx+=(ix/len)*650*dt;
+    p.vy+=(iy/len)*650*dt;
+   }else{
+    cpuMove(p,dt);
+   }
+
+   p.vx*=Math.pow(.0005,dt);
+   p.vy*=Math.pow(.0005,dt);
+
+   const speed=Math.hypot(p.vx,p.vy);
+   const maxSpeed=390;
+
+   if(speed>maxSpeed){
+    p.vx=p.vx/speed*maxSpeed;
+    p.vy=p.vy/speed*maxSpeed;
+   }
+
+   p.x+=p.vx*dt;
+   p.y+=p.vy*dt;
+
+   const margin=65;
+   if(p.x<margin){p.x=margin;p.vx=Math.abs(p.vx)*.7}
+   if(p.x>W-margin){p.x=W-margin;p.vx=-Math.abs(p.vx)*.7}
+   if(p.y<margin){p.y=margin;p.vy=Math.abs(p.vy)*.7}
+   if(p.y>H-margin){p.y=H-margin;p.vy=-Math.abs(p.vy)*.7}
+
+   p.angle+=(Math.hypot(p.vx,p.vy)*dt*.025)+.05;
+
+   if(p.attack){
+    attackPlayer(p);
+    p.attack=false;
+   }
+  });
+
+  checkWinner();
+
+  if(onlineMode){
+   broadcast({
+    type:"state",
+    players:copyPlayers()
+   });
+  }
+ }
 }
 
 function cpuMove(p,dt){
+ const alive=Object.values(players).filter(x=>x!==p&&x.hp>0);
+ if(!alive.length)return;
 
-let target=null;
-let best=99999;
+ let target=alive[Math.floor(Math.random()*alive.length)];
 
-players.forEach(o=>{
+ let dx=target.x-p.x;
+ let dy=target.y-p.y;
+ let d=Math.hypot(dx,dy)||1;
 
-if(o===p||!o.alive)return;
+ let ix=dx/d;
+ let iy=dy/d;
 
-const d=Math.hypot(
-o.x-p.x,
-o.y-p.y
-);
+ if(d<150){
+  ix+=Math.sin(performance.now()/300+p.x)*.8;
+  iy+=Math.cos(performance.now()/320+p.y)*.8;
+ }
 
-if(d<best){
+ p.vx+=ix*430*dt;
+ p.vy+=iy*430*dt;
 
-best=d;
-target=o;
-
+ if(d<130&&Math.random()<.09){
+  attackPlayer(p);
+ }
 }
 
-});
+function attackPlayer(p){
+ const enemies=Object.values(players).filter(x=>x!==p&&x.hp>0);
+ if(!enemies.length)return;
 
-if(!target)return;
+ let target=null;
+ let best=Infinity;
 
-const dx=target.x-p.x;
-const dy=target.y-p.y;
+ enemies.forEach(e=>{
+  const d=Math.hypot(e.x-p.x,e.y-p.y);
+  if(d<best){best=d;target=e}
+ });
 
-const d=Math.hypot(dx,dy)||1;
+ if(target&&best<115){
+  target.hp=Math.max(0,target.hp-(8+Math.random()*7));
 
-let x=dx/d;
-let y=dy/d;
+  const dx=target.x-p.x;
+  const dy=target.y-p.y;
+  const d=Math.hypot(dx,dy)||1;
 
-if(d<115){
-
-const temp=x;
-
-x=-y;
-y=temp;
-
-}
-
-move(p,x,y,dt);
-
-if(
-d<105&&
-Math.random()<.08
-){
-
-hit(p);
-
-}
-
-}
-
-function hit(p){
-
-if(!p.alive)return;
-
-p.attack=1;
-
-players.forEach(o=>{
-
-if(o===p||!o.alive)return;
-
-const d=Math.hypot(
-o.x-p.x,
-o.y-p.y
-);
-
-if(d<105){
-
-o.hp-=p.cpu?7:10;
-
-const dx=o.x-p.x;
-const dy=o.y-p.y;
-
-const l=Math.hypot(dx,dy)||1;
-
-o.vx+=dx/l*3;
-o.vy+=dy/l*3;
-
-if(o.hp<=0){
-
-o.hp=0;
-o.alive=false;
-
-}
-
-}
-
-});
-
-}
-
-function limit(p){
-
-const r=36;
-
-if(p.x<r){
-
-p.x=r;
-p.vx=Math.abs(p.vx)*.5;
-
-}
-
-if(p.x>W-r){
-
-p.x=W-r;
-p.vx=-Math.abs(p.vx)*.5;
-
-}
-
-if(p.y<r){
-
-p.y=r;
-p.vy=Math.abs(p.vy)*.5;
-
-}
-
-if(p.y>H-r){
-
-p.y=H-r;
-p.vy=-Math.abs(p.vy)*.5;
-
-}
-
+  target.vx+=(dx/d)*180;
+  target.vy+=(dy/d)*180;
+ }
 }
 
 function checkWinner(){
+ const alive=Object.values(players).filter(p=>p.hp>0);
 
-if(finished)return;
+ if(alive.length<=1){
+  running=false;
 
-const alive=
-players.filter(p=>p.alive);
+  const winner=alive[0];
 
-if(alive.length<=1){
+  const title=winner?
+   "🏆 "+winner.name+" GANÓ":
+   "💥 EMPATE";
 
-finished=true;
-running=false;
+  const message=winner?
+   "¡El último trompo en pie es "+winner.name+"!":
+   "Todos quedaron fuera.";
 
-const winner=
-alive[0]||null;
+  if(onlineMode&&isHost){
+   broadcast({
+    type:"result",
+    title,
+    message
+   });
+  }
 
-if(mode==="online"){
-
-const data={
-type:"result",
-winner:winner?
-{
-id:winner.id,
-name:winner.name
-}:null
-};
-
-connections.forEach(c=>{
-
-if(c.open)
-send(c,data);
-
-});
-
+  showResult(title,message);
+ }
 }
 
-showResult(winner);
-
+function showResult(title,message){
+ running=false;
+ document.getElementById("resultTitle").textContent=title;
+ document.getElementById("resultText").textContent=message;
+ document.getElementById("resultBox").style.display="block";
 }
 
-}
-
-function showResult(winner){
-
-document.getElementById(
-"againHost"
-).style.display=
-isHost?"inline-block":"none";
-
-document.getElementById(
-"againGuest"
-).style.display=
-isHost?"none":"inline-block";
-
-if(winner){
-
-if(winner.id===myId){
-
-document.getElementById(
-"resultTitle"
-).textContent=
-"🏆 ¡GANASTE!";
-
-}else{
-
-document.getElementById(
-"resultTitle"
-).textContent=
-"🏆 "+winner.name;
-
-}
-
-}else{
-
-document.getElementById(
-"resultTitle"
-).textContent=
-"⚔️ EMPATE";
-
-}
-
-document.getElementById(
-"resultInfo"
-).textContent=
-"¡La batalla terminó!";
-
-document.getElementById(
-"resultOverlay"
-).classList.add("show");
-
-}
-
-function pauseGame(){
-
-if(!running&&!paused)return;
-
-paused=!paused;
-
-document.getElementById(
-"pauseOverlay"
-).classList.toggle(
-"show",
-paused
-);
-
-}
-
-function leaveGame(){
-
-if(mode==="online")
-leaveRoom();
-else
-goMenu();
-
-}
-
-function again(){
-
-if(mode==="solo"){
-
-solo();
-
-return;
-
-}
-
-if(isHost){
-
-finished=false;
-running=false;
-
-players.forEach(p=>{
-
-p.cpu=false;
-p.alive=true;
-p.hp=100;
-
-p.vx=0;
-p.vy=0;
-
-p.ix=0;
-p.iy=0;
-p.ia=false;
-
-p.last=Date.now();
-
-});
-
-document.getElementById(
-"resultOverlay"
-).classList.remove("show");
-
-updateLobby();
-
-broadcastLobby();
-
-screen("lobby");
-
-}else{
-
-document.getElementById(
-"resultOverlay"
-).classList.remove("show");
-
-screen("lobby");
-
-if(hostConn&&hostConn.open){
-
-send(hostConn,{
-type:"ready"
-});
-
-}
-
-}
-
-}
-
-function guestDisconnected(conn){
-
-const i=
-connections.indexOf(conn);
-
-if(i>=0)
-connections.splice(i,1);
-
-const p=
-players.find(
-x=>x.id===conn.__playerId
-);
-
-if(
-p&&
-mode==="online"&&
-!finished
-){
-
-p.cpu=true;
-p.last=Date.now();
-
-p.ix=0;
-p.iy=0;
-p.ia=false;
-
-if(!running)
-broadcastLobby();
-
-}
-
-}
-
-function leaveRoom(){
-
-if(isHost){
-
-connections.forEach(c=>{
-
-if(c.open)
-send(c,{
-type:"hostLeft"
-});
-
-});
-
-}
-
-cleanup();
-
-document.getElementById(
-"resultOverlay"
-).classList.remove("show");
-
-screen("menu");
-
-}
-
-function cleanup(){
-
-if(peer){
-
-try{
-peer.destroy();
-}catch(e){}
-
-}
-
-peer=null;
-hostConn=null;
-connections=[];
-
-players=[];
-
-room="";
-myId=0;
-
-isHost=false;
-mode="";
-
-running=false;
-paused=false;
-finished=false;
-
-}
-
-function readKeyboard(){
-
-let x=0;
-let y=0;
-
-if(
-keys["ArrowLeft"]||
-keys["a"]||
-keys["A"]
-)x--;
-
-if(
-keys["ArrowRight"]||
-keys["d"]||
-keys["D"]
-)x++;
-
-if(
-keys["ArrowUp"]||
-keys["w"]||
-keys["W"]
-)y--;
-
-if(
-keys["ArrowDown"]||
-keys["s"]||
-keys["S"]
-)y++;
-
-const l=Math.hypot(x,y);
-
-if(l){
-
-x/=l;
-y/=l;
-
-}
-
-if(!touchActive){
-
-input.x=x;
-input.y=y;
-
-}
-
-input.attack=
-!!(
-keys[" "]||
-keys["Spacebar"]
-);
-
-}
-
-addEventListener("keydown",e=>{
-
-keys[e.key]=true;
-
-if(
-e.key===" "||
-e.key.startsWith("Arrow")
-)e.preventDefault();
-
-if(
-e.key==="Escape"&&
-running
-)
-pauseGame();
-
-});
-
-addEventListener("keyup",e=>{
-
-keys[e.key]=false;
-
-});
-
-let touchActive=false;
-
-const joy=
-document.getElementById("joy");
-
-const stick=
-document.getElementById("stick");
-
-const attack=
-document.getElementById("attack");
-
-let joyDown=false;
-
-function moveJoy(x,y){
-
-const r=
-joy.getBoundingClientRect();
-
-const cx=
-r.left+r.width/2;
-
-const cy=
-r.top+r.height/2;
-
-let dx=x-cx;
-let dy=y-cy;
-
-const max=43;
-
-const l=
-Math.hypot(dx,dy);
-
-if(l>max){
-
-dx=dx/l*max;
-dy=dy/l*max;
-
-}
-
-stick.style.transform=
-"translate("+dx+"px,"+dy+"px)";
-
-input.x=dx/max;
-input.y=dy/max;
-
-}
-
-joy.addEventListener(
-"pointerdown",
-e=>{
-
-joyDown=true;
-touchActive=true;
-
-joy.setPointerCapture(
-e.pointerId
-);
-
-moveJoy(
-e.clientX,
-e.clientY
-);
-
-});
-
-joy.addEventListener(
-"pointermove",
-e=>{
-
-if(joyDown)
-moveJoy(
-e.clientX,
-e.clientY
-);
-
-});
-
-function joyEnd(){
-
-joyDown=false;
-touchActive=false;
-
-input.x=0;
-input.y=0;
-
-stick.style.transform=
-"translate(0,0)";
-
-}
-
-joy.addEventListener(
-"pointerup",
-joyEnd
-);
-
-joy.addEventListener(
-"pointercancel",
-joyEnd
-);
-
-attack.addEventListener(
-"pointerdown",
-e=>{
-
-e.preventDefault();
-
-input.attack=true;
-
-});
-
-attack.addEventListener(
-"pointerup",
-e=>{
-
-e.preventDefault();
-
-input.attack=false;
-
-});
-
-attack.addEventListener(
-"pointercancel",
-()=>{
-
-input.attack=false;
-
-});
-
-function draw(){
-
-ctx.clearRect(
-0,
-0,
-W,
-H
-);
-
-drawArena();
-
-players.forEach(
-drawPlayer
-);
-
-const me=
-players.find(
-p=>p.id===myId
-);
-
-if(me){
-
-document.getElementById(
-"life"
-).textContent=
-"❤️ "+Math.max(
-0,
-Math.round(me.hp)
-);
-
-}
-
-document.getElementById(
-"alive"
-).textContent=
-"⚔️ "+
-players.filter(
-p=>p.alive
-).length+
-" vivos";
-
+function updateHud(){
+ const alive=Object.values(players).filter(p=>p.hp>0).length;
+ const me=players[myId]||players.host||players.p1;
+
+ document.getElementById("countHud").textContent=alive;
+ document.getElementById("lifeHud").textContent=me?Math.ceil(me.hp):0;
+ document.getElementById("roomHud").textContent=roomCode;
 }
 
 function drawArena(){
+ const cx=W/2,cy=H/2;
+ const r=Math.min(W,H)*.39;
 
-const g=
-ctx.createRadialGradient(
-W/2,
-H/2,
-20,
-W/2,
-H/2,
-Math.max(W,H)
-);
+ ctx.clearRect(0,0,W,H);
 
-g.addColorStop(
-0,
-"#263b96"
-);
+ const bg=ctx.createRadialGradient(cx,cy,30,cx,cy,Math.max(W,H));
+ bg.addColorStop(0,"#24265c");
+ bg.addColorStop(.35,"#10143b");
+ bg.addColorStop(1,"#03040c");
 
-g.addColorStop(
-.35,
-"#111c59"
-);
+ ctx.fillStyle=bg;
+ ctx.fillRect(0,0,W,H);
 
-g.addColorStop(
-.7,
-"#070c2b"
-);
+ ctx.save();
 
-g.addColorStop(
-1,
-"#010208"
-);
+ ctx.globalAlpha=.22;
+ ctx.strokeStyle="#6e7aff";
+ ctx.lineWidth=1;
 
-ctx.fillStyle=g;
+ const grid=55;
+ for(let x=0;x<W;x+=grid){
+  ctx.beginPath();
+  ctx.moveTo(x,0);
+  ctx.lineTo(x,H);
+  ctx.stroke();
+ }
+ for(let y=0;y<H;y+=grid){
+  ctx.beginPath();
+  ctx.moveTo(0,y);
+  ctx.lineTo(W,y);
+  ctx.stroke();
+ }
 
-ctx.fillRect(
-0,
-0,
-W,
-H
-);
+ ctx.restore();
 
-/* ESTRELLAS */
+ ctx.save();
+ ctx.translate(cx,cy);
 
-for(let i=0;i<90;i++){
+ ctx.shadowBlur=40;
+ ctx.shadowColor="#5664ff";
+ ctx.strokeStyle="#7b86ff";
+ ctx.lineWidth=10;
+ ctx.beginPath();
+ ctx.arc(0,0,r,0,Math.PI*2);
+ ctx.stroke();
 
-const x=
-(i*97)%W;
+ ctx.shadowBlur=0;
+ ctx.strokeStyle="#d7dcff55";
+ ctx.lineWidth=2;
+ ctx.beginPath();
+ ctx.arc(0,0,r*.86,0,Math.PI*2);
+ ctx.stroke();
 
-const y=
-(i*53)%H;
+ ctx.strokeStyle="#ff4ee455";
+ ctx.beginPath();
+ ctx.arc(0,0,r*.63,0,Math.PI*2);
+ ctx.stroke();
 
-const a=
-.25+
-Math.sin(performance.now()*.001+i)*.15;
+ const grd=ctx.createRadialGradient(0,0,5,0,0,85);
+ grd.addColorStop(0,"#ffffff");
+ grd.addColorStop(.15,"#67eaff");
+ grd.addColorStop(.45,"#675dff");
+ grd.addColorStop(1,"transparent");
 
-ctx.fillStyle=
-"rgba(120,220,255,"+
-a+
-")";
+ ctx.fillStyle=grd;
+ ctx.beginPath();
+ ctx.arc(0,0,85,0,Math.PI*2);
+ ctx.fill();
 
-ctx.beginPath();
+ ctx.restore();
 
-ctx.arc(
-x,
-y,
-(i%3===0?1.8:1),
-0,
-Math.PI*2
-);
-
-ctx.fill();
-
+ for(let i=0;i<45;i++){
+  const x=(i*97+performance.now()*.01*(i%3+1))%W;
+  const y=(i*53)%H;
+  ctx.fillStyle="#ffffff55";
+  ctx.beginPath();
+  ctx.arc(x,y,(i%3)+.5,0,Math.PI*2);
+  ctx.fill();
+ }
 }
 
-/* CUADRÍCULA */
+function drawBlade(p){
+ if(p.hp<=0)return;
 
-ctx.strokeStyle="#91a3ff18";
-ctx.lineWidth=1;
+ const x=p.x,y=p.y;
+ const size=43;
 
-for(
-let x=0;
-x<W;
-x+=65
-){
+ ctx.save();
+ ctx.translate(x,y);
+ ctx.rotate(p.angle);
 
-ctx.beginPath();
-ctx.moveTo(x,0);
-ctx.lineTo(x,H);
-ctx.stroke();
+ ctx.shadowColor=p.color;
+ ctx.shadowBlur=25;
 
+ const grad=ctx.createRadialGradient(0,-8,4,0,0,size);
+ grad.addColorStop(0,"#ffffff");
+ grad.addColorStop(.18,p.color);
+ grad.addColorStop(.55,"#171a39");
+ grad.addColorStop(1,"#050611");
+
+ ctx.fillStyle=grad;
+
+ ctx.beginPath();
+
+ for(let i=0;i<20;i++){
+  const a=i*Math.PI/10;
+  const rr=i%2===0?size:size*.72;
+  const px=Math.cos(a)*rr;
+  const py=Math.sin(a)*rr;
+
+  if(i===0)ctx.moveTo(px,py);
+  else ctx.lineTo(px,py);
+ }
+
+ ctx.closePath();
+ ctx.fill();
+
+ ctx.shadowBlur=0;
+
+ ctx.strokeStyle=p.color;
+ ctx.lineWidth=4;
+ ctx.stroke();
+
+ ctx.fillStyle="#0a0c20";
+ ctx.beginPath();
+ ctx.arc(0,0,17,0,Math.PI*2);
+ ctx.fill();
+
+ ctx.strokeStyle="#ffffff";
+ ctx.lineWidth=2;
+ ctx.beginPath();
+ ctx.arc(0,0,10,0,Math.PI*2);
+ ctx.stroke();
+
+ ctx.fillStyle=p.color;
+ ctx.beginPath();
+ ctx.arc(0,0,5,0,Math.PI*2);
+ ctx.fill();
+
+ ctx.restore();
+
+ const barW=75;
+ const barH=7;
+ const hp=Math.max(0,p.hp)/100;
+
+ ctx.fillStyle="#090a17";
+ ctx.fillRect(x-barW/2,y-size-22,barW,barH);
+
+ ctx.fillStyle=p.color;
+ ctx.fillRect(x-barW/2,y-size-22,barW*hp,barH);
+
+ ctx.strokeStyle="#ffffff55";
+ ctx.strokeRect(x-barW/2,y-size-22,barW,barH);
+
+ ctx.textAlign="center";
+ ctx.font="bold 13px Arial";
+ ctx.fillStyle="#fff";
+ ctx.shadowColor="#000";
+ ctx.shadowBlur=5;
+ ctx.fillText(p.name,x,y-size-28);
+ ctx.shadowBlur=0;
+
+ if(p.cpu){
+  ctx.font="10px Arial";
+  ctx.fillStyle="#bfc8ff";
+  ctx.fillText("CPU",x,y+58);
+ }
 }
 
-for(
-let y=0;
-y<H;
-y+=65
-){
+function draw(){
+ drawArena();
 
-ctx.beginPath();
-ctx.moveTo(0,y);
-ctx.lineTo(W,y);
-ctx.stroke();
+ Object.values(players)
+  .sort((a,b)=>a.y-b.y)
+  .forEach(drawBlade);
 
+ updateHud();
 }
 
-/* ARENA */
+const keyboard={x:0,y:0};
 
-const radius=
-Math.min(W,H)*.39;
+addEventListener("keydown",e=>{
+ const k=e.key.toLowerCase();
 
-ctx.beginPath();
+ if(["w","arrowup"].includes(k))keyboard.y=-1;
+ if(["s","arrowdown"].includes(k))keyboard.y=1;
+ if(["a","arrowleft"].includes(k))keyboard.x=-1;
+ if(["d","arrowright"].includes(k))keyboard.x=1;
 
-ctx.arc(
-W/2,
-H/2,
-radius,
-0,
-Math.PI*2
-);
+ if(e.code==="Space"){
+  attackPressed=true;
+  sendAttack();
+ }
 
-ctx.fillStyle="#121b55aa";
-ctx.fill();
-
-ctx.strokeStyle="#6179ff";
-ctx.lineWidth=7;
-
-ctx.shadowBlur=25;
-ctx.shadowColor="#405eff";
-
-ctx.stroke();
-
-ctx.shadowBlur=0;
-
-/* ANILLOS */
-
-ctx.beginPath();
-
-ctx.arc(
-W/2,
-H/2,
-radius*.72,
-0,
-Math.PI*2
-);
-
-ctx.strokeStyle="#55dfff44";
-ctx.lineWidth=3;
-
-ctx.stroke();
-
-ctx.beginPath();
-
-ctx.arc(
-W/2,
-H/2,
-radius*.42,
-0,
-Math.PI*2
-);
-
-ctx.strokeStyle="#ff55d944";
-ctx.lineWidth=3;
-
-ctx.stroke();
-
-/* CENTRO */
-
-const cg=
-ctx.createRadialGradient(
-W/2,
-H/2,
-3,
-W/2,
-H/2,
-55
-);
-
-cg.addColorStop(
-0,
-"#ffffff"
-);
-
-cg.addColorStop(
-.15,
-"#5ff6ff"
-);
-
-cg.addColorStop(
-.5,
-"#596aff"
-);
-
-cg.addColorStop(
-1,
-"#16205e00"
-);
-
-ctx.fillStyle=cg;
-
-ctx.beginPath();
-
-ctx.arc(
-W/2,
-H/2,
-55,
-0,
-Math.PI*2
-);
-
-ctx.fill();
-
-}
-
-function drawPlayer(p){
-
-if(!p.alive)return;
-
-const r=34;
-
-ctx.save();
-
-ctx.translate(
-p.x,
-p.y
-);
-
-ctx.rotate(
-p.angle
-);
-
-ctx.shadowBlur=28;
-ctx.shadowColor=p.color;
-
-/* ALETAS */
-
-ctx.beginPath();
-
-for(let i=0;i<20;i++){
-
-const a=
-i*Math.PI/10;
-
-const rr=
-i%2===0?
-r:
-r*.76;
-
-const x=
-Math.cos(a)*rr;
-
-const y=
-Math.sin(a)*rr;
-
-if(i===0)
-ctx.moveTo(x,y);
-else
-ctx.lineTo(x,y);
-
-}
-
-ctx.closePath();
-
-const blade=
-ctx.createRadialGradient(
--8,
--8,
-2,
-0,
-0,
-r
-);
-
-blade.addColorStop(
-0,
-"#ffffff"
-);
-
-blade.addColorStop(
-.16,
-p.color
-);
-
-blade.addColorStop(
-.65,
-p.color
-);
-
-blade.addColorStop(
-1,
-"#10152f"
-);
-
-ctx.fillStyle=blade;
-
-ctx.fill();
-
-ctx.strokeStyle="#ffffffaa";
-ctx.lineWidth=2;
-
-ctx.stroke();
-
-ctx.shadowBlur=0;
-
-/* NÚCLEO */
-
-ctx.beginPath();
-
-ctx.arc(
-0,
-0,
-r*.52,
-0,
-Math.PI*2
-);
-
-ctx.fillStyle="#0a1030";
-
-ctx.fill();
-
-ctx.strokeStyle="#b8c8ff";
-ctx.lineWidth=2;
-
-ctx.stroke();
-
-/* CENTRO */
-
-ctx.beginPath();
-
-ctx.arc(
-0,
-0,
-r*.19,
-0,
-Math.PI*2
-);
-
-ctx.fillStyle="#ffffff";
-
-ctx.fill();
-
-ctx.beginPath();
-
-ctx.arc(
-0,
-0,
-r*.1,
-0,
-Math.PI*2
-);
-
-ctx.fillStyle=p.color;
-
-ctx.fill();
-
-ctx.restore();
-
-/* ATAQUE */
-
-if(p.attack>0){
-
-ctx.beginPath();
-
-ctx.arc(
-p.x,
-p.y,
-r+15,
-0,
-Math.PI*2
-);
-
-ctx.strokeStyle=p.color;
-ctx.lineWidth=5;
-
-ctx.shadowBlur=20;
-ctx.shadowColor=p.color;
-
-ctx.stroke();
-
-ctx.shadowBlur=0;
-
-}
-
-/* VIDA */
-
-const bw=76;
-
-const hp=
-Math.max(
-0,
-p.hp/p.maxHp
-);
-
-ctx.fillStyle="#080c1b";
-
-ctx.fillRect(
-p.x-bw/2,
-p.y-57,
-bw,
-8
-);
-
-ctx.fillStyle=
-p.hp>50?
-"#42ee78":
-"#ff3e60";
-
-ctx.fillRect(
-p.x-bw/2,
-p.y-57,
-bw*hp,
-8
-);
-
-/* NOMBRE */
-
-ctx.font="900 13px Arial";
-
-ctx.textAlign="center";
-
-ctx.fillStyle="#fff";
-
-ctx.shadowBlur=5;
-ctx.shadowColor="#000";
-
-ctx.fillText(
-p.name,
-p.x,
-p.y-64
-);
-
-ctx.shadowBlur=0;
-
-}
-
-document.addEventListener(
-"visibilitychange",
-()=>{
-
-if(
-document.hidden&&
-running
-){
-
-paused=true;
-
-document.getElementById(
-"pauseOverlay"
-).classList.add("show");
-
-}
-
+ if(e.key==="Escape")exitGame();
 });
 
-window.addEventListener(
-"beforeunload",
-()=>{
+addEventListener("keyup",e=>{
+ const k=e.key.toLowerCase();
 
-if(isHost){
-
-connections.forEach(c=>{
-
-try{
-
-send(
-c,
-{
-type:"hostLeft"
-}
-);
-
-}catch(e){}
-
+ if(["w","arrowup","s","arrowdown"].includes(k))keyboard.y=0;
+ if(["a","arrowleft","d","arrowright"].includes(k))keyboard.x=0;
 });
 
+function sendAttack(){
+ if(!onlineMode||isHost){
+  const p=players[myId]||players.host||players.p1;
+  if(p)p.attack=true;
+ }else if(conn&&conn.open){
+  conn.send({
+   type:"input",
+   x:joy.x,
+   y:joy.y,
+   attack:true
+  });
+ }
 }
 
+document.getElementById("attack").addEventListener("pointerdown",e=>{
+ e.preventDefault();
+ sendAttack();
 });
 
+const joy={x:0,y:0};
+
+const joyEl=document.getElementById("joy");
+const stick=document.getElementById("stick");
+
+let joyActive=false;
+
+function moveJoy(e){
+ const r=joyEl.getBoundingClientRect();
+ const cx=r.left+r.width/2;
+ const cy=r.top+r.height/2;
+
+ let dx=e.clientX-cx;
+ let dy=e.clientY-cy;
+
+ const max=43;
+ const d=Math.hypot(dx,dy)||1;
+
+ if(d>max){
+  dx=dx/d*max;
+  dy=dy/d*max;
+ }
+
+ stick.style.transform=`translate(${dx}px,${dy}px)`;
+
+ joy.x=dx/max;
+ joy.y=dy/max;
+}
+
+joyEl.addEventListener("pointerdown",e=>{
+ joyActive=true;
+ joyEl.setPointerCapture(e.pointerId);
+ moveJoy(e);
+});
+
+joyEl.addEventListener("pointermove",e=>{
+ if(joyActive)moveJoy(e);
+});
+
+joyEl.addEventListener("pointerup",()=>{
+ joyActive=false;
+ joy.x=0;
+ joy.y=0;
+ stick.style.transform="translate(0,0)";
+});
+
+joyEl.addEventListener("pointercancel",()=>{
+ joyActive=false;
+ joy.x=0;
+ joy.y=0;
+ stick.style.transform="translate(0,0)";
+});
+
+setInterval(()=>{
+ if(!running)return;
+
+ if(onlineMode&&!isHost&&conn&&conn.open){
+  conn.send({
+   type:"input",
+   x:joy.x,
+   y:joy.y,
+   attack:false
+  });
+ }
+},60);
+
+function gameInput(){
+ if(!onlineMode||isHost){
+  const p=players[myId]||players.host||players.p1;
+
+  if(p&&myId!=="host"){
+   p.inputX=joy.x;
+   p.inputY=joy.y;
+  }
+
+  if(p&&myId==="host"){
+   if(Math.abs(joy.x)+Math.abs(joy.y)>.05){
+    keyboard.x=joy.x;
+    keyboard.y=joy.y;
+   }
+  }
+ }
+}
+
+function leaveLobby(){
+ if(isHost){
+  broadcast({type:"result",title:"SALA CERRADA",message:"El anfitrión salió de la sala."});
+ }
+
+ closeConnection();
+ connections=[];
+ players={};
+ running=false;
+ onlineMode=false;
+ roomCode="";
+ show("menu");
+}
+
+function exitGame(){
+ if(onlineMode){
+  document.getElementById("resultBox").style.display="none";
+  if(isHost){
+   resetToLobby();
+  }else{
+   running=false;
+   showLobby();
+  }
+ }else{
+  running=false;
+  closeConnection();
+  show("menu");
+ }
+}
+
+function resetToLobby(){
+ running=false;
+
+ Object.values(players).forEach(p=>{
+  p.hp=100;
+  p.vx=0;
+  p.vy=0;
+  p.cpu=false;
+  p.last=Date.now();
+  p.x=W*.5+(Math.random()-.5)*200;
+  p.y=H*.5+(Math.random()-.5)*150;
+ });
+
+ if(isHost){
+  broadcastLobby();
+  showLobby();
+ }
+}
+
+function playAgain(){
+ document.getElementById("resultBox").style.display="none";
+
+ if(!onlineMode){
+  createSoloPlayers();
+  startGame();
+  return;
+ }
+
+ if(isHost){
+  resetToLobby();
+ }else{
+  running=false;
+
+  if(conn&&conn.open){
+   conn.send({type:"again"});
+  }
+
+  showLobby();
+  document.getElementById("lobbyStatus").textContent="Esperando al anfitrión...";
+ }
+}
+
+function leaveAfterGame(){
+ if(isHost){
+  broadcast({
+   type:"result",
+   title:"SALA CERRADA",
+   message:"El anfitrión salió de la sala."
+  });
+ }
+
+ closeConnection();
+ connections=[];
+ players={};
+ running=false;
+ onlineMode=false;
+ roomCode="";
+
+ document.getElementById("resultBox").style.display="none";
+ show("menu");
+}
+
+function guestDisconnected(c){
+ if(!c||!c.playerId)return;
+
+ if(players[c.playerId]){
+  if(running){
+   players[c.playerId].cpu=true;
+   players[c.playerId].human=false;
+  }else{
+   delete players[c.playerId];
+   connections=connections.filter(x=>x!==c);
+   broadcastLobby();
+  }
+ }
+}
+
+function animate(t){
+ const dt=Math.min((t-lastFrame)/1000,.033);
+ lastFrame=t;
+
+ gameInput();
+ update(dt);
+ draw();
+
+ requestAnimationFrame(animate);
+}
+
+requestAnimationFrame(animate);
+
+document.getElementById("roomCodeInput").addEventListener("input",e=>{
+ e.target.value=e.target.value.replace(/\D/g,"").slice(0,4);
+});
+
+document.getElementById("guestName").addEventListener("keydown",e=>{
+ if(e.key==="Enter")joinRoom();
+});
+
+document.getElementById("nameInput").addEventListener("keydown",e=>{
+ if(e.key==="Enter")solo();
+});
+
+window.addEventListener("beforeunload",()=>{
+ try{
+  if(conn)conn.close();
+  if(peer)peer.destroy();
+ }catch(e){}
+});
 </script>
+
 </body>
 </html>
