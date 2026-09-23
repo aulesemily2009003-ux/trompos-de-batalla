@@ -421,6 +421,7 @@ if(peer)peer.destroy();
 conn=null;
 peer=null;
 host=false;
+roomConnections=[];
 }
 
 function randomRoom(){
@@ -952,17 +953,11 @@ return;
 
 if(data.type==="state"){
 
-/* El anfitrión manda la posición real de TODOS. Esto mantiene
-   sincronizados al anfitrión y al invitado. */
+/* El anfitrión es la única autoridad del movimiento online.
+   El invitado NO mueve su copia local: solo manda controles.
+   Así no hay dos simulaciones peleándose por la posición. */
 let incoming=data.players||{};
-
-Object.keys(incoming).forEach(function(id){
-  players[id]=Object.assign({},players[id]||{},incoming[id]);
-});
-
-Object.keys(players).forEach(function(id){
-  if(!incoming[id]) delete players[id];
-});
+players=incoming;
 
 return;
 
@@ -1143,8 +1138,6 @@ conn.send({
   type:"input",
   x:Number(x)||0,
   y:Number(y)||0,
-  px:me.x,
-  py:me.y,
   attack:!!attack
 });
 }catch(e){}
@@ -1191,8 +1184,6 @@ conn.send({
   type:"input",
   x:x/l,
   y:y/l,
-  px:me.x,
-  py:me.y,
   attack:!!keys[" "] || !!keys["spacebar"]
 });
 }catch(e){}
@@ -1763,15 +1754,13 @@ p.cpu=true;
 
 }
 
-if(roomCode!=="SOLO"&&peer){
+if(roomCode!=="SOLO"){
 
 let state=copyPlayers();
 
-peer.connections.forEach(function(list){
+roomConnections.forEach(function(c){
 
-list.forEach(function(c){
-
-if(c.open){
+if(c&&c.open){
 
 try{
 
@@ -1786,16 +1775,12 @@ players:state
 
 });
 
-});
-
 }
 
 }else{
 
-/* El invitado también mueve su Beyblade localmente para que los
-   controles respondan inmediatamente. El anfitrión recibe el mismo
-   movimiento por red y mantiene la autoridad del juego. */
-let me=players[myId];
+/* El invitado NO simula la posición. Solo envía su control.
+   El anfitrión mueve al jugador y devuelve el estado completo. */
 let k=keyboard();
 let x=k.x;
 let y=k.y;
@@ -1807,18 +1792,12 @@ y=joyY;
 
 }
 
-if(me&&me.alive){
-move(me,x,y,dt);
-}
-
-if(conn&&conn.open&&myId&&me){
+if(conn&&conn.open&&myId){
 try{
 conn.send({
   type:"input",
   x:x,
   y:y,
-  px:me.x,
-  py:me.y,
   attack:false
 });
 }catch(e){}
@@ -2088,15 +2067,13 @@ requestAnimationFrame(loop);
 
 setInterval(function(){
 
-if(host&&playing&&roomCode!=="SOLO"&&peer){
+if(host&&playing&&roomCode!=="SOLO"){
 
 let state=copyPlayers();
 
-peer.connections.forEach(function(list){
+roomConnections.forEach(function(c){
 
-list.forEach(function(c){
-
-if(c.open){
+if(c&&c.open){
 
 try{
 
@@ -2108,8 +2085,6 @@ players:state
 }catch(e){}
 
 }
-
-});
 
 });
 
