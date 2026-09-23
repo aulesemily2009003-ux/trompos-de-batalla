@@ -2,3091 +2,1633 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
 <title>GUERRA BEYBLADE</title>
-
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
-
 <style>
-*{
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-    user-select:none;
-    -webkit-user-select:none;
-}
-
-html,body{
-    width:100%;
-    height:100%;
-    overflow:hidden;
-    font-family:Arial,Helvetica,sans-serif;
-    background:
-        radial-gradient(circle at top,#3d9cff,#061b45 55%,#020817);
-    color:white;
-}
-
-.screen{
-    display:none;
-    width:100%;
-    height:100%;
-}
-
-.screen.active{
-    display:flex;
-}
-
-button{
-    border:none;
-    cursor:pointer;
-    font-weight:bold;
-    color:white;
-}
+*{box-sizing:border-box}
+html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#070b20;color:white}
+body{touch-action:none}
+.screen{position:absolute;inset:0;display:none;align-items:center;justify-content:center}
+.active{display:flex}
 
 #menuScreen{
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    padding:20px;
+background:
+radial-gradient(circle at 50% 30%,#2439a8 0,#11194e 35%,#050817 75%);
 }
 
-.menuBox{
-    width:min(500px,94vw);
-    padding:35px 25px;
-    border-radius:30px;
-    background:linear-gradient(145deg,rgba(20,74,160,.95),rgba(3,20,58,.98));
-    border:2px solid #61c7ff;
-    box-shadow:
-        0 0 25px #168cff,
-        inset 0 0 30px rgba(50,160,255,.2);
+.menu{
+width:min(92%,520px);
+text-align:center;
+padding:30px 20px;
+border-radius:28px;
+background:rgba(7,10,35,.82);
+border:2px solid #5268ff;
+box-shadow:0 0 35px #263cff;
 }
 
-.logo{
-    font-size:clamp(38px,10vw,70px);
-    font-weight:1000;
-    color:#fff;
-    text-shadow:
-        0 0 8px #36bfff,
-        0 0 25px #0077ff,
-        4px 4px 0 #06245f;
-    margin-bottom:8px;
+.title{
+font-size:clamp(38px,8vw,72px);
+font-weight:1000;
+letter-spacing:2px;
+margin-bottom:8px;
+color:#fff;
+text-shadow:0 0 8px #00d9ff,0 0 25px #4960ff;
 }
 
 .subtitle{
-    color:#aee5ff;
-    font-size:18px;
-    margin-bottom:28px;
+font-size:18px;
+margin-bottom:25px;
+color:#b9c8ff;
 }
 
-.menuButton{
-    width:100%;
-    padding:17px;
-    margin:8px 0;
-    border-radius:18px;
-    font-size:20px;
-    background:linear-gradient(90deg,#087cff,#22c9ff);
-    box-shadow:0 5px 15px rgba(0,0,0,.4);
-    transition:.2s;
+button{
+border:0;
+border-radius:16px;
+padding:15px 20px;
+font-size:18px;
+font-weight:bold;
+cursor:pointer;
+color:white;
+background:linear-gradient(135deg,#5967ff,#913cff);
+box-shadow:0 5px 18px rgba(0,0,0,.4);
+margin:7px;
 }
 
-.menuButton:hover{
-    transform:scale(1.03);
-    box-shadow:0 0 20px #19aaff;
-}
+button:active{transform:scale(.96)}
+button:disabled{opacity:.45}
 
-.menuButton.secondary{
-    background:linear-gradient(90deg,#164b9b,#3978d9);
-}
-
-#onlineScreen,
-#lobbyScreen{
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    padding:15px;
-}
+.blue{background:linear-gradient(135deg,#287cff,#24c6ff)}
+.green{background:linear-gradient(135deg,#14c98c,#35e66f)}
+.red{background:linear-gradient(135deg,#ff365e,#ff1744)}
+.gray{background:#30375d}
 
 .panel{
-    width:min(550px,95vw);
-    max-height:95vh;
-    overflow:auto;
-    padding:28px 22px;
-    border-radius:28px;
-    background:linear-gradient(145deg,rgba(8,42,100,.97),rgba(2,14,43,.98));
-    border:2px solid #46c7ff;
-    box-shadow:0 0 30px rgba(0,153,255,.6);
+width:min(92%,600px);
+max-height:92vh;
+overflow:auto;
+padding:25px;
+border-radius:25px;
+background:rgba(7,11,37,.94);
+border:2px solid #596cff;
+box-shadow:0 0 35px rgba(70,90,255,.5);
+text-align:center;
 }
 
-.panel h2{
-    font-size:34px;
-    margin-bottom:18px;
-    text-shadow:0 0 12px #22bfff;
-}
+h2{font-size:32px;margin:5px 0 20px}
 
 input{
-    width:100%;
-    padding:16px;
-    margin:7px 0;
-    border-radius:15px;
-    border:2px solid #349dff;
-    background:#031637;
-    color:white;
-    font-size:18px;
-    outline:none;
-    text-align:center;
+width:100%;
+padding:15px;
+border-radius:13px;
+border:2px solid #4655aa;
+background:#101638;
+color:white;
+font-size:18px;
+outline:none;
+margin-bottom:10px;
 }
 
-input:focus{
-    border-color:#6ed8ff;
-    box-shadow:0 0 15px #168cff;
+input:focus{border-color:#4bd9ff}
+
+.roomBox{
+padding:18px;
+border-radius:18px;
+background:#10173b;
+border:2px solid #4d65ff;
+margin:15px 0;
 }
 
 .roomCode{
-    font-size:48px;
-    letter-spacing:10px;
-    font-weight:1000;
-    color:#7cddff;
-    text-shadow:0 0 20px #008cff;
-    padding:15px;
-}
-
-.info{
-    color:#bceaff;
-    margin:10px 0 18px;
-}
-
-.playersList{
-    margin:15px 0;
-}
-
-.playerItem{
-    padding:13px;
-    margin:7px 0;
-    border-radius:14px;
-    background:linear-gradient(90deg,#0c3984,#075cae);
-    border:1px solid #3bc5ff;
-    text-align:left;
+font-size:42px;
+font-weight:1000;
+letter-spacing:10px;
+color:#6ee8ff;
+text-shadow:0 0 15px #00cfff;
 }
 
 .status{
-    padding:10px;
-    border-radius:12px;
-    background:#03183b;
-    color:#7ddcff;
-    margin:10px 0;
+min-height:25px;
+margin:10px;
+font-weight:bold;
+color:#9eeaff;
+}
+
+.players{
+text-align:left;
+background:#0d1331;
+border-radius:16px;
+padding:12px;
+margin:15px 0;
+}
+
+.player{
+padding:12px;
+margin:7px 0;
+border-radius:12px;
+background:#1a2250;
+display:flex;
+justify-content:space-between;
 }
 
 #gameScreen{
-    position:relative;
-    background:#020b20;
+background:#050814;
 }
 
 #gameCanvas{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    display:block;
-    background:#061634;
+position:absolute;
+inset:0;
+width:100%;
+height:100%;
 }
 
-#topBar{
-    position:absolute;
-    left:10px;
-    right:10px;
-    top:10px;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    pointer-events:none;
-    z-index:5;
+.hud{
+position:absolute;
+top:12px;
+left:50%;
+transform:translateX(-50%);
+z-index:5;
+width:min(95%,650px);
+display:flex;
+justify-content:space-between;
+pointer-events:none;
 }
 
-.gameTitle{
-    padding:9px 15px;
-    border-radius:14px;
-    background:rgba(3,27,68,.85);
-    border:1px solid #35bfff;
-    color:#9ce8ff;
-    font-weight:bold;
+.hudBox{
+background:rgba(7,11,35,.8);
+border:2px solid #5467ff;
+border-radius:14px;
+padding:8px 13px;
+font-weight:bold;
+box-shadow:0 0 12px rgba(60,90,255,.4);
 }
 
 .pauseButton{
-    pointer-events:auto;
-    padding:10px 16px;
-    border-radius:14px;
-    background:#0b65cf;
-    border:1px solid #75dfff;
-    font-size:16px;
+position:absolute;
+top:12px;
+right:12px;
+z-index:10;
+padding:10px 14px;
+font-size:15px;
 }
 
 #touchControls{
-    position:absolute;
-    left:0;
-    right:0;
-    bottom:20px;
-    height:190px;
-    pointer-events:none;
-    z-index:10;
+position:absolute;
+inset:0;
+z-index:8;
+pointer-events:none;
 }
 
-#joystick{
-    position:absolute;
-    left:25px;
-    bottom:15px;
-    width:145px;
-    height:145px;
-    border-radius:50%;
-    background:rgba(25,124,210,.3);
-    border:3px solid rgba(99,218,255,.75);
-    box-shadow:0 0 25px rgba(0,155,255,.5);
-    pointer-events:auto;
-    touch-action:none;
+.joystick{
+position:absolute;
+left:25px;
+bottom:25px;
+width:125px;
+height:125px;
+border-radius:50%;
+background:rgba(255,255,255,.09);
+border:2px solid rgba(255,255,255,.3);
+pointer-events:auto;
 }
 
-#stick{
-    position:absolute;
-    width:62px;
-    height:62px;
-    left:50%;
-    top:50%;
-    transform:translate(-50%,-50%);
-    border-radius:50%;
-    background:linear-gradient(145deg,#65ddff,#0879ff);
-    border:2px solid white;
-    box-shadow:0 0 18px #009dff;
+.stick{
+position:absolute;
+left:37px;
+top:37px;
+width:50px;
+height:50px;
+border-radius:50%;
+background:#6474ff;
+box-shadow:0 0 20px #5268ff;
 }
 
-#attackButton{
-    position:absolute;
-    right:25px;
-    bottom:25px;
-    width:125px;
-    height:125px;
-    border-radius:50%;
-    background:linear-gradient(145deg,#2ed8ff,#075dff);
-    border:4px solid #a8efff;
-    box-shadow:0 0 25px #008cff;
-    font-size:18px;
-    pointer-events:auto;
-    touch-action:none;
+.attack{
+position:absolute;
+right:28px;
+bottom:35px;
+width:100px;
+height:100px;
+border-radius:50%;
+background:linear-gradient(135deg,#ff2955,#ff8a00);
+font-size:16px;
+pointer-events:auto;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+box-shadow:0 0 25px rgba(255,70,40,.5);
 }
 
-#pauseOverlay,
-#resultOverlay{
-    position:absolute;
-    inset:0;
-    z-index:20;
-    display:none;
-    justify-content:center;
-    align-items:center;
-    background:rgba(0,8,25,.78);
-    backdrop-filter:blur(7px);
+.overlay{
+position:absolute;
+inset:0;
+z-index:20;
+background:rgba(2,4,18,.82);
+display:none;
+align-items:center;
+justify-content:center;
 }
 
-.overlayBox{
-    width:min(450px,90vw);
-    padding:30px;
-    border-radius:28px;
-    text-align:center;
-    background:linear-gradient(145deg,#0a438d,#031838);
-    border:2px solid #4ed5ff;
-    box-shadow:0 0 35px #008cff;
+.overlay.active{display:flex}
+
+.resultBox{
+width:min(90%,450px);
+padding:28px;
+background:#0c1233;
+border:2px solid #6070ff;
+border-radius:25px;
+text-align:center;
+box-shadow:0 0 35px #293fff;
 }
 
-.overlayBox h2{
-    font-size:38px;
-    color:#9beaff;
-    margin-bottom:15px;
+.bigResult{
+font-size:38px;
+font-weight:1000;
+margin-bottom:10px;
 }
 
-.winner{
-    font-size:27px;
-    margin:20px 0;
-    color:#fff;
+.small{
+color:#aebaff;
+font-size:14px;
 }
 
-#mobileOnlyInfo{
-    display:none;
-}
-
-@media(max-width:700px){
-    #mobileOnlyInfo{
-        display:block;
-        color:#8edfff;
-        font-size:13px;
-        margin-top:12px;
-    }
-
-    .logo{
-        font-size:45px;
-    }
-
-    .roomCode{
-        font-size:40px;
-    }
-
-    .panel{
-        padding:23px 17px;
-    }
-}
-
-@media(min-width:701px){
-    #touchControls{
-        display:none;
-    }
+@media(min-width:800px){
+#touchControls{display:none}
 }
 </style>
 </head>
 
 <body>
 
-<!-- ================= MENU ================= -->
-
 <div id="menuScreen" class="screen active">
-
-    <div class="menuBox">
-
-        <div class="logo">⚡ BEYBLADE ⚡</div>
-        <div class="subtitle">GUERRA DE TROMPOS</div>
-
-        <button class="menuButton" onclick="startSolo()">
-            🎮 JUGAR SOLO
-        </button>
-
-        <button class="menuButton" onclick="openOnline()">
-            🌐 JUGAR ONLINE
-        </button>
-
-        <button class="menuButton secondary" onclick="showInstructions()">
-            📖 CÓMO JUGAR
-        </button>
-
-        <div id="mobileOnlyInfo">
-            📱 En celular usa el joystick azul para moverte.
-        </div>
-
-    </div>
-
+<div class="menu">
+<div class="title">GUERRA<br>BEYBLADE</div>
+<div class="subtitle">⚡ Batallas de trompos ⚡</div>
+<button class="blue" onclick="startSolo()">JUGAR SOLO</button>
+<button class="green" onclick="openOnline()">JUGAR ONLINE</button>
+<button class="gray" onclick="showInstructions()">¿CÓMO JUGAR?</button>
 </div>
-
-
-<!-- ================= ONLINE ================= -->
+</div>
 
 <div id="onlineScreen" class="screen">
+<div class="panel">
+<h2>🌐 JUEGO ONLINE</h2>
 
-    <div class="panel">
+<input id="playerName" maxlength="14" placeholder="Escribe tu nombre">
 
-        <h2>🌐 BATALLA ONLINE</h2>
-
-        <input
-            id="playerName"
-            maxlength="12"
-            placeholder="Tu nombre"
-        >
-
-        <button class="menuButton" onclick="createRoom()">
-            🏠 CREAR SALA
-        </button>
-
-        <div style="margin:12px;color:#7ecfff;">O</div>
-
-        <input
-            id="roomInput"
-            maxlength="4"
-            inputmode="numeric"
-            placeholder="Código de 4 números"
-            oninput="onlyNumbers(this)"
-        >
-
-        <button class="menuButton" onclick="joinRoom()">
-            🚪 ENTRAR A SALA
-        </button>
-
-        <button class="menuButton secondary" onclick="backToMenu()">
-            ⬅ VOLVER
-        </button>
-
-        <div id="connectionStatus" class="status">
-            Listo para jugar.
-        </div>
-
-    </div>
-
+<div style="margin-top:10px">
+<button class="green" onclick="createRoom()">CREAR SALA</button>
 </div>
 
+<div style="margin:10px;color:#9aa8d8">O entra a una sala</div>
 
-<!-- ================= LOBBY ================= -->
+<input id="roomInput" inputmode="numeric" maxlength="4" placeholder="Código de 4 números" oninput="onlyNumbers(this)">
+
+<button class="blue" onclick="joinRoom()">ENTRAR A SALA</button>
+<button class="gray" onclick="backToMenu()">VOLVER</button>
+
+<div id="onlineStatus" class="status"></div>
+</div>
+</div>
 
 <div id="lobbyScreen" class="screen">
+<div class="panel">
+<h2>⚔️ SALA DE BATALLA</h2>
 
-    <div class="panel">
-
-        <h2>🏆 SALA DE BATALLA</h2>
-
-        <div>CODIGO DE SALA</div>
-
-        <div id="roomDisplay" class="roomCode">
-            ----
-        </div>
-
-        <div id="hostText" class="info"></div>
-
-        <h3>👥 JUGADORES</h3>
-
-        <div id="playersList" class="playersList"></div>
-
-        <div id="lobbyStatus" class="status">
-            Esperando jugadores...
-        </div>
-
-        <button
-            id="startMatchButton"
-            class="menuButton"
-            onclick="hostStartGame()"
-            style="display:none"
-        >
-            ▶ INICIAR PARTIDA
-        </button>
-
-        <button
-            class="menuButton secondary"
-            onclick="leaveRoom()"
-        >
-            🚪 SALIR DE LA SALA
-        </button>
-
-    </div>
-
+<div class="roomBox">
+<div>CÓDIGO DE LA SALA</div>
+<div id="roomDisplay" class="roomCode">----</div>
 </div>
 
+<div id="lobbyStatus" class="status">Esperando jugadores...</div>
 
-<!-- ================= GAME ================= -->
+<div class="players">
+<strong>👥 JUGADORES EN LA SALA</strong>
+<div id="playersList"></div>
+</div>
+
+<div id="hostControls">
+<button id="startMatchButton" class="green" onclick="hostStartGame()" disabled>
+INICIAR PARTIDA
+</button>
+</div>
+
+<button class="red" onclick="leaveRoom()">SALIR DE LA SALA</button>
+</div>
+</div>
 
 <div id="gameScreen" class="screen">
+<canvas id="gameCanvas"></canvas>
 
-    <canvas id="gameCanvas"></canvas>
+<div class="hud">
+<div class="hudBox" id="myHud">❤️ 100</div>
+<div class="hudBox" id="gameHud">⚔️ 0</div>
+</div>
 
-    <div id="topBar">
+<button class="pauseButton gray" onclick="togglePause()">⏸ PAUSA</button>
 
-        <div class="gameTitle">
-            ⚡ GUERRA BEYBLADE
-        </div>
+<div id="touchControls">
+<div id="joystick" class="joystick">
+<div id="stick" class="stick"></div>
+</div>
+<div id="attackButton" class="attack">⚡ ATAQUE</div>
+</div>
 
-        <button class="pauseButton" onclick="togglePause()">
-            ⏸ PAUSA
-        </button>
+<div id="pauseOverlay" class="overlay">
+<div class="resultBox">
+<div class="bigResult">⏸ PAUSA</div>
+<button class="green" onclick="togglePause()">CONTINUAR</button>
+<button class="red" onclick="returnToMenuFromGame()">SALIR</button>
+</div>
+</div>
 
-    </div>
+<div id="resultOverlay" class="overlay">
+<div class="resultBox">
+<div id="resultText" class="bigResult">🏆</div>
+<div id="resultInfo" class="small"></div>
 
-    <div id="touchControls">
+<div id="hostResultButtons">
+<button class="green" onclick="playAgain()">VOLVER A JUGAR</button>
+</div>
 
-        <div id="joystick">
-            <div id="stick"></div>
-        </div>
+<div id="guestResultButtons">
+<button class="green" onclick="playAgain()">VOLVER A LA SALA</button>
+</div>
 
-        <button id="attackButton">
-            ⚡ ATAQUE
-        </button>
-
-    </div>
-
-
-    <div id="pauseOverlay">
-
-        <div class="overlayBox">
-
-            <h2>⏸ PAUSA</h2>
-
-            <button
-                class="menuButton"
-                onclick="togglePause()"
-            >
-                ▶ CONTINUAR
-            </button>
-
-            <button
-                class="menuButton secondary"
-                onclick="returnToMenuFromGame()"
-            >
-                🚪 SALIR
-            </button>
-
-        </div>
-
-    </div>
-
-
-    <div id="resultOverlay">
-
-        <div class="overlayBox">
-
-            <h2>🏆 FIN DE BATALLA</h2>
-
-            <div id="winnerText" class="winner">
-                Ganador
-            </div>
-
-            <button
-                id="playAgainButton"
-                class="menuButton"
-                onclick="playAgain()"
-            >
-                🔄 VOLVER A JUGAR
-            </button>
-
-            <button
-                class="menuButton secondary"
-                onclick="leaveRoom()"
-            >
-                🚪 SALIR DE LA SALA
-            </button>
-
-        </div>
-
-    </div>
+<button class="red" onclick="leaveRoom()">SALIR DE LA SALA</button>
+</div>
+</div>
 
 </div>
 
-
 <script>
+const canvas=document.getElementById("gameCanvas");
+const ctx=canvas.getContext("2d");
 
-/* =========================================================
-   CONFIGURACIÓN
-========================================================= */
+let W=window.innerWidth;
+let H=window.innerHeight;
 
-const canvas = document.getElementById("gameCanvas");
-const ctx = canvas.getContext("2d");
+let mode="";
+let running=false;
+let paused=false;
+let gameOver=false;
 
-let W = 0;
-let H = 0;
+let players=[];
+let myPlayerId=0;
+let isHost=false;
 
-let peer = null;
-let hostConnection = null;
+let peer=null;
+let roomCode="";
+let hostConnection=null;
+let guestConnections=[];
 
-let isHost = false;
-let onlineMode = false;
+let lastInputSend=0;
+let lastStateSend=0;
+let lastFrame=0;
 
-let roomCode = "";
-let myId = 0;
-let myName = "";
+let keys={};
+let input={x:0,y:0,attack:false};
 
-let players = [];
-let guestConnections = [];
+let joystickActive=false;
+let joystickCenter={x:0,y:0};
 
-let gameRunning = false;
-let gamePaused = false;
-
-let lastStateSend = 0;
-let lastInputSend = 0;
-
-
-/* =========================================================
-   PANTALLAS
-========================================================= */
+const peerConfig={
+debug:0,
+config:{
+iceServers:[
+{urls:"stun:stun.l.google.com:19302"},
+{urls:"stun:stun1.l.google.com:19302"}
+]
+}
+};
 
 function showScreen(id){
-
-    document.querySelectorAll(".screen").forEach(s=>{
-        s.classList.remove("active");
-    });
-
-    document.getElementById(id).classList.add("active");
-
-    if(id === "gameScreen"){
-        setTimeout(resizeCanvas,50);
-    }
+document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));
+document.getElementById(id).classList.add("active");
 }
-
 
 function backToMenu(){
-
-    cleanupNetwork();
-
-    showScreen("menuScreen");
+cleanupNetwork();
+running=false;
+gameOver=false;
+showScreen("menuScreen");
 }
-
 
 function openOnline(){
-
-    showScreen("onlineScreen");
-
-    document.getElementById("connectionStatus").textContent =
-        "Escribe tu nombre para comenzar.";
+showScreen("onlineScreen");
+document.getElementById("onlineStatus").textContent="";
+document.getElementById("roomInput").value="";
 }
-
 
 function showInstructions(){
-
-    alert(
-`🎮 GUERRA BEYBLADE
-
-JUGAR SOLO:
-• Mueves tu trompo.
-• Los otros trompos son CPU.
-• Derriba a todos.
-
-JUGAR ONLINE:
-• Crea una sala.
-• Comparte el código de 4 números.
-• Pueden entrar hasta 4 jugadores.
-• Cada jugador controla SU PROPIO trompo.
-
-PC:
-WASD o flechas = mover
-ESPACIO = atacar
-
-CELULAR:
-Joystick = mover
-Botón ATAQUE = atacar`
-    );
+alert(
+"⚡ GUERRA BEYBLADE ⚡\n\n"+
+"PC: usa WASD o las flechas para moverte y ESPACIO para atacar.\n\n"+
+"CELULAR: usa el joystick y el botón ATAQUE.\n\n"+
+"ONLINE: crea una sala con un código de 4 números y comparte ese código. Pueden jugar hasta 4 personas."
+);
 }
-
-
-/* =========================================================
-   CANVAS
-========================================================= */
 
 function resizeCanvas(){
+W=window.innerWidth;
+H=window.innerHeight;
 
-    const dpr = Math.min(window.devicePixelRatio || 1,2);
+const dpr=Math.min(window.devicePixelRatio||1,2);
 
-    W = window.innerWidth;
-    H = window.innerHeight;
+canvas.width=Math.floor(W*dpr);
+canvas.height=Math.floor(H*dpr);
+canvas.style.width=W+"px";
+canvas.style.height=H+"px";
 
-    canvas.width = Math.floor(W*dpr);
-    canvas.height = Math.floor(H*dpr);
-
-    canvas.style.width = W+"px";
-    canvas.style.height = H+"px";
-
-    ctx.setTransform(dpr,0,0,dpr,0,0);
+ctx.setTransform(dpr,0,0,dpr,0,0);
 }
-
 
 window.addEventListener("resize",resizeCanvas);
-
-if(window.visualViewport){
-    window.visualViewport.addEventListener("resize",resizeCanvas);
-}
-
 resizeCanvas();
 
-
-/* =========================================================
-   UTILIDADES
-========================================================= */
-
-function onlyNumbers(input){
-
-    input.value = input.value
-        .replace(/\D/g,"")
-        .slice(0,4);
+function onlyNumbers(el){
+el.value=el.value.replace(/\D/g,"").slice(0,4);
 }
-
 
 function makeRoomCode(){
-
-    return String(
-        Math.floor(1000 + Math.random()*9000)
-    );
+return String(Math.floor(1000+Math.random()*9000));
 }
 
-
-function randomColor(i){
-
-    const colors = [
-        "#28bfff",
-        "#1677ff",
-        "#55e8ff",
-        "#704cff"
-    ];
-
-    return colors[i % colors.length];
+function randomColor(){
+const colors=[
+"#37d9ff",
+"#ff3d75",
+"#8b5cff",
+"#39e86f"
+];
+return colors[Math.floor(Math.random()*colors.length)];
 }
-
 
 function distance(a,b){
-
-    return Math.hypot(
-        a.x-b.x,
-        a.y-b.y
-    );
+return Math.hypot(a.x-b.x,a.y-b.y);
 }
 
-
-/* =========================================================
-   JUGADORES
-========================================================= */
-
-function createPlayer(id,name,x,y,isCPU=false){
-
-    return {
-        id:id,
-        name:name || "Jugador",
-        x:x,
-        y:y,
-
-        vx:0,
-        vy:0,
-
-        radius:25,
-
-        hp:100,
-        maxHp:100,
-
-        color:randomColor(id),
-
-        angle:Math.random()*Math.PI*2,
-
-        input:{
-            x:0,
-            y:0,
-            attack:false
-        },
-
-        attackTimer:0,
-        hitCooldown:0,
-
-        cpu:isCPU,
-        alive:true
-    };
+function createPlayer(id,name,x,y,cpu=false){
+return{
+id,
+name:name||("Jugador "+id),
+x,
+y,
+vx:0,
+vy:0,
+hp:100,
+maxHp:100,
+color:randomColor(),
+angle:Math.random()*Math.PI*2,
+attack:0,
+attackCooldown:0,
+cpu,
+alive:true
+};
 }
-
 
 function getFreePlayerId(){
-
-    for(let i=1;i<=3;i++){
-
-        if(!players.some(p=>p.id===i)){
-            return i;
-        }
-    }
-
-    return null;
+for(let i=1;i<=3;i++){
+if(!players.some(p=>p.id===i))return i;
 }
-
-
-/* =========================================================
-   SOLO
-========================================================= */
+return null;
+}
 
 function startSolo(){
+cleanupNetwork();
 
-    onlineMode = false;
-    isHost = true;
+mode="solo";
+isHost=true;
+myPlayerId=1;
 
-    players = [];
+players=[
+createPlayer(1,"TÚ",W*.5,H*.5,false),
+createPlayer(2,"CPU 1",W*.3,H*.3,true),
+createPlayer(3,"CPU 2",W*.7,H*.35,true),
+createPlayer(4,"CPU 3",W*.5,H*.7,true)
+];
 
-    const positions = [
-        [W/2, H-150],
-        [W/2, 150],
-        [150, H/2],
-        [W-150, H/2]
-    ];
-
-    players.push(
-        createPlayer(
-            0,
-            "TÚ",
-            positions[0][0],
-            positions[0][1],
-            false
-        )
-    );
-
-    players.push(
-        createPlayer(
-            1,
-            "CPU 1",
-            positions[1][0],
-            positions[1][1],
-            true
-        )
-    );
-
-    players.push(
-        createPlayer(
-            2,
-            "CPU 2",
-            positions[2][0],
-            positions[2][1],
-            true
-        )
-    );
-
-    players.push(
-        createPlayer(
-            3,
-            "CPU 3",
-            positions[3][0],
-            positions[3][1],
-            true
-        )
-    );
-
-    myId = 0;
-
-    startGame();
+startGame();
 }
-
-
-/* =========================================================
-   ONLINE - CREAR SALA
-========================================================= */
 
 function createRoom(){
+const name=document.getElementById("playerName").value.trim()||"Jugador 1";
 
-    myName =
-        document.getElementById("playerName")
-        .value.trim()
-        .slice(0,12);
+roomCode=makeRoomCode();
+isHost=true;
+mode="online";
 
-    if(!myName){
-        myName = "Jugador 1";
-    }
+document.getElementById("onlineStatus").textContent="Creando sala...";
 
-    onlineMode = true;
-    isHost = true;
-
-    roomCode = makeRoomCode();
-
-    document.getElementById("connectionStatus").textContent =
-        "Creando sala...";
-
-    createHostPeer();
+createHostPeer(name);
 }
 
+function createHostPeer(name){
+const peerId="bb-"+roomCode;
 
-function createHostPeer(){
+peer=new Peer(peerId,peerConfig);
 
-    if(peer){
+let opened=false;
 
-        try{
-            peer.destroy();
-        }catch(e){}
+peer.on("open",()=>{
+opened=true;
 
-        peer = null;
-    }
+players=[
+createPlayer(1,name,W*.5,H*.5,false)
+];
 
-    const internalId = "beyblade" + roomCode;
+myPlayerId=1;
 
-    peer = new Peer(
-        internalId,
-        {
-            debug:0
-        }
-    );
+document.getElementById("roomDisplay").textContent=roomCode;
+document.getElementById("lobbyStatus").textContent="Sala creada. Comparte el código.";
 
+document.getElementById("onlineStatus").textContent="Sala creada: "+roomCode;
 
-    peer.on("open",()=>{
+updateLobby();
+showScreen("lobbyScreen");
+});
 
-        myId = 0;
+peer.on("connection",conn=>{
+if(!isHost)return;
 
-        players = [
-            createPlayer(
-                0,
-                myName,
-                W/2,
-                H-150,
-                false
-            )
-        ];
-
-        guestConnections = [];
-
-        document.getElementById("roomDisplay")
-            .textContent = roomCode;
-
-        document.getElementById("hostText")
-            .textContent =
-            "👑 Tú eres el anfitrión. Comparte este código.";
-
-        document.getElementById("lobbyStatus")
-            .textContent =
-            "Esperando jugadores...";
-
-        updateLobby();
-
-        showScreen("lobbyScreen");
-
-    });
-
-
-    peer.on("connection",(conn)=>{
-
-        setupHostConnection(conn);
-
-    });
-
-
-    peer.on("error",(err)=>{
-
-        console.log("Peer error:",err);
-
-        if(err.type === "unavailable-id"){
-
-            roomCode = makeRoomCode();
-
-            createHostPeer();
-
-        }else{
-
-            document.getElementById("connectionStatus")
-                .textContent =
-                "Error de conexión. Intenta nuevamente.";
-        }
-
-    });
-
+if(guestConnections.length>=3){
+conn.on("open",()=>{
+conn.send({type:"full"});
+setTimeout(()=>conn.close(),500);
+});
+return;
 }
 
+const id=getFreePlayerId();
 
-/* =========================================================
-   HOST - CONEXIÓN DE JUGADOR
-========================================================= */
+if(id===null)return;
 
-function setupHostConnection(conn){
+conn.playerId=id;
+guestConnections.push(conn);
 
-    const id = getFreePlayerId();
+conn.on("open",()=>{
+conn.send({
+type:"welcome",
+playerId:id,
+room:roomCode
+});
+});
 
-    if(id === null){
+conn.on("data",data=>{
+handleHostData(conn,data);
+});
 
-        conn.on("open",()=>{
-            conn.send({
-                type:"full",
-                message:"Sala llena"
-            });
+conn.on("close",()=>{
+removeGuest(conn);
+});
 
-            setTimeout(()=>{
-                try{conn.close();}catch(e){}
-            },500);
-        });
+conn.on("error",()=>{
+removeGuest(conn);
+});
+});
 
-        return;
-    }
-
-
-    conn.playerId = id;
-
-    guestConnections.push(conn);
-
-
-    conn.on("open",()=>{
-
-        conn.send({
-            type:"welcome",
-            playerId:id,
-            roomCode:roomCode,
-            players:getLobbyData()
-        });
-
-    });
-
-
-    conn.on("data",(data)=>{
-
-        if(!data) return;
-
-
-        /* ----------- UNIRSE ----------- */
-
-        if(data.type === "join"){
-
-            const existing =
-                players.find(p=>p.id===id);
-
-            if(!existing){
-
-                players.push(
-                    createPlayer(
-                        id,
-                        data.name || ("Jugador "+(id+1)),
-                        120 + id*130,
-                        H/2,
-                        false
-                    )
-                );
-
-            }else{
-
-                existing.name =
-                    data.name || existing.name;
-
-            }
-
-            broadcastLobby();
-
-            return;
-        }
-
-
-        /* ----------- CONTROL ----------- */
-
-        if(data.type === "input"){
-
-            const p =
-                players.find(p=>p.id===id);
-
-            if(!p || !p.alive) return;
-
-            let x = Number(data.x) || 0;
-            let y = Number(data.y) || 0;
-
-            const len = Math.hypot(x,y);
-
-            if(len > 1){
-
-                x /= len;
-                y /= len;
-            }
-
-            p.input.x = x;
-            p.input.y = y;
-
-            if(data.attack){
-                p.input.attack = true;
-            }
-
-            return;
-        }
-
-
-        /* ----------- VOLVER A JUGAR ----------- */
-
-        if(data.type === "guestReady"){
-
-            if(gameRunning){
-                return;
-            }
-
-            resetOnlineLobby();
-
-            return;
-        }
-
-    });
-
-
-    conn.on("close",()=>{
-
-        const index =
-            guestConnections.indexOf(conn);
-
-        if(index !== -1){
-            guestConnections.splice(index,1);
-        }
-
-        players =
-            players.filter(p=>p.id!==id);
-
-        if(!gameRunning){
-            broadcastLobby();
-        }
-
-    });
-
-
-    conn.on("error",()=>{});
-
+peer.on("error",err=>{
+if(err.type==="unavailable-id"&&!opened){
+roomCode=makeRoomCode();
+if(peer){
+try{peer.destroy()}catch(e){}
+}
+setTimeout(()=>createHostPeer(name),200);
+return;
 }
 
+document.getElementById("onlineStatus").textContent=
+"Error de conexión. Intenta crear otra sala.";
+});
 
-/* =========================================================
-   ENTRAR A SALA
-========================================================= */
-
-function joinRoom(){
-
-    myName =
-        document.getElementById("playerName")
-        .value.trim()
-        .slice(0,12);
-
-    roomCode =
-        document.getElementById("roomInput")
-        .value.trim();
-
-
-    if(!myName){
-        myName = "Jugador";
-    }
-
-
-    if(!/^\d{4}$/.test(roomCode)){
-
-        alert("El código debe tener exactamente 4 números.");
-
-        return;
-    }
-
-
-    onlineMode = true;
-    isHost = false;
-
-
-    document.getElementById("connectionStatus")
-        .textContent =
-        "Conectando a la sala "+roomCode+"...";
-
-
-    peer = new Peer();
-
-
-    peer.on("open",()=>{
-
-        hostConnection =
-            peer.connect(
-                "beyblade"+roomCode,
-                {
-                    reliable:true
-                }
-            );
-
-
-        setupGuestConnection();
-
-    });
-
-
-    peer.on("error",(err)=>{
-
-        console.log(err);
-
-        document.getElementById("connectionStatus")
-            .textContent =
-            "No se pudo conectar a la sala.";
-
-    });
-
+peer.on("disconnected",()=>{
+if(isHost){
+try{peer.reconnect()}catch(e){}
 }
-
-
-/* =========================================================
-   GUEST CONNECTION
-========================================================= */
+});
+}
 
 function setupGuestConnection(){
-
-    hostConnection.on("open",()=>{
-
-        document.getElementById("connectionStatus")
-            .textContent =
-            "¡Conectado! Entrando a la sala...";
-
-    });
-
-
-    hostConnection.on("data",(data)=>{
-
-        if(!data) return;
-
-
-        /* ----------- BIENVENIDA ----------- */
-
-        if(data.type === "welcome"){
-
-            myId = data.playerId;
-
-            players = data.players || [];
-
-            hostConnection.send({
-                type:"join",
-                name:myName
-            });
-
-            document.getElementById("roomDisplay")
-                .textContent = roomCode;
-
-            document.getElementById("hostText")
-                .textContent =
-                "Estás dentro de la sala.";
-
-            updateLobby();
-
-            showScreen("lobbyScreen");
-
-            return;
-        }
-
-
-        /* ----------- LOBBY ----------- */
-
-        if(data.type === "lobby"){
-
-            players = data.players || [];
-
-            updateLobby();
-
-            return;
-        }
-
-
-        /* ----------- COMENZAR ----------- */
-
-        if(data.type === "startGame"){
-
-            myId = data.myId;
-
-            players = clonePlayers(data.players);
-
-            startGame();
-
-            return;
-        }
-
-
-        /* ----------- ESTADO ----------- */
-
-        if(data.type === "state"){
-
-            if(!gameRunning) return;
-
-            applyNetworkState(data.players);
-
-            return;
-        }
-
-
-        /* ----------- PAUSA ----------- */
-
-        if(data.type === "pause"){
-
-            gamePaused = data.value;
-
-            document.getElementById("pauseOverlay")
-                .style.display =
-                gamePaused ? "flex" : "none";
-
-            return;
-        }
-
-
-        /* ----------- GANADOR ----------- */
-
-        if(data.type === "winner"){
-
-            gameRunning = false;
-
-            players = clonePlayers(data.players);
-
-            showResult(data.name);
-
-            return;
-        }
-
-
-        /* ----------- VOLVER AL LOBBY ----------- */
-
-        if(data.type === "backLobby"){
-
-            gameRunning = false;
-            gamePaused = false;
-
-            players = data.players || [];
-
-            updateLobby();
-
-            showScreen("lobbyScreen");
-
-            return;
-        }
-
-
-        /* ----------- SALA CERRADA ----------- */
-
-        if(data.type === "roomClosed"){
-
-            alert("El anfitrión cerró la sala.");
-
-            cleanupNetwork();
-
-            showScreen("onlineScreen");
-
-        }
-
-    });
-
-
-    hostConnection.on("close",()=>{
-
-        if(onlineMode && !isHost){
-
-            gameRunning = false;
-
-            alert("El anfitrión salió de la sala.");
-
-            cleanupNetwork();
-
-            showScreen("onlineScreen");
-        }
-
-    });
-
-
-    hostConnection.on("error",(err)=>{
-
-        console.log(err);
-
-        document.getElementById("connectionStatus")
-            .textContent =
-            "Error al conectarse.";
-
-    });
-
+if(!hostConnection)return;
+
+hostConnection.on("open",()=>{
+hostConnection.send({
+type:"join",
+name:document.getElementById("playerName").value.trim()||"Jugador"
+});
+
+document.getElementById("lobbyStatus").textContent="Conectado. Esperando al anfitrión...";
+});
+
+hostConnection.on("data",data=>{
+handleGuestData(data);
+});
+
+hostConnection.on("close",()=>{
+alert("La sala se cerró o el anfitrión salió.");
+backToMenu();
+});
+
+hostConnection.on("error",()=>{
+document.getElementById("onlineStatus").textContent=
+"No se pudo conectar a la sala.";
+});
 }
 
+function joinRoom(){
+const name=document.getElementById("playerName").value.trim()||"Jugador";
 
-/* =========================================================
-   CLONAR JUGADORES
-========================================================= */
+roomCode=document.getElementById("roomInput").value.trim();
 
-function clonePlayers(list){
-
-    return (list || []).map(p=>({
-
-        id:p.id,
-        name:p.name,
-        x:p.x,
-        y:p.y,
-
-        vx:p.vx || 0,
-        vy:p.vy || 0,
-
-        radius:p.radius || 25,
-
-        hp:p.hp ?? 100,
-        maxHp:p.maxHp || 100,
-
-        color:p.color || randomColor(p.id),
-
-        angle:p.angle || 0,
-
-        input:{
-            x:0,
-            y:0,
-            attack:false
-        },
-
-        attackTimer:p.attackTimer || 0,
-        hitCooldown:p.hitCooldown || 0,
-
-        cpu:!!p.cpu,
-        alive:p.alive !== false
-
-    }));
-
+if(!/^\d{4}$/.test(roomCode)){
+document.getElementById("onlineStatus").textContent=
+"Escribe exactamente 4 números.";
+return;
 }
 
+cleanupNetwork();
 
-/* =========================================================
-   LOBBY
-========================================================= */
+isHost=false;
+mode="online";
 
-function getLobbyData(){
+document.getElementById("onlineStatus").textContent="Conectando a la sala...";
+showScreen("onlineScreen");
 
-    return players.map(p=>({
-        id:p.id,
-        name:p.name
-    }));
+peer=new Peer(peerConfig);
 
+let finished=false;
 
+const timeout=setTimeout(()=>{
+if(finished)return;
+
+finished=true;
+
+try{peer.destroy()}catch(e){}
+
+document.getElementById("onlineStatus").textContent=
+"No se pudo entrar. Revisa el código o intenta otra vez.";
+},9000);
+
+peer.on("open",()=>{
+if(finished)return;
+
+const hostId="bb-"+roomCode;
+
+hostConnection=peer.connect(hostId,{
+reliable:false,
+serialization:"json"
+});
+
+setupGuestConnection();
+});
+
+peer.on("error",err=>{
+if(finished)return;
+
+if(err.type==="peer-unavailable"){
+clearTimeout(timeout);
+finished=true;
+
+document.getElementById("onlineStatus").textContent=
+"No existe esa sala. Revisa el código.";
+try{peer.destroy()}catch(e){}
+}else{
+document.getElementById("onlineStatus").textContent=
+"Problema de conexión. Intenta nuevamente.";
+}
+});
 }
 
+function handleHostData(conn,data){
+if(!data||typeof data!=="object")return;
+
+if(data.type==="join"){
+const id=conn.playerId;
+
+const p=players.find(x=>x.id===id);
+
+if(p){
+p.name=(data.name||("Jugador "+id)).slice(0,14);
+}else{
+players.push(
+createPlayer(
+id,
+(data.name||("Jugador "+id)).slice(0,14),
+W*(.2+Math.random()*.6),
+H*(.25+Math.random()*.5),
+false
+)
+);
+}
+
+conn.ready=true;
+
+conn.send({
+type:"lobby",
+players:cloneLobby()
+});
+
+broadcastLobby();
+return;
+}
+
+if(data.type==="input"){
+const p=players.find(x=>x.id===conn.playerId);
+
+if(!p||!p.alive)return;
+
+if(typeof data.x==="number")p.inputX=Math.max(-1,Math.min(1,data.x));
+if(typeof data.y==="number")p.inputY=Math.max(-1,Math.min(1,data.y));
+p.inputAttack=!!data.attack;
+return;
+}
+
+if(data.type==="guestReady"){
+broadcastLobby();
+}
+}
+
+function handleGuestData(data){
+if(!data||typeof data!=="object")return;
+
+if(data.type==="welcome"){
+myPlayerId=data.playerId;
+
+document.getElementById("roomDisplay").textContent=roomCode;
+
+showScreen("lobbyScreen");
+
+document.getElementById("lobbyStatus").textContent=
+"Conectado como jugador "+myPlayerId;
+
+return;
+}
+
+if(data.type==="full"){
+document.getElementById("onlineStatus").textContent=
+"La sala está llena.";
+try{peer.destroy()}catch(e){}
+return;
+}
+
+if(data.type==="lobby"){
+players=data.players.map(p=>({
+...p,
+vx:0,
+vy:0,
+attack:0,
+attackCooldown:0,
+alive:true
+}));
+
+updateLobby();
+return;
+}
+
+if(data.type==="start"){
+players=data.players;
+myPlayerId=data.myPlayerId;
+startOnlineGame();
+return;
+}
+
+if(data.type==="state"){
+players=data.players;
+return;
+}
+
+if(data.type==="result"){
+showOnlineResult(data.winner);
+return;
+}
+
+if(data.type==="backLobby"){
+players=data.players.map(p=>({
+...p,
+vx:0,
+vy:0,
+attack:0,
+attackCooldown:0,
+alive:true
+}));
+
+gameOver=false;
+running=false;
+
+document.getElementById("resultOverlay").classList.remove("active");
+
+updateLobby();
+
+showScreen("lobbyScreen");
+
+document.getElementById("lobbyStatus").textContent=
+"Esperando al anfitrión...";
+
+return;
+}
+
+if(data.type==="hostLeft"){
+alert("El anfitrión salió de la sala.");
+backToMenu();
+}
+}
+
+function cloneLobby(){
+return players.map(p=>({
+id:p.id,
+name:p.name,
+color:p.color
+}));
+}
 
 function broadcastLobby(){
+const data={
+type:"lobby",
+players:cloneLobby()
+};
 
-    const data = {
-        type:"lobby",
-        players:getLobbyData()
-    };
-
-
-    guestConnections.forEach(conn=>{
-
-        if(conn.open){
-
-            try{
-                conn.send(data);
-            }catch(e){}
-
-        }
-
-    });
-
-
-    updateLobby();
+guestConnections.forEach(c=>{
+if(c.open){
+try{c.send(data)}catch(e){}
 }
+});
 
+updateLobby();
+}
 
 function updateLobby(){
+const list=document.getElementById("playersList");
+list.innerHTML="";
 
-    const list =
-        document.getElementById("playersList");
+players.forEach(p=>{
+const div=document.createElement("div");
+div.className="player";
 
-    list.innerHTML = "";
+const crown=p.id===1?" 👑":"";
 
+div.innerHTML=
+"<span>⚡ "+escapeHtml(p.name)+crown+"</span>"+
+"<span>Jugador "+p.id+"</span>";
 
-    players.forEach((p,index)=>{
+list.appendChild(div);
+});
 
-        const div =
-            document.createElement("div");
+const start=document.getElementById("startMatchButton");
 
-        div.className = "playerItem";
-
-        let crown = p.id === 0 ? " 👑" : "";
-
-        let you = p.id === myId ? " (TÚ)" : "";
-
-        div.innerHTML =
-            "🌀 <b>"+p.name+"</b>"+crown+you;
-
-        list.appendChild(div);
-
-    });
-
-
-    if(players.length < 2){
-
-        document.getElementById("lobbyStatus")
-            .textContent =
-            "Esperando al menos 2 jugadores...";
-
-    }else{
-
-        document.getElementById("lobbyStatus")
-            .textContent =
-            players.length+" jugadores listos.";
-
-    }
-
-
-    const button =
-        document.getElementById("startMatchButton");
-
-
-    if(isHost){
-
-        button.style.display =
-            players.length >= 2 ? "block" : "none";
-
-    }else{
-
-        button.style.display = "none";
-
-    }
-
+if(isHost){
+start.disabled=players.length<2;
+start.textContent=players.length<2
+?"ESPERANDO JUGADORES..."
+:"INICIAR PARTIDA";
+}
 }
 
-
-/* =========================================================
-   INICIAR PARTIDA ONLINE
-========================================================= */
+function escapeHtml(text){
+return String(text)
+.replaceAll("&","&amp;")
+.replaceAll("<","&lt;")
+.replaceAll(">","&gt;")
+.replaceAll('"',"&quot;");
+}
 
 function hostStartGame(){
+if(!isHost||players.length<2)return;
 
-    if(!isHost) return;
+players.forEach((p,i)=>{
+p.x=W*(.2+.2*i);
+p.y=H*(.35+((i%2)*.3));
+p.hp=100;
+p.alive=true;
+p.vx=0;
+p.vy=0;
+});
 
-    if(players.length < 2){
-
-        alert("Necesitas al menos 2 jugadores.");
-
-        return;
-    }
-
-
-    const startData = {
-        type:"startGame",
-        players:players,
-    };
-
-
-    guestConnections.forEach(conn=>{
-
-        if(conn.open){
-
-            const copy = clonePlayers(players);
-
-            conn.send({
-                type:"startGame",
-                myId:conn.playerId,
-                players:copy
-            });
-
-        }
-
-    });
-
-
-    startOnlineGame();
-
+guestConnections.forEach(c=>{
+if(c.open){
+try{
+c.send({
+type:"start",
+players:players.map(p=>({...p})),
+myPlayerId:c.playerId
+});
+}catch(e){}
 }
+});
 
+startOnlineGame();
+}
 
 function startOnlineGame(){
-
-    onlineMode = true;
-
-    isHost = true;
-
-    gameRunning = true;
-
-    gamePaused = false;
-
-    showScreen("gameScreen");
-
-    resizeCanvas();
-
-}
-
-
-/* =========================================================
-   INICIAR JUEGO
-========================================================= */
-
-function startGame(){
-
-    gameRunning = true;
-
-    gamePaused = false;
-
-    document.getElementById("pauseOverlay")
-        .style.display = "none";
-
-    document.getElementById("resultOverlay")
-        .style.display = "none";
-
-    showScreen("gameScreen");
-
-    resizeCanvas();
-
-}
-
-
-/* =========================================================
-   TECLADO
-========================================================= */
-
-const keys = {};
-
-
-window.addEventListener("keydown",(e)=>{
-
-    keys[e.key.toLowerCase()] = true;
-
-    if(
-        e.key === "ArrowUp" ||
-        e.key === "ArrowDown" ||
-        e.key === "ArrowLeft" ||
-        e.key === "ArrowRight" ||
-        e.code === "Space"
-    ){
-
-        e.preventDefault();
-
-    }
-
-});
-
-
-window.addEventListener("keyup",(e)=>{
-
-    keys[e.key.toLowerCase()] = false;
-
-});
-
-
-function getKeyboardInput(){
-
-    let x = 0;
-    let y = 0;
-
-
-    if(
-        keys["a"] ||
-        keys["arrowleft"]
-    ){
-        x--;
-    }
-
-
-    if(
-        keys["d"] ||
-        keys["arrowright"]
-    ){
-        x++;
-    }
-
-
-    if(
-        keys["w"] ||
-        keys["arrowup"]
-    ){
-        y--;
-    }
-
-
-    if(
-        keys["s"] ||
-        keys["arrowdown"]
-    ){
-        y++;
-    }
-
-
-    const len = Math.hypot(x,y);
-
-    if(len>0){
-
-        x/=len;
-        y/=len;
-
-    }
-
-
-    return {
-        x:x,
-        y:y,
-        attack:!!keys[" "]
-    };
-
-}
-
-
-/* =========================================================
-   JOYSTICK
-========================================================= */
-
-const joystick =
-    document.getElementById("joystick");
-
-const stick =
-    document.getElementById("stick");
-
-const attackButton =
-    document.getElementById("attackButton");
-
-
-let joyX = 0;
-let joyY = 0;
-let joystickActive = false;
-
-
-function updateJoystick(clientX,clientY){
-
-    const rect =
-        joystick.getBoundingClientRect();
-
-    const centerX =
-        rect.left + rect.width/2;
-
-    const centerY =
-        rect.top + rect.height/2;
-
-    let dx =
-        clientX-centerX;
-
-    let dy =
-        clientY-centerY;
-
-    const max =
-        rect.width/2-31;
-
-    const len =
-        Math.hypot(dx,dy);
-
-    if(len > max){
-
-        dx =
-            dx/len*max;
-
-        dy =
-            dy/len*max;
-
-    }
-
-
-    joyX = dx/max;
-    joyY = dy/max;
-
-
-    stick.style.left =
-        "calc(50% + "+dx+"px)";
-
-    stick.style.top =
-        "calc(50% + "+dy+"px)";
-
-}
-
-
-function resetJoystick(){
-
-    joystickActive = false;
-
-    joyX = 0;
-    joyY = 0;
-
-    stick.style.left = "50%";
-    stick.style.top = "50%";
-
-}
-
-
-joystick.addEventListener("pointerdown",(e)=>{
-
-    joystickActive = true;
-
-    joystick.setPointerCapture(e.pointerId);
-
-    updateJoystick(e.clientX,e.clientY);
-
-});
-
-
-joystick.addEventListener("pointermove",(e)=>{
-
-    if(!joystickActive) return;
-
-    updateJoystick(e.clientX,e.clientY);
-
-});
-
-
-joystick.addEventListener("pointerup",resetJoystick);
-joystick.addEventListener("pointercancel",resetJoystick);
-
-
-let touchAttack = false;
-
-
-attackButton.addEventListener("pointerdown",(e)=>{
-
-    e.preventDefault();
-
-    touchAttack = true;
-
-});
-
-
-attackButton.addEventListener("pointerup",(e)=>{
-
-    e.preventDefault();
-
-    touchAttack = false;
-
-});
-
-
-attackButton.addEventListener("pointercancel",()=>{
-
-    touchAttack = false;
-
-});
-
-
-/* =========================================================
-   CONTROL DEL JUGADOR
-========================================================= */
-
-function getLocalInput(){
-
-    const keyboard =
-        getKeyboardInput();
-
-    let x = keyboard.x;
-    let y = keyboard.y;
-
-
-    if(
-        Math.abs(joyX)>0.05 ||
-        Math.abs(joyY)>0.05
-    ){
-
-        x = joyX;
-        y = joyY;
-
-    }
-
-
-    return {
-        x:x,
-        y:y,
-        attack:
-            keyboard.attack ||
-            touchAttack
-    };
-
-}
-
-
-/* =========================================================
-   UPDATE PRINCIPAL
-========================================================= */
-
-let lastTime = performance.now();
-
-
-function gameLoop(now){
-
-    const dt =
-        Math.min((now-lastTime)/16.67,2);
-
-    lastTime = now;
-
-
-    if(gameRunning && !gamePaused){
-
-        if(isHost){
-
-            updateHostGame(dt);
-
-        }else{
-
-            updateGuestGame();
-
-        }
-
-    }
-
-
-    draw();
-
-    requestAnimationFrame(gameLoop);
-
-}
-
-
-requestAnimationFrame(gameLoop);
-
-
-/* =========================================================
-   UPDATE HOST
-========================================================= */
-
-function updateHostGame(dt){
-
-    const human =
-        players.find(p=>p.id===myId);
-
-
-    /* -------------------------
-       CONTROL HUMANO
-    ------------------------- */
-
-    if(human && !human.cpu && human.alive){
-
-        const input =
-            getLocalInput();
-
-        human.input.x = input.x;
-        human.input.y = input.y;
-
-        if(input.attack){
-
-            human.input.attack = true;
-
-        }
-
-    }
-
-
-    /* -------------------------
-       CPU
-    ------------------------- */
-
-    players.forEach(p=>{
-
-        if(!p.cpu || !p.alive) return;
-
-        updateCPU(p,dt);
-
-    });
-
-
-    /* -------------------------
-       MOVIMIENTO
-    ------------------------- */
-
-    players.forEach(p=>{
-
-        if(!p.alive) return;
-
-        updatePlayerMovement(p,dt);
-
-        updateCombat(p);
-
-    });
-
-
-    /* -------------------------
-       ESTADO
-    ------------------------- */
-
-    const now =
-        performance.now();
-
-
-    if(
-        onlineMode &&
-        now-lastStateSend > 50
-    ){
-
-        broadcastState();
-
-        lastStateSend = now;
-
-    }
-
-
-    checkWinner();
-
-}
-
-
-/* =========================================================
-   UPDATE GUEST
-========================================================= */
-
-function updateGuestGame(){
-
-    const p =
-        players.find(p=>p.id===myId);
-
-
-    if(!p || !p.alive) return;
-
-
-    const input =
-        getLocalInput();
-
-
-    const now =
-        performance.now();
-
-
-    if(
-        hostConnection &&
-        hostConnection.open &&
-        now-lastInputSend > 35
-    ){
-
-        hostConnection.send({
-
-            type:"input",
-
-            x:input.x,
-            y:input.y,
-
-            attack:input.attack
-
-        });
-
-
-        lastInputSend = now;
-
-    }
-
-
-    /* No movemos localmente.
-       El host manda la posición real.
-       Así los 4 jugadores permanecen sincronizados. */
-
-}
-
-
-/* =========================================================
-   MOVIMIENTO
-========================================================= */
-
-function updatePlayerMovement(p,dt){
-
-    let dx =
-        Number(p.input.x)||0;
-
-    let dy =
-        Number(p.input.y)||0;
-
-
-    const len =
-        Math.hypot(dx,dy);
-
-
-    if(len>1){
-
-        dx/=len;
-        dy/=len;
-
-    }
-
-
-    p.vx += dx*0.85*dt;
-    p.vy += dy*0.85*dt;
-
-
-    p.vx *= Math.pow(.91,dt);
-    p.vy *= Math.pow(.91,dt);
-
-
-    const speed =
-        Math.hypot(p.vx,p.vy);
-
-
-    if(speed>6){
-
-        p.vx =
-            p.vx/speed*6;
-
-        p.vy =
-            p.vy/speed*6;
-
-    }
-
-
-    p.x += p.vx*dt;
-    p.y += p.vy*dt;
-
-
-    const margin = 50;
-
-
-    if(p.x<margin){
-
-        p.x=margin;
-        p.vx*=-.5;
-
-    }
-
-
-    if(p.x>W-margin){
-
-        p.x=W-margin;
-        p.vx*=-.5;
-
-    }
-
-
-    if(p.y<margin){
-
-        p.y=margin;
-        p.vy*=-.5;
-
-    }
-
-
-    if(p.y>H-margin){
-
-        p.y=H-margin;
-        p.vy*=-.5;
-
-    }
-
-
-    p.angle +=
-        Math.hypot(p.vx,p.vy)*.08*dt;
-
-
-    if(p.attackTimer>0){
-
-        p.attackTimer -= dt;
-
-    }
-
-
-    if(p.hitCooldown>0){
-
-        p.hitCooldown -= dt;
-
-    }
-
-}
-
-
-/* =========================================================
-   CPU
-========================================================= */
-
-function updateCPU(p,dt){
-
-    const targets =
-        players.filter(
-            x=>x.alive && x.id!==p.id
-        );
-
-
-    if(!targets.length) return;
-
-
-    let target =
-        targets[0];
-
-    let best =
-        Infinity;
-
-
-    targets.forEach(t=>{
-
-        const d =
-            distance(p,t);
-
-        if(d<best){
-
-            best=d;
-            target=t;
-
-        }
-
-    });
-
-
-    const dx =
-        target.x-p.x;
-
-    const dy =
-        target.y-p.y;
-
-    const d =
-        Math.hypot(dx,dy)||1;
-
-
-    const nx =
-        dx/d;
-
-    const ny =
-        dy/d;
-
-
-    if(d>85){
-
-        p.input.x=nx;
-        p.input.y=ny;
-
-    }else{
-
-        p.input.x=-ny;
-        p.input.y=nx;
-
-        if(Math.random()<.08){
-
-            p.input.attack=true;
-
-        }
-
-    }
-
-}
-
-
-/* =========================================================
-   COMBATE
-========================================================= */
-
-function updateCombat(p){
-
-    if(!p.alive) return;
-
-
-    if(p.input.attack && p.attackTimer<=0){
-
-        p.attackTimer=25;
-
-        p.input.attack=false;
-
-
-        players.forEach(enemy=>{
-
-            if(
-                enemy.id===p.id ||
-                !enemy.alive
-            ) return;
-
-
-            const d =
-                distance(p,enemy);
-
-
-            if(d<75){
-
-                const damage =
-                    8 + Math.random()*7;
-
-
-                enemy.hp -= damage;
-
-
-                const dx =
-                    enemy.x-p.x;
-
-                const dy =
-                    enemy.y-p.y;
-
-                const len =
-                    Math.hypot(dx,dy)||1;
-
-
-                enemy.vx +=
-                    dx/len*3.5;
-
-                enemy.vy +=
-                    dy/len*3.5;
-
-            }
-
-        });
-
-    }
-
-
-    if(p.hp<=0){
-
-        p.hp=0;
-        p.alive=false;
-        p.vx=0;
-        p.vy=0;
-
-    }
-
-}
-
-
-/* =========================================================
-   GANADOR
-========================================================= */
-
-function checkWinner(){
-
-    const alive =
-        players.filter(p=>p.alive);
-
-
-    if(alive.length<=1){
-
-        const winner =
-            alive[0] || null;
-
-
-        gameRunning=false;
-
-
-        if(onlineMode){
-
-            const name =
-                winner ? winner.name : "Nadie";
-
-
-            guestConnections.forEach(conn=>{
-
-                if(conn.open){
-
-                    conn.send({
-
-                        type:"winner",
-
-                        name:name,
-
-                        players:players
-
-                    });
-
-                }
-
-            });
-
-
-            showResult(name);
-
-        }else{
-
-            showResult(
-                winner ? winner.name : "Nadie"
-            );
-
-        }
-
-    }
-
-}
-
-
-/* =========================================================
-   ESTADO ONLINE
-========================================================= */
-
-function broadcastState(){
-
-    const state = {
-
-        type:"state",
-
-        players:players.map(p=>({
-
-            id:p.id,
-
-            name:p.name,
-
-            x:p.x,
-            y:p.y,
-
-            vx:p.vx,
-            vy:p.vy,
-
-            radius:p.radius,
-
-            hp:p.hp,
-            maxHp:p.maxHp,
-
-            color:p.color,
-
-            angle:p.angle,
-
-            attackTimer:p.attackTimer,
-
-            alive:p.alive
-
-        }))
-
-    };
-
-
-    guestConnections.forEach(conn=>{
-
-        if(conn.open){
-
-            try{
-
-                conn.send(state);
-
-            }catch(e){}
-
-        }
-
-    });
-
-}
-
-
-/* =========================================================
-   RECIBIR ESTADO
-========================================================= */
-
-function applyNetworkState(list){
-
-    if(!Array.isArray(list)) return;
-
-
-    list.forEach(net=>{
-
-        let p =
-            players.find(x=>x.id===net.id);
-
-
-        if(!p){
-
-            p =
-                createPlayer(
-                    net.id,
-                    net.name,
-                    net.x,
-                    net.y,
-                    false
-                );
-
-            players.push(p);
-
-        }
-
-
-        p.name=net.name;
-
-        p.x=net.x;
-        p.y=net.y;
-
-        p.vx=net.vx;
-        p.vy=net.vy;
-
-        p.hp=net.hp;
-        p.maxHp=net.maxHp;
-
-        p.color=net.color;
-
-        p.angle=net.angle;
-
-        p.attackTimer=net.attackTimer;
-
-        p.alive=net.alive;
-
-    });
-
-
-    players =
-        players.filter(
-            p=>list.some(n=>n.id===p.id)
-        );
-
-}
-
-
-/* =========================================================
-   DIBUJAR
-========================================================= */
-
-function draw(){
-
-    ctx.clearRect(0,0,W,H);
-
-
-    if(
-        !document.getElementById("gameScreen")
-        .classList.contains("active")
-    ){
-
-        return;
-
-    }
-
-
-    drawArena();
-
-
-    players.forEach(p=>{
-
-        if(p.alive){
-
-            drawPlayer(p);
-
-        }
-
-    });
-
-}
-
-
-/* =========================================================
-   ARENA
-========================================================= */
-
-function drawArena(){
-
-    const gradient =
-        ctx.createRadialGradient(
-            W/2,H/2,50,
-            W/2,H/2,
-            Math.max(W,H)
-        );
-
-
-    gradient.addColorStop(
-        0,
-        "#103e87"
-    );
-
-    gradient.addColorStop(
-        .55,
-        "#061c4d"
-    );
-
-    gradient.addColorStop(
-        1,
-        "#020918"
-    );
-
-
-    ctx.fillStyle=gradient;
-
-    ctx.fillRect(0,0,W,H);
-
-
-    /* círculos de la arena */
-
-    ctx.save();
-
-    ctx.translate(W/2,H/2);
-
-    const radius =
-        Math.min(W,H)*.42;
-
-
-    for(let i=5;i>=1;i--){
-
-        ctx.beginPath();
-
-        ctx.arc(
-            0,
-            0,
-            radius*i/5,
-            0,
-            Math.PI*2
-        );
-
-        ctx.strokeStyle =
-            `rgba(80,190,255,${.08+i*.015})`;
-
-        ctx.lineWidth=2;
-
-        ctx.stroke();
-
-    }
-
-
-    ctx.restore();
-
-
-    /* estrellas */
-
-    for(let i=0;i<45;i++){
-
-        const x =
-            (i*137)%W;
-
-        const y =
-            (i*71)%H;
-
-        ctx.fillStyle =
-            "rgba(100,210,255,.25)";
-
-        ctx.beginPath();
-
-        ctx.arc(
-            x,
-            y,
-            1.5,
-            0,
-            Math.PI*2
-        );
-
-        ctx.fill();
-
-    }
-
-}
-
-
-/* =========================================================
-   DIBUJAR TROMPO
-========================================================= */
-
-function drawPlayer(p){
-
-    ctx.save();
-
-    ctx.translate(p.x,p.y);
-
-
-    /* sombra */
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        4,
-        8,
-        p.radius*1.1,
-        p.radius*.45,
-        0,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fillStyle="rgba(0,0,0,.4)";
-    ctx.fill();
-
-
-    /* ataque */
-
-    if(p.attackTimer>0){
-
-        ctx.beginPath();
-
-        ctx.arc(
-            0,
-            0,
-            70,
-            p.angle,
-            p.angle+Math.PI*1.4
-        );
-
-        ctx.strokeStyle="#9aeaff";
-        ctx.lineWidth=8;
-        ctx.shadowBlur=20;
-        ctx.shadowColor="#00aaff";
-        ctx.stroke();
-
-    }
-
-
-    /* trompo exterior */
-
-    ctx.beginPath();
-
-    ctx.arc(
-        0,
-        0,
-        p.radius,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fillStyle=p.color;
-
-    ctx.shadowBlur=18;
-    ctx.shadowColor=p.color;
-
-    ctx.fill();
-
-
-    /* borde */
-
-    ctx.strokeStyle="#c8f6ff";
-    ctx.lineWidth=3;
-
-    ctx.stroke();
-
-
-    /* diseño giratorio */
-
-    ctx.rotate(p.angle);
-
-
-    for(let i=0;i<6;i++){
-
-        ctx.rotate(Math.PI/3);
-
-        ctx.beginPath();
-
-        ctx.moveTo(0,-4);
-        ctx.lineTo(17,-10);
-        ctx.lineTo(9,0);
-        ctx.lineTo(17,10);
-        ctx.closePath();
-
-        ctx.fillStyle=
-            i%2===0
-            ? "#e9fbff"
-            : "#062d79";
-
-        ctx.fill();
-
-    }
-
-
-    /* centro */
-
-    ctx.beginPath();
-
-    ctx.arc(
-        0,
-        0,
-        8,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fillStyle="#fff";
-    ctx.fill();
-
-    ctx.restore();
-
-
-    /* nombre */
-
-    ctx.font="bold 14px Arial";
-
-    ctx.textAlign="center";
-
-    ctx.fillStyle="#fff";
-
-    ctx.shadowBlur=4;
-    ctx.shadowColor="#000";
-
-    ctx.fillText(
-        p.name,
-        p.x,
-        p.y-p.radius-28
-    );
-
-
-    /* barra de vida */
-
-    const barW=60;
-    const barH=7;
-
-    const hpPercent =
-        Math.max(0,p.hp/p.maxHp);
-
-
-    ctx.fillStyle="rgba(0,0,0,.7)";
-
-    ctx.fillRect(
-        p.x-barW/2,
-        p.y-p.radius-18,
-        barW,
-        barH
-    );
-
-
-    ctx.fillStyle =
-        hpPercent>.5
-        ? "#37e8ff"
-        : hpPercent>.25
-        ? "#ffc43d"
-        : "#ff4f75";
-
-
-    ctx.fillRect(
-        p.x-barW/2,
-        p.y-p.radius-18,
-        barW*hpPercent,
-        barH
-    );
-
-}
-
-
-/* =========================================================
-   PAUSA
-========================================================= */
-
-function togglePause(){
-
-    if(!gameRunning) return;
-
-
-    if(onlineMode){
-
-        if(!isHost) return;
-
-        gamePaused=!gamePaused;
-
-        document.getElementById("pauseOverlay")
-            .style.display =
-            gamePaused ? "flex" : "none";
-
-
-        guestConnections.forEach(conn=>{
-
-            if(conn.open){
-
-                conn.send({
-
-                    type:"pause",
-
-                    value:gamePaused
-
-                });
-
-            }
-
-        });
-
-    }else{
-
-        gamePaused=!gamePaused;
-
-        document.getElementById("pauseOverlay")
-            .style.display =
-            gamePaused ? "flex" : "none";
-
-    }
-
-}
-
-
-/* =========================================================
-   RESULTADO
-========================================================= */
-
-function showResult(name){
-
-    gameRunning=false;
-
-    document.getElementById("winnerText")
-        .textContent =
-        "🏆 GANADOR: "+name;
-
-
-    document.getElementById("resultOverlay")
-        .style.display="flex";
-
-
-    const button =
-        document.getElementById("playAgainButton");
-
-
-    if(onlineMode){
-
-        if(isHost){
-
-            button.textContent =
-                "🔄 VOLVER A JUGAR";
-
-        }else{
-
-            button.textContent =
-                "🔄 VOLVER A LA SALA";
-
-        }
-
-    }else{
-
-        button.textContent =
-            "🔄 VOLVER A JUGAR";
-
-    }
-
-}
-
-
-/* =========================================================
-   VOLVER A JUGAR
-========================================================= */
-
-function playAgain(){
-
-    document.getElementById("resultOverlay")
-        .style.display="none";
-
-
-    if(!onlineMode){
-
-        startSolo();
-
-        return;
-
-    }
-
-
-    if(isHost){
-
-        resetOnlineLobby();
-
-    }else{
-
-        if(
-            hostConnection &&
-            hostConnection.open
-        ){
-
-            hostConnection.send({
-                type:"guestReady"
-            });
-
-        }
-
-        showScreen("lobbyScreen");
-
-        document.getElementById("lobbyStatus")
-            .textContent =
-            "Esperando al anfitrión...";
-
-    }
-
-}
-
-
-/* =========================================================
-   REINICIAR SALA ONLINE
-========================================================= */
-
-function resetOnlineLobby(){
-
-    gameRunning=false;
-    gamePaused=false;
-
-
-    players =
-        players.map(p=>{
-
-            return createPlayer(
-                p.id,
-                p.name,
-                W/2,
-                H/2,
-                false
-            );
-
-        });
-
-
-    /* posiciones */
-
-    const positions = [
-
-        [W/2,H-150],
-
-        [W/2,150],
-
-        [150,H/2],
-
-        [W-150,H/2]
-
-    ];
-
-
-    players.forEach((p,i)=>{
-
-        p.x =
-            positions[i][0];
-
-        p.y =
-            positions[i][1];
-
-    });
-
-
-    broadcastLobby();
-
-    showScreen("lobbyScreen");
-
-}
-
-
-/* =========================================================
-   SALIR DE SALA
-========================================================= */
-
-function leaveRoom(){
-
-    if(isHost){
-
-        guestConnections.forEach(conn=>{
-
-            if(conn.open){
-
-                try{
-
-                    conn.send({
-                        type:"roomClosed"
-                    });
-
-                }catch(e){}
-
-            }
-
-        });
-
-    }
-
-
-    cleanupNetwork();
-
-    showScreen("onlineScreen");
-
-}
-
-
-/* =========================================================
-   SALIR DESDE PARTIDA
-========================================================= */
-
-function returnToMenuFromGame(){
-
-    if(onlineMode){
-
-        leaveRoom();
-
-    }else{
-
-        gameRunning=false;
-
-        showScreen("menuScreen");
-
-    }
-
-}
-
-
-/* =========================================================
-   LIMPIAR CONEXIONES
-========================================================= */
-
-function cleanupNetwork(){
-
-    gameRunning=false;
-    gamePaused=false;
-
-    try{
-
-        if(hostConnection){
-
-            hostConnection.close();
-
-        }
-
-    }catch(e){}
-
-
-    try{
-
-        guestConnections.forEach(conn=>{
-
-            try{
-                conn.close();
-            }catch(e){}
-
-        });
-
-    }catch(e){}
-
-
-    try{
-
-        if(peer){
-
-            peer.destroy();
-
-        }
-
-    }catch(e){}
-
-
-    peer=null;
-    hostConnection=null;
-    guestConnections=[];
-
-    players=[];
-
-    roomCode="";
-
-    onlineMode=false;
-    isHost=false;
-    myId=0;
-
-}
-
-
-/* =========================================================
-   EVITAR SALIR CON RECARGA
-========================================================= */
-
-window.addEventListener("beforeunload",()=>{
-
-    if(isHost){
-
-        guestConnections.forEach(conn=>{
-
-            if(conn.open){
-
-                try{
-                    conn.send({
-                        type:"roomClosed"
-                    });
-                }catch(e){}
-
-            }
-
-        });
-
-    }
-
-});
-
-
-/* =========================================================
-   INICIAR
-========================================================= */
-
+mode="online";
+running=true;
+gameOver=false;
+paused=false;
+
+document.getElementById("pauseOverlay").classList.remove("active");
+document.getElementById("resultOverlay").classList.remove("active");
+
+showScreen("gameScreen");
 resizeCanvas();
 
+requestAnimationFrame(gameLoop);
+}
+
+function startGame(){
+running=true;
+gameOver=false;
+paused=false;
+
+document.getElementById("pauseOverlay").classList.remove("active");
+document.getElementById("resultOverlay").classList.remove("active");
+
+showScreen("gameScreen");
+resizeCanvas();
+
+requestAnimationFrame(gameLoop);
+}
+
+function getMyPlayer(){
+return players.find(p=>p.id===myPlayerId);
+}
+
+function readKeyboard(){
+let x=0;
+let y=0;
+
+if(keys["ArrowLeft"]||keys["a"]||keys["A"])x--;
+if(keys["ArrowRight"]||keys["d"]||keys["D"])x++;
+if(keys["ArrowUp"]||keys["w"]||keys["W"])y--;
+if(keys["ArrowDown"]||keys["s"]||keys["S"])y++;
+
+const len=Math.hypot(x,y);
+
+if(len>0){
+x/=len;
+y/=len;
+}
+
+input.x=x;
+input.y=y;
+input.attack=
+!!(keys[" "]||keys["Spacebar"]);
+}
+
+window.addEventListener("keydown",e=>{
+keys[e.key]=true;
+
+if(
+["ArrowUp","ArrowDown","ArrowLeft","ArrowRight"," "].includes(e.key)
+)e.preventDefault();
+
+if(e.key==="Escape"&&running){
+togglePause();
+}
+});
+
+window.addEventListener("keyup",e=>{
+keys[e.key]=false;
+});
+
+setInterval(()=>{
+if(running&&!paused){
+readKeyboard();
+
+if(mode==="online"&&!isHost&&hostConnection&&hostConnection.open){
+const now=performance.now();
+
+if(now-lastInputSend>35){
+lastInputSend=now;
+
+try{
+hostConnection.send({
+type:"input",
+x:input.x,
+y:input.y,
+attack:input.attack
+});
+}catch(e){}
+}
+}
+}
+},20);
+
+function updateHostGame(dt){
+const me=players.find(p=>p.id===myPlayerId);
+
+players.forEach(p=>{
+if(!p.alive)return;
+
+if(p.cpu){
+updateCPU(p,dt);
+}else if(p.id===myPlayerId){
+movePlayer(p,input.x,input.y,dt);
+p.inputX=input.x;
+p.inputY=input.y;
+p.inputAttack=input.attack;
+}else{
+movePlayer(
+p,
+p.inputX||0,
+p.inputY||0,
+dt
+);
+}
+
+p.angle+=0.22*dt;
+p.attackCooldown=Math.max(0,p.attackCooldown-dt);
+
+if(p.inputAttack&&p.attackCooldown<=0){
+attack(p);
+p.attackCooldown=35;
+}
+
+p.attack=Math.max(0,p.attack-.12*dt);
+
+keepInside(p);
+});
+
+checkWinner();
+
+if(mode==="online"){
+const now=performance.now();
+
+if(now-lastStateSend>45){
+lastStateSend=now;
+broadcastState();
+}
+}
+}
+
+function updateGuestGame(){
+const me=getMyPlayer();
+
+if(me){
+document.getElementById("myHud").textContent=
+"❤️ "+Math.max(0,Math.round(me.hp));
+}
+}
+
+function movePlayer(p,x,y,dt){
+const power=0.85*dt;
+
+p.vx+=x*power;
+p.vy+=y*power;
+
+p.vx*=Math.pow(.91,dt);
+p.vy*=Math.pow(.91,dt);
+
+const speed=Math.hypot(p.vx,p.vy);
+
+if(speed>6){
+p.vx=p.vx/speed*6;
+p.vy=p.vy/speed*6;
+}
+
+p.x+=p.vx*dt;
+p.y+=p.vy*dt;
+}
+
+function updateCPU(p,dt){
+let target=null;
+let best=Infinity;
+
+players.forEach(o=>{
+if(o===p||!o.alive)return;
+
+const d=distance(p,o);
+
+if(d<best){
+best=d;
+target=o;
+}
+});
+
+if(!target)return;
+
+const dx=target.x-p.x;
+const dy=target.y-p.y;
+const d=Math.hypot(dx,dy)||1;
+
+const nx=dx/d;
+const ny=dy/d;
+
+if(d>90){
+p.vx+=nx*.55*dt;
+p.vy+=ny*.55*dt;
+}else{
+p.vx+=-ny*.35*dt;
+p.vy+=nx*.35*dt;
+}
+
+p.vx*=Math.pow(.94,dt);
+p.vy*=Math.pow(.94,dt);
+
+const speed=Math.hypot(p.vx,p.vy);
+
+if(speed>5){
+p.vx=p.vx/speed*5;
+p.vy=p.vy/speed*5;
+}
+
+p.x+=p.vx*dt;
+p.y+=p.vy*dt;
+
+p.inputAttack=d<105&&Math.random()<.08;
+}
+
+function attack(p){
+if(!p.alive)return;
+
+p.attack=1;
+
+players.forEach(o=>{
+if(o===p||!o.alive)return;
+
+const d=distance(p,o);
+
+if(d<105){
+const damage=p.cpu?8:10;
+
+o.hp-=damage;
+
+const dx=o.x-p.x;
+const dy=o.y-p.y;
+const len=Math.hypot(dx,dy)||1;
+
+o.vx+=dx/len*3;
+o.vy+=dy/len*3;
+
+if(o.hp<=0){
+o.hp=0;
+o.alive=false;
+}
+}
+});
+}
+
+function keepInside(p){
+const r=34;
+
+if(p.x<r){
+p.x=r;
+p.vx=Math.abs(p.vx)*.6;
+}
+
+if(p.x>W-r){
+p.x=W-r;
+p.vx=-Math.abs(p.vx)*.6;
+}
+
+if(p.y<r){
+p.y=r;
+p.vy=Math.abs(p.vy)*.6;
+}
+
+if(p.y>H-r){
+p.y=H-r;
+p.vy=-Math.abs(p.vy)*.6;
+}
+}
+
+function checkWinner(){
+if(gameOver)return;
+
+const alive=players.filter(p=>p.alive);
+
+if(alive.length<=1){
+gameOver=true;
+running=false;
+
+const winner=alive[0]||null;
+
+if(mode==="online"){
+broadcastState();
+
+guestConnections.forEach(c=>{
+if(c.open){
+try{
+c.send({
+type:"result",
+winner:winner?{
+id:winner.id,
+name:winner.name
+}:null
+});
+}catch(e){}
+}
+});
+
+showOnlineResult(winner);
+}else{
+showSoloResult(winner);
+}
+}
+}
+
+function broadcastState(){
+const data={
+type:"state",
+players:players.map(p=>({
+id:p.id,
+name:p.name,
+x:p.x,
+y:p.y,
+vx:p.vx,
+vy:p.vy,
+hp:p.hp,
+maxHp:p.maxHp,
+color:p.color,
+angle:p.angle,
+attack:p.attack,
+alive:p.alive
+}))
+};
+
+guestConnections.forEach(c=>{
+if(c.open){
+try{c.send(data)}catch(e){}
+}
+});
+}
+
+function gameLoop(now){
+if(!running)return;
+
+const dt=Math.min((now-lastFrame)/16.67||1,2);
+lastFrame=now;
+
+if(!paused){
+if(mode==="solo"||isHost){
+updateHostGame(dt);
+}else{
+updateGuestGame();
+}
+}
+
+draw();
+
+requestAnimationFrame(gameLoop);
+}
+
+function draw(){
+ctx.clearRect(0,0,W,H);
+
+drawArena();
+
+players.forEach(p=>drawPlayer(p));
+
+const me=getMyPlayer();
+
+if(me){
+document.getElementById("myHud").textContent=
+"❤️ "+Math.max(0,Math.round(me.hp));
+}
+
+document.getElementById("gameHud").textContent=
+"⚔️ "+players.filter(p=>p.alive).length+" vivos";
+}
+
+function drawArena(){
+const g=ctx.createRadialGradient(
+W/2,H/2,50,
+W/2,H/2,Math.max(W,H)
+);
+
+g.addColorStop(0,"#1c2460");
+g.addColorStop(.55,"#0b1032");
+g.addColorStop(1,"#030512");
+
+ctx.fillStyle=g;
+ctx.fillRect(0,0,W,H);
+
+ctx.strokeStyle="rgba(100,130,255,.15)";
+ctx.lineWidth=2;
+
+const spacing=70;
+
+for(let x=0;x<W;x+=spacing){
+ctx.beginPath();
+ctx.moveTo(x,0);
+ctx.lineTo(x,H);
+ctx.stroke();
+}
+
+for(let y=0;y<H;y+=spacing){
+ctx.beginPath();
+ctx.moveTo(0,y);
+ctx.lineTo(W,y);
+ctx.stroke();
+}
+
+ctx.beginPath();
+ctx.arc(W/2,H/2,Math.min(W,H)*.38,0,Math.PI*2);
+ctx.strokeStyle="rgba(90,120,255,.35)";
+ctx.lineWidth=4;
+ctx.stroke();
+}
+
+function drawPlayer(p){
+if(!p.alive)return;
+
+const r=31;
+
+ctx.save();
+ctx.translate(p.x,p.y);
+ctx.rotate(p.angle);
+
+ctx.shadowBlur=22;
+ctx.shadowColor=p.color;
+
+ctx.beginPath();
+
+for(let i=0;i<12;i++){
+const a=i*Math.PI/6;
+const rr=i%2===0?r:r*.82;
+
+const x=Math.cos(a)*rr;
+const y=Math.sin(a)*rr;
+
+if(i===0)ctx.moveTo(x,y);
+else ctx.lineTo(x,y);
+}
+
+ctx.closePath();
+ctx.fillStyle=p.color;
+ctx.fill();
+
+ctx.shadowBlur=0;
+
+ctx.beginPath();
+ctx.arc(0,0,r*.48,0,Math.PI*2);
+ctx.fillStyle="#111735";
+ctx.fill();
+
+ctx.beginPath();
+ctx.arc(0,0,r*.19,0,Math.PI*2);
+ctx.fillStyle="#f4f7ff";
+ctx.fill();
+
+ctx.restore();
+
+if(p.attack>0){
+ctx.beginPath();
+ctx.arc(p.x,p.y,r+12,0,Math.PI*2);
+ctx.strokeStyle=p.color;
+ctx.lineWidth=5;
+ctx.stroke();
+}
+
+const barW=65;
+const barH=7;
+const hp=Math.max(0,p.hp/p.maxHp);
+
+ctx.fillStyle="#15182a";
+ctx.fillRect(p.x-barW/2,p.y-52,barW,barH);
+
+ctx.fillStyle=p.hp>50?"#42ed75":"#ff405c";
+ctx.fillRect(p.x-barW/2,p.y-52,barW*hp,barH);
+
+ctx.font="bold 13px Arial";
+ctx.textAlign="center";
+ctx.fillStyle="white";
+ctx.fillText(p.name,p.x,p.y-59);
+}
+
+function showSoloResult(winner){
+document.getElementById("hostResultButtons").style.display="block";
+document.getElementById("guestResultButtons").style.display="none";
+
+document.getElementById("resultText").textContent=
+winner&&winner.id===myPlayerId
+?"🏆 ¡GANASTE!"
+:"💥 FIN DE LA BATALLA";
+
+document.getElementById("resultInfo").textContent=
+winner?"Ganador: "+winner.name:"No hubo ganador.";
+
+document.getElementById("resultOverlay").classList.add("active");
+}
+
+function showOnlineResult(winner){
+running=false;
+gameOver=true;
+
+document.getElementById("hostResultButtons").style.display=
+isHost?"block":"none";
+
+document.getElementById("guestResultButtons").style.display=
+isHost?"none":"block";
+
+if(winner){
+document.getElementById("resultText").textContent=
+winner.id===myPlayerId
+?"🏆 ¡GANASTE!"
+:"🏆 GANADOR: "+winner.name;
+}else{
+document.getElementById("resultText").textContent="⚔️ EMPATE";
+}
+
+document.getElementById("resultInfo").textContent=
+"Todos pueden volver a la sala.";
+
+document.getElementById("resultOverlay").classList.add("active");
+}
+
+function togglePause(){
+if(!running&& !paused)return;
+
+paused=!paused;
+
+document.getElementById("pauseOverlay")
+.classList.toggle("active",paused);
+}
+
+function playAgain(){
+if(mode==="solo"){
+startSolo();
+return;
+}
+
+if(isHost){
+resetOnlineLobby();
+}else{
+if(hostConnection&&hostConnection.open){
+hostConnection.send({type:"guestReady"});
+}
+
+document.getElementById("resultOverlay").classList.remove("active");
+showScreen("lobbyScreen");
+document.getElementById("lobbyStatus").textContent=
+"Esperando al anfitrión...";
+}
+}
+
+function resetOnlineLobby(){
+running=false;
+gameOver=false;
+paused=false;
+
+players=players.map(p=>({
+...p,
+x:W*(.25+.5*Math.random()),
+y:H*(.3+.4*Math.random()),
+vx:0,
+vy:0,
+hp:100,
+alive:true,
+attack:0,
+attackCooldown:0,
+inputX:0,
+inputY:0,
+inputAttack:false
+}));
+
+document.getElementById("resultOverlay").classList.remove("active");
+
+showScreen("lobbyScreen");
+
+document.getElementById("lobbyStatus").textContent=
+"Todos están de vuelta. El anfitrión puede iniciar.";
+
+broadcastLobby();
+}
+
+function returnToMenuFromGame(){
+if(mode==="online"){
+leaveRoom();
+}else{
+backToMenu();
+}
+}
+
+function removeGuest(conn){
+const index=guestConnections.indexOf(conn);
+
+if(index>=0)guestConnections.splice(index,1);
+
+if(conn.playerId){
+players=players.filter(p=>p.id!==conn.playerId);
+}
+
+if(isHost){
+broadcastLobby();
+}
+}
+
+function leaveRoom(){
+if(mode==="online"){
+if(isHost){
+guestConnections.forEach(c=>{
+if(c.open){
+try{c.send({type:"hostLeft"})}catch(e){}
+}
+});
+}else{
+if(hostConnection&&hostConnection.open){
+try{hostConnection.close()}catch(e){}
+}
+}
+}
+
+cleanupNetwork();
+running=false;
+gameOver=false;
+
+showScreen("menuScreen");
+}
+
+function cleanupNetwork(){
+if(peer){
+try{peer.destroy()}catch(e){}
+}
+
+peer=null;
+hostConnection=null;
+guestConnections=[];
+
+isHost=false;
+myPlayerId=0;
+roomCode="";
+}
+
+const joystick=document.getElementById("joystick");
+const stick=document.getElementById("stick");
+const attackButton=document.getElementById("attackButton");
+
+function joystickMove(clientX,clientY){
+const rect=joystick.getBoundingClientRect();
+
+const cx=rect.left+rect.width/2;
+const cy=rect.top+rect.height/2;
+
+let dx=clientX-cx;
+let dy=clientY-cy;
+
+const max=42;
+const len=Math.hypot(dx,dy);
+
+if(len>max){
+dx=dx/len*max;
+dy=dy/len*max;
+}
+
+stick.style.transform=
+"translate("+dx+"px,"+dy+"px)";
+
+input.x=dx/max;
+input.y=dy/max;
+}
+
+function joystickEnd(){
+joystickActive=false;
+stick.style.transform="translate(0,0)";
+input.x=0;
+input.y=0;
+}
+
+joystick.addEventListener("pointerdown",e=>{
+joystickActive=true;
+joystick.setPointerCapture(e.pointerId);
+joystickMove(e.clientX,e.clientY);
+});
+
+joystick.addEventListener("pointermove",e=>{
+if(joystickActive)joystickMove(e.clientX,e.clientY);
+});
+
+joystick.addEventListener("pointerup",joystickEnd);
+joystick.addEventListener("pointercancel",joystickEnd);
+
+attackButton.addEventListener("pointerdown",e=>{
+e.preventDefault();
+input.attack=true;
+});
+
+attackButton.addEventListener("pointerup",e=>{
+e.preventDefault();
+input.attack=false;
+});
+
+attackButton.addEventListener("pointercancel",()=>{
+input.attack=false;
+});
+
+document.addEventListener("visibilitychange",()=>{
+if(document.hidden&&running){
+paused=true;
+document.getElementById("pauseOverlay").classList.add("active");
+}
+});
+
+window.addEventListener("beforeunload",()=>{
+if(isHost){
+guestConnections.forEach(c=>{
+try{c.send({type:"hostLeft"})}catch(e){}
+});
+}
+});
 </script>
 
 </body>
 </html>
+        
