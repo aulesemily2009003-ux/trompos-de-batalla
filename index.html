@@ -51,8 +51,7 @@ canvas{
     border:2px solid rgba(120,180,255,.55);
     box-shadow:
         0 0 25px rgba(45,120,255,.3),
-        0 0 70px rgba(0,0,0,.9),
-        inset 0 0 25px rgba(100,150,255,.08);
+        0 0 70px rgba(0,0,0,.9);
     text-align:center;
 }
 
@@ -89,7 +88,6 @@ input{
 
 input:focus{
     border-color:#55dfff;
-    box-shadow:0 0 15px rgba(50,200,255,.3);
 }
 
 button{
@@ -132,7 +130,7 @@ button:hover{
 }
 
 .code{
-    font-size:25px;
+    font-size:24px;
     font-weight:bold;
     letter-spacing:3px;
     color:#63e8ff;
@@ -142,7 +140,6 @@ button:hover{
     background:#050b1c;
     border:1px solid #315b91;
     word-break:break-all;
-    text-shadow:0 0 15px #00cfff;
 }
 
 .status{
@@ -210,12 +207,6 @@ button:hover{
 #gameOver{
     display:none;
 }
-
-.controlInfo{
-    color:#91a8d0;
-    font-size:12px;
-    margin-top:10px;
-}
 </style>
 </head>
 
@@ -239,6 +230,7 @@ button:hover{
     </button>
 
     <div id="playersHUD"></div>
+
 </div>
 
 
@@ -323,7 +315,7 @@ button:hover{
         <h2>⚔️ SALA DE BATALLA</h2>
 
         <div style="color:#b7c5e5;">
-            Comparte este código con tus amigos:
+            Comparte este código:
         </div>
 
         <div class="code" id="myRoomCode">
@@ -405,16 +397,16 @@ button:hover{
    CANVAS
 ===================================================== */
 
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
 
-let W = 0;
-let H = 0;
+let W=0;
+let H=0;
 
 function resize(){
 
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
+    W=canvas.width=window.innerWidth;
+    H=canvas.height=window.innerHeight;
 
 }
 
@@ -426,42 +418,39 @@ resize();
    CONFIGURACIÓN
 ===================================================== */
 
-const MAX_PLAYERS = 4;
+const MAX_PLAYERS=4;
 
-let gameMode = "solo";
-let gameRunning = false;
-let paused = false;
+let gameMode="solo";
+let gameRunning=false;
+let paused=false;
 
-let localPlayerIndex = 0;
+let localPlayerIndex=0;
 
-let peer = null;
-let isHost = false;
+let peer=null;
+let isHost=false;
 
-let hostConnection = null;
-let connections = [];
+let hostConnection=null;
+let connections=[];
 
-let roomCode = "";
+let roomCode="";
+let localName="Jugador";
 
-let localName = "Jugador";
+let particles=[];
 
-let particles = [];
+let networkTimer=0;
 
-let networkTimer = 0;
-
-const keys = {};
+const keys={};
 
 
 /* =====================================================
-   ESTADO DEL JUEGO
+   ESTADO
 ===================================================== */
 
-let state = {
-
+let state={
     players:[],
     running:false,
     winner:null,
     tick:0
-
 };
 
 
@@ -483,17 +472,17 @@ function distance(a,b){
 
 
 /* =====================================================
-   NOMBRES / SÍMBOLOS
+   NOMBRES
 ===================================================== */
 
-const defaultNames = [
+const defaultNames=[
     "DRAGÓN",
     "FÉNIX",
     "TITÁN",
     "SOMBRA"
 ];
 
-const symbols = [
+const symbols=[
     "🐉",
     "🔥",
     "⚡",
@@ -564,10 +553,10 @@ function drawParticles(){
             Math.PI*2
         );
 
-        ctx.fillStyle =
+        ctx.fillStyle=
             p.type==="hit"
-            ? "#ffdf3d"
-            : "#68eaff";
+            ?"#ffdf3d"
+            :"#68eaff";
 
         ctx.fill();
 
@@ -584,11 +573,11 @@ function drawParticles(){
 
 function createPlayer(index,cpu=false,name=null){
 
-    return {
+    return{
 
         id:index,
 
-        name:name || defaultNames[index],
+        name:name||defaultNames[index],
 
         symbol:symbols[index],
 
@@ -656,44 +645,42 @@ function backToMenu(){
     }
 
     peer=null;
-
     connections=[];
-
     hostConnection=null;
-
     isHost=false;
-
     roomCode="";
 
     hideAllScreens();
 
     document.getElementById("menu").style.display="flex";
-
     document.getElementById("hud").style.display="none";
 
 }
 
 
 /* =====================================================
-   NOMBRE
+   NOMBRES
 ===================================================== */
 
 function getPlayerName(){
 
-    let name =
-        document.getElementById("playerNameInput").value.trim();
+    let name=
+        document.getElementById("playerNameInput")
+        .value.trim();
 
     if(name===""){
         name="Jugador";
     }
 
     return name.substring(0,15);
+
 }
 
 function getOnlineName(){
 
-    let name =
-        document.getElementById("onlineName").value.trim();
+    let name=
+        document.getElementById("onlineName")
+        .value.trim();
 
     if(name===""){
         name=getPlayerName();
@@ -704,11 +691,23 @@ function getOnlineName(){
     }
 
     return name.substring(0,15);
+
+}
+
+function escapeHTML(text){
+
+    return String(text)
+        .replaceAll("&","&amp;")
+        .replaceAll("<","&lt;")
+        .replaceAll(">","&gt;")
+        .replaceAll('"',"&quot;")
+        .replaceAll("'","&#039;");
+
 }
 
 
 /* =====================================================
-   JUGAR SOLO
+   SOLO
 ===================================================== */
 
 function startSolo(){
@@ -724,17 +723,19 @@ function startSolo(){
         tick:0
     };
 
+
     for(let i=0;i<MAX_PLAYERS;i++){
 
         state.players.push(
             createPlayer(
                 i,
                 i!==0,
-                i===0 ? localName : null
+                i===0?localName:null
             )
         );
 
     }
+
 
     state.players[0].symbol="👑";
 
@@ -749,13 +750,11 @@ function startSolo(){
 
     document.getElementById("hud").style.display="block";
 
-    updateHUD();
-
 }
 
 
 /* =====================================================
-   ABRIR ONLINE
+   ONLINE
 ===================================================== */
 
 function openOnline(){
@@ -778,15 +777,16 @@ function createRoom(){
     localName=getOnlineName();
 
     isHost=true;
-
     connections=[];
 
-    document.getElementById("onlineStatus").textContent =
+    document.getElementById("onlineStatus").textContent=
         "🔄 Creando sala...";
+
 
     peer=new Peer({
         debug:1
     });
+
 
     peer.on("open",id=>{
 
@@ -804,6 +804,7 @@ function createRoom(){
         if(connections.length>=MAX_PLAYERS-1){
 
             conn.on("open",()=>{
+
                 conn.send({
                     type:"full"
                 });
@@ -811,19 +812,24 @@ function createRoom(){
                 setTimeout(()=>{
                     conn.close();
                 },500);
+
             });
 
             return;
+
         }
 
 
-        const playerIndex=connections.length+1;
+        const playerIndex=
+            connections.length+1;
+
 
         const playerConnection={
             conn:conn,
             index:playerIndex,
             name:"Jugador "+(playerIndex+1)
         };
+
 
         connections.push(playerConnection);
 
@@ -834,9 +840,7 @@ function createRoom(){
 
                 type:"welcome",
 
-                index:playerIndex,
-
-                maxPlayers:MAX_PLAYERS
+                index:playerIndex
 
             });
 
@@ -847,14 +851,17 @@ function createRoom(){
 
         conn.on("data",data=>{
 
-            handleHostData(playerConnection,data);
+            handleHostData(
+                playerConnection,
+                data
+            );
 
         });
 
 
         conn.on("close",()=>{
 
-            connections =
+            connections=
                 connections.filter(
                     c=>c!==playerConnection
                 );
@@ -866,7 +873,7 @@ function createRoom(){
 
         conn.on("error",err=>{
 
-            console.error("Error jugador:",err);
+            console.error(err);
 
         });
 
@@ -877,21 +884,8 @@ function createRoom(){
 
         console.error(err);
 
-        document.getElementById("onlineStatus").textContent =
+        document.getElementById("onlineStatus").textContent=
             "❌ No se pudo crear la sala.";
-
-    });
-
-
-    peer.on("disconnected",()=>{
-
-        if(gameRunning){
-
-            try{
-                peer.reconnect();
-            }catch(e){}
-
-        }
 
     });
 
@@ -899,20 +893,23 @@ function createRoom(){
 
 
 /* =====================================================
-   UNIRSE A SALA
+   UNIRSE
 ===================================================== */
 
 function joinRoom(){
 
-    const code =
-        document.getElementById("roomInput").value.trim();
+    const code=
+        document.getElementById("roomInput")
+        .value.trim();
+
 
     if(!code){
 
-        document.getElementById("onlineStatus").textContent =
-            "⚠️ Escribe el código de la sala.";
+        document.getElementById("onlineStatus").textContent=
+            "⚠️ Escribe el código.";
 
         return;
+
     }
 
 
@@ -920,8 +917,9 @@ function joinRoom(){
 
     isHost=false;
 
-    document.getElementById("onlineStatus").textContent =
-        "🔄 Conectando a la sala...";
+
+    document.getElementById("onlineStatus").textContent=
+        "🔄 Conectando...";
 
 
     peer=new Peer({
@@ -931,7 +929,7 @@ function joinRoom(){
 
     peer.on("open",()=>{
 
-        hostConnection =
+        hostConnection=
             peer.connect(
                 code,
                 {
@@ -951,8 +949,9 @@ function joinRoom(){
 
             });
 
-            document.getElementById("onlineStatus").textContent =
-                "✅ Conectado. Esperando al anfitrión...";
+
+            document.getElementById("onlineStatus").textContent=
+                "✅ Conectado. Esperando...";
 
         });
 
@@ -983,7 +982,7 @@ function joinRoom(){
 
             console.error(err);
 
-            document.getElementById("onlineStatus").textContent =
+            document.getElementById("onlineStatus").textContent=
                 "❌ Error de conexión.";
 
         });
@@ -995,13 +994,8 @@ function joinRoom(){
 
         console.error(err);
 
-        let message="❌ No se pudo conectar.";
-
-        if(err.type==="peer-unavailable"){
-            message="❌ Código de sala incorrecto o sala cerrada.";
-        }
-
-        document.getElementById("onlineStatus").textContent=message;
+        document.getElementById("onlineStatus").textContent=
+            "❌ Código incorrecto o sala cerrada.";
 
     });
 
@@ -1009,7 +1003,7 @@ function joinRoom(){
 
 
 /* =====================================================
-   MOSTRAR LOBBY
+   LOBBY
 ===================================================== */
 
 function showLobby(){
@@ -1018,21 +1012,17 @@ function showLobby(){
 
     document.getElementById("lobbyScreen").style.display="flex";
 
-    document.getElementById("myRoomCode").textContent =
-        roomCode || "SALA";
+    document.getElementById("myRoomCode").textContent=
+        roomCode||"SALA";
 
     updateLobbyUI();
 
 }
 
 
-/* =====================================================
-   ACTUALIZAR LOBBY
-===================================================== */
-
 function updateLobbyUI(){
 
-    const box =
+    const box=
         document.getElementById("lobbyPlayers");
 
     let players=[];
@@ -1045,11 +1035,15 @@ function updateLobbyUI(){
             index:0
         });
 
+
         connections.forEach(c=>{
 
             players.push({
-                name:c.name || "Jugador",
+
+                name:c.name||"Jugador",
+
                 index:c.index
+
             });
 
         });
@@ -1058,8 +1052,11 @@ function updateLobbyUI(){
     else{
 
         players.push({
+
             name:localName,
+
             index:localPlayerIndex
+
         });
 
     }
@@ -1067,7 +1064,8 @@ function updateLobbyUI(){
 
     let html="";
 
-    players.forEach((p,i)=>{
+
+    players.forEach(p=>{
 
         html+=`
 
@@ -1077,7 +1075,7 @@ function updateLobbyUI(){
 
             <b>${escapeHTML(p.name)}</b>
 
-            ${p.index===0 ? " 👑 ANFITRIÓN" : ""}
+            ${p.index===0?" 👑 ANFITRIÓN":""}
 
         </div>
 
@@ -1091,11 +1089,11 @@ function updateLobbyUI(){
 
     if(isHost){
 
-        document.getElementById("lobbyStatus").textContent =
-            `👥 ${players.length}/${MAX_PLAYERS} jugadores conectados`;
+        document.getElementById("lobbyStatus").textContent=
+            `👥 ${players.length}/${MAX_PLAYERS} jugadores`;
 
-        document.getElementById("startOnlineBtn").style.display =
-            players.length>=1 ? "block" : "none";
+        document.getElementById("startOnlineBtn").style.display=
+            "block";
 
     }
 
@@ -1103,73 +1101,42 @@ function updateLobbyUI(){
 
 
 /* =====================================================
-   ESCAPAR HTML PARA NOMBRES
-===================================================== */
-
-function escapeHTML(text){
-
-    return String(text)
-        .replaceAll("&","&amp;")
-        .replaceAll("<","&lt;")
-        .replaceAll(">","&gt;")
-        .replaceAll('"',"&quot;")
-        .replaceAll("'","&#039;");
-
-}
-
-
-/* =====================================================
-   DATOS DEL ANFITRIÓN
+   DATOS HOST
 ===================================================== */
 
 function handleHostData(playerConnection,data){
 
-    if(!data || typeof data!=="object"){
+    if(!data){
         return;
     }
 
 
-    /* NUEVO JUGADOR */
-
     if(data.type==="join"){
 
-        playerConnection.name =
-            String(data.name || "Jugador")
-            .substring(0,15);
+        playerConnection.name=
+            String(
+                data.name||"Jugador"
+            ).substring(0,15);
 
 
         if(state.players[playerConnection.index]){
 
-            state.players[playerConnection.index].name =
+            state.players[playerConnection.index].name=
                 playerConnection.name;
 
         }
 
 
-        playerConnection.conn.send({
-
-            type:"welcome",
-
-            index:playerConnection.index,
-
-            maxPlayers:MAX_PLAYERS
-
-        });
-
-
         updateLobbyUI();
 
         return;
+
     }
 
 
-    /* CONTROLES */
-
     if(data.type==="input"){
 
-        if(
-            state.players[playerConnection.index]
-        ){
+        if(state.players[playerConnection.index]){
 
             state.players[playerConnection.index].input={
 
@@ -1183,53 +1150,45 @@ function handleHostData(playerConnection,data){
 
         }
 
-        return;
     }
 
 }
 
 
 /* =====================================================
-   DATOS DEL INVITADO
+   DATOS GUEST
 ===================================================== */
 
 function handleGuestData(data){
 
-    if(!data || typeof data!=="object"){
+    if(!data){
         return;
     }
 
 
-    /* SALA LLENA */
-
     if(data.type==="full"){
 
         alert(
-            "❌ La sala ya tiene 4 jugadores."
+            "❌ La sala está llena."
         );
 
         backToMenu();
 
         return;
+
     }
 
-
-    /* BIENVENIDA */
 
     if(data.type==="welcome"){
 
         localPlayerIndex=data.index;
 
-        document.getElementById("onlineStatus").textContent =
-            "✅ Unido correctamente a la sala.";
-
         showLobby();
 
         return;
+
     }
 
-
-    /* COMENZAR */
 
     if(data.type==="start"){
 
@@ -1249,50 +1208,27 @@ function handleGuestData(data){
 
         document.getElementById("hud").style.display="block";
 
-        updateHUD();
-
         return;
+
     }
 
-
-    /* ESTADO */
 
     if(data.type==="state"){
 
         state=data.state;
 
-        updateHUD();
-
         return;
+
     }
 
 
-    /* FIN */
-
     if(data.type==="gameover"){
 
-        state.winner=data.winner;
+        state=data.state||state;
 
         gameRunning=false;
 
         showGameOver(data.winner);
-
-        return;
-    }
-
-
-    /* DESCONEXIÓN DE OTRO JUGADOR */
-
-    if(data.type==="playerleft"){
-
-        if(state.players[data.index]){
-
-            state.players[data.index].alive=false;
-            state.players[data.index].life=0;
-
-        }
-
-        updateHUD();
 
     }
 
@@ -1300,7 +1236,7 @@ function handleGuestData(data){
 
 
 /* =====================================================
-   INICIAR BATALLA ONLINE
+   INICIAR ONLINE
 ===================================================== */
 
 function startOnlineBattle(){
@@ -1310,24 +1246,15 @@ function startOnlineBattle(){
     }
 
 
-    const totalPlayers =
-        Math.min(
-            MAX_PLAYERS,
-            connections.length+1
-        );
-
-
     state={
-
         players:[],
         running:true,
         winner:null,
         tick:0
-
     };
 
 
-    /* CREAR JUGADOR DEL HOST */
+    /* HOST */
 
     state.players.push(
         createPlayer(
@@ -1338,60 +1265,61 @@ function startOnlineBattle(){
     );
 
 
-    /* CREAR JUGADORES CONECTADOS */
+    /* JUGADORES */
 
     connections.forEach((c,i)=>{
 
         state.players.push(
-
             createPlayer(
                 i+1,
                 false,
-                c.name || `Jugador ${i+2}`
+                c.name
             )
-
         );
 
     });
 
 
-    /* POSICIONES SEPARADAS */
+    /* POSICIONES */
 
-    const centerX=W/2;
-    const centerY=H/2;
+    const cx=W/2;
+    const cy=H/2;
 
-    const radius=Math.min(W,H)*.27;
+    const r=
+        Math.min(W,H)*.27;
+
 
     state.players.forEach((p,i)=>{
 
         const angle=
-            (Math.PI*2/state.players.length)*i;
+            Math.PI*2/
+            state.players.length*
+            i;
+
 
         p.x=
-            centerX+
-            Math.cos(angle)*radius;
+            cx+
+            Math.cos(angle)*r;
+
 
         p.y=
-            centerY+
-            Math.sin(angle)*radius;
+            cy+
+            Math.sin(angle)*r;
 
     });
 
 
+    localPlayerIndex=0;
+
     gameRunning=true;
     paused=false;
 
-    localPlayerIndex=0;
-
     particles=[];
-
 
     hideAllScreens();
 
     document.getElementById("hud").style.display="block";
 
-
-    /* ENVIAR ESTADO INICIAL A CADA JUGADOR */
 
     connections.forEach(c=>{
 
@@ -1407,16 +1335,9 @@ function startOnlineBattle(){
 
             });
 
-        }catch(e){
-
-            console.error(e);
-
-        }
+        }catch(e){}
 
     });
-
-
-    updateHUD();
 
 }
 
@@ -1449,31 +1370,31 @@ function getInput(){
 
         up:
             !!(
-                keys["w"] ||
+                keys["w"]||
                 keys["arrowup"]
             ),
 
         down:
             !!(
-                keys["s"] ||
+                keys["s"]||
                 keys["arrowdown"]
             ),
 
         left:
             !!(
-                keys["a"] ||
+                keys["a"]||
                 keys["arrowleft"]
             ),
 
         right:
             !!(
-                keys["d"] ||
+                keys["d"]||
                 keys["arrowright"]
             ),
 
         attack:
             !!(
-                keys[" "] ||
+                keys[" "]||
                 keys["enter"]
             )
 
@@ -1483,18 +1404,20 @@ function getInput(){
 
 
 /* =====================================================
-   ENVIAR CONTROL DEL JUGADOR ONLINE
+   ENVIAR CONTROLES ONLINE
 ===================================================== */
 
 function sendGuestInput(){
 
     if(
-        gameMode!=="online" ||
-        isHost ||
-        !hostConnection ||
+        gameMode!=="online"||
+        isHost||
+        !hostConnection||
         !hostConnection.open
     ){
+
         return;
+
     }
 
 
@@ -1515,17 +1438,13 @@ function sendGuestInput(){
 
         });
 
-    }catch(e){
-
-        console.error("No se pudo enviar input:",e);
-
-    }
+    }catch(e){}
 
 }
 
 
 /* =====================================================
-   JUGADOR HUMANO
+   MOVIMIENTO HUMANO - MÁS RÁPIDO
 ===================================================== */
 
 function updateHuman(p){
@@ -1546,9 +1465,7 @@ function updateHuman(p){
     else{
 
         if(!isHost){
-
             return;
-
         }
 
         input=p.input;
@@ -1574,26 +1491,37 @@ function updateHuman(p){
         dx/=len;
         dy/=len;
 
-        p.vx+=dx*.65;
-        p.vy+=dy*.65;
+
+        /* MÁS ACELERACIÓN */
+
+        p.vx+=dx*1.15;
+        p.vy+=dy*1.15;
 
     }
 
 
-    p.vx*=.88;
-    p.vy*=.88;
+    /* MENOS FRENADO */
+
+    p.vx*=.94;
+    p.vy*=.94;
 
 
-    const speed=Math.hypot(p.vx,p.vy);
+    const speed=
+        Math.hypot(
+            p.vx,
+            p.vy
+        );
 
 
-    if(speed>5){
+    /* MÁS VELOCIDAD MÁXIMA */
+
+    if(speed>8){
 
         p.vx=
-            p.vx/speed*5;
+            p.vx/speed*8;
 
         p.vy=
-            p.vy/speed*5;
+            p.vy/speed*8;
 
     }
 
@@ -1602,9 +1530,20 @@ function updateHuman(p){
     p.y+=p.vy;
 
 
-    p.x=clamp(p.x,55,W-55);
-    p.y=clamp(p.y,55,H-55);
+    p.x=clamp(
+        p.x,
+        55,
+        W-55
+    );
 
+    p.y=clamp(
+        p.y,
+        55,
+        H-55
+    );
+
+
+    /* ATAQUE MÁS RÁPIDO */
 
     if(
         input.attack &&
@@ -1612,8 +1551,10 @@ function updateHuman(p){
     ){
 
         p.attack=true;
-        p.attackTimer=10;
-        p.cooldown=25;
+
+        p.attackTimer=12;
+
+        p.cooldown=18;
 
     }
 
@@ -1621,7 +1562,7 @@ function updateHuman(p){
 
 
 /* =====================================================
-   CPU
+   CPU RÁPIDA
 ===================================================== */
 
 function updateCPU(p,index){
@@ -1637,16 +1578,13 @@ function updateCPU(p,index){
 
     state.players.forEach((other,i)=>{
 
-        if(i===index){
-            return;
-        }
+        if(i===index)return;
 
-        if(!other.alive){
-            return;
-        }
+        if(!other.alive)return;
 
 
-        const d=distance(p,other);
+        const d=
+            distance(p,other);
 
 
         if(d<best){
@@ -1664,13 +1602,11 @@ function updateCPU(p,index){
     }
 
 
-    p.target=target.id;
-
-
     const dx=target.x-p.x;
     const dy=target.y-p.y;
 
-    const d=Math.hypot(dx,dy)||1;
+    const d=
+        Math.hypot(dx,dy)||1;
 
 
     const nx=dx/d;
@@ -1679,8 +1615,8 @@ function updateCPU(p,index){
 
     if(d>75){
 
-        p.vx+=nx*.55;
-        p.vy+=ny*.55;
+        p.vx+=nx*.80;
+        p.vy+=ny*.80;
 
     }
     else{
@@ -1688,13 +1624,13 @@ function updateCPU(p,index){
         const sx=-ny;
         const sy=nx;
 
-        p.vx+=sx*.42;
-        p.vy+=sy*.42;
+        p.vx+=sx*.55;
+        p.vy+=sy*.55;
 
-        if(d>62){
+        if(d>60){
 
-            p.vx+=nx*.25;
-            p.vy+=ny*.25;
+            p.vx+=nx*.35;
+            p.vy+=ny*.35;
 
         }
 
@@ -1702,31 +1638,37 @@ function updateCPU(p,index){
 
 
     if(
-        d<100 &&
+        d<105 &&
         p.cooldown<=0
     ){
 
         p.attack=true;
-        p.attackTimer=10;
-        p.cooldown=22;
+
+        p.attackTimer=12;
+
+        p.cooldown=18;
 
     }
 
 
-    p.vx*=.90;
-    p.vy*=.90;
+    p.vx*=.94;
+    p.vy*=.94;
 
 
-    const speed=Math.hypot(p.vx,p.vy);
+    const speed=
+        Math.hypot(
+            p.vx,
+            p.vy
+        );
 
 
-    if(speed>4.5){
+    if(speed>7){
 
         p.vx=
-            p.vx/speed*4.5;
+            p.vx/speed*7;
 
         p.vy=
-            p.vy/speed*4.5;
+            p.vy/speed*7;
 
     }
 
@@ -1777,17 +1719,12 @@ function updateTimers(p){
 
 function damagePlayer(target,attacker){
 
-    if(!target.alive){
-        return;
-    }
+    if(!target.alive)return;
+
+    if(target.hitCooldown>0)return;
 
 
-    if(target.hitCooldown>0){
-        return;
-    }
-
-
-    target.hitCooldown=10;
+    target.hitCooldown=8;
 
     target.life-=8;
 
@@ -1803,14 +1740,22 @@ function damagePlayer(target,attacker){
     }
 
 
-    const dx=target.x-attacker.x;
-    const dy=target.y-attacker.y;
+    const dx=
+        target.x-attacker.x;
 
-    const d=Math.hypot(dx,dy)||1;
+    const dy=
+        target.y-attacker.y;
 
 
-    target.vx+=dx/d*2.5;
-    target.vy+=dy/d*2.5;
+    const d=
+        Math.hypot(dx,dy)||1;
+
+
+    target.vx+=
+        dx/d*3.5;
+
+    target.vy+=
+        dy/d*3.5;
 
 
     if(target.life<=0){
@@ -1842,26 +1787,21 @@ function collisions(){
 
         const a=players[i];
 
-
-        if(!a.alive){
-            continue;
-        }
+        if(!a.alive)continue;
 
 
         for(let j=i+1;j<players.length;j++){
 
             const b=players[j];
 
-
-            if(!b.alive){
-                continue;
-            }
+            if(!b.alive)continue;
 
 
             const dx=b.x-a.x;
             const dy=b.y-a.y;
 
-            const d=Math.hypot(dx,dy)||1;
+            const d=
+                Math.hypot(dx,dy)||1;
 
 
             const minDist=
@@ -1877,28 +1817,41 @@ function collisions(){
                     minDist-d;
 
 
-                a.x-=nx*overlap*.5;
-                a.y-=ny*overlap*.5;
+                a.x-=
+                    nx*
+                    overlap*.5;
 
-                b.x+=nx*overlap*.5;
-                b.y+=ny*overlap*.5;
+                a.y-=
+                    ny*
+                    overlap*.5;
 
 
-                a.vx-=nx*1.2;
-                a.vy-=ny*1.2;
+                b.x+=
+                    nx*
+                    overlap*.5;
 
-                b.vx+=nx*1.2;
-                b.vy+=ny*1.2;
+                b.y+=
+                    ny*
+                    overlap*.5;
+
+
+                a.vx-=nx*1.5;
+                a.vy-=ny*1.5;
+
+                b.vx+=nx*1.5;
+                b.vy+=ny*1.5;
 
             }
 
 
             const range=
-                a.radius+b.radius+35;
+                a.radius+
+                b.radius+
+                35;
 
 
             if(
-                a.attack &&
+                a.attack&&
                 d<=range
             ){
 
@@ -1908,7 +1861,7 @@ function collisions(){
 
 
             if(
-                b.attack &&
+                b.attack&&
                 d<=range
             ){
 
@@ -1929,23 +1882,15 @@ function collisions(){
 
 function updateGame(){
 
-    if(!gameRunning){
-        return;
-    }
+    if(!gameRunning)return;
+
+    if(paused)return;
 
 
-    if(paused){
-        return;
-    }
-
-
-    /* -----------------------------------------
-       INVITADO ONLINE
-       SOLO MANDA SUS CONTROLES
-    ----------------------------------------- */
+    /* INVITADO */
 
     if(
-        gameMode==="online" &&
+        gameMode==="online"&&
         !isHost
     ){
 
@@ -1958,9 +1903,7 @@ function updateGame(){
     }
 
 
-    /* -----------------------------------------
-       HOST / SOLO
-    ----------------------------------------- */
+    /* HOST / SOLO */
 
     state.tick++;
 
@@ -1970,9 +1913,7 @@ function updateGame(){
         updateTimers(p);
 
 
-        if(!p.alive){
-            return;
-        }
+        if(!p.alive)return;
 
 
         if(p.cpu){
@@ -1996,21 +1937,14 @@ function updateGame(){
     checkWinner();
 
 
-    /* -----------------------------------------
-       SINCRONIZAR ONLINE
-    ----------------------------------------- */
+    /* ONLINE */
 
     if(gameMode==="online"){
 
         networkTimer++;
 
 
-        /*
-           Mandamos el estado unas 20 veces por segundo
-           para que los jugadores vean movimiento fluido.
-        */
-
-        if(networkTimer>=3){
+        if(networkTimer>=2){
 
             networkTimer=0;
 
@@ -2024,19 +1958,20 @@ function updateGame(){
 
 
 /* =====================================================
-   SINCRONIZAR ESTADO
+   ENVIAR ESTADO
 ===================================================== */
 
 function broadcastState(){
 
-    if(!isHost){
-        return;
-    }
+    if(!isHost)return;
 
 
     connections.forEach(c=>{
 
-        if(!c.conn || !c.conn.open){
+        if(
+            !c.conn||
+            !c.conn.open
+        ){
             return;
         }
 
@@ -2051,11 +1986,7 @@ function broadcastState(){
 
             });
 
-        }catch(e){
-
-            console.error(e);
-
-        }
+        }catch(e){}
 
     });
 
@@ -2069,7 +2000,9 @@ function broadcastState(){
 function checkWinner(){
 
     const alive=
-        state.players.filter(p=>p.alive);
+        state.players.filter(
+            p=>p.alive
+        );
 
 
     if(alive.length<=1){
@@ -2078,14 +2011,14 @@ function checkWinner(){
 
         gameRunning=false;
 
-        state.winner =
+        state.winner=
             alive.length
-            ? alive[0].id
-            : null;
+            ?alive[0].id
+            :null;
 
 
         if(
-            gameMode==="online" &&
+            gameMode==="online"&&
             isHost
         ){
 
@@ -2110,7 +2043,9 @@ function checkWinner(){
         }
 
 
-        showGameOver(state.winner);
+        showGameOver(
+            state.winner
+        );
 
     }
 
@@ -2129,12 +2064,15 @@ function updateHUD(){
 
 
     const me=
-        state.players[localPlayerIndex];
+        state.players[
+            localPlayerIndex
+        ];
 
 
     if(me){
 
-        document.getElementById("myLife").textContent =
+        document.getElementById("myLife")
+        .textContent=
             Math.ceil(me.life);
 
     }
@@ -2146,8 +2084,8 @@ function updateHUD(){
         ).length;
 
 
-    document.getElementById("aliveCount").textContent =
-        alive;
+    document.getElementById("aliveCount")
+    .textContent=alive;
 
 
     let html="";
@@ -2157,7 +2095,9 @@ function updateHUD(){
 
         html+=`
 
-        <div class="playerLine ${p.alive?"":"dead"}">
+        <div class="playerLine ${
+            p.alive?"":"dead"
+        }">
 
             ${p.symbol}
             ${escapeHTML(p.name)}
@@ -2172,7 +2112,9 @@ function updateHUD(){
     });
 
 
-    document.getElementById("playersHUD").innerHTML=html;
+    document.getElementById(
+        "playersHUD"
+    ).innerHTML=html;
 
 }
 
@@ -2185,7 +2127,9 @@ function showGameOver(id){
 
     hideAllScreens();
 
-    document.getElementById("gameOver").style.display="flex";
+    document.getElementById(
+        "gameOver"
+    ).style.display="flex";
 
 
     const winner=
@@ -2194,13 +2138,13 @@ function showGameOver(id){
         );
 
 
-    document.getElementById("winnerText").textContent =
+    document.getElementById(
+        "winnerText"
+    ).textContent=
 
         winner
-
-        ? `${winner.symbol} ${winner.name} GANÓ`
-
-        : "NO HAY GANADOR";
+        ?`${winner.symbol} ${winner.name} GANÓ`
+        :"NO HAY GANADOR";
 
 }
 
@@ -2215,18 +2159,16 @@ function restartCurrentMode(){
 
         startSolo();
 
-        return;
+    }
+    else{
+
+        backToMenu();
+
+        setTimeout(()=>{
+            openOnline();
+        },100);
 
     }
-
-
-    backToMenu();
-
-    setTimeout(()=>{
-
-        openOnline();
-
-    },100);
 
 }
 
@@ -2237,35 +2179,23 @@ function restartCurrentMode(){
 
 function togglePause(){
 
-    if(!gameRunning){
+    if(!gameRunning)return;
+
+
+    if(gameMode==="online"&&!isHost){
         return;
-    }
-
-
-    /*
-       La pausa solo afecta localmente.
-       En online no detenemos la simulación del host
-       para no congelar la partida del otro jugador.
-    */
-
-    if(gameMode==="online"){
-
-        if(!isHost){
-
-            return;
-
-        }
-
     }
 
 
     paused=!paused;
 
 
-    document.getElementById("pauseScreen").style.display =
+    document.getElementById(
+        "pauseScreen"
+    ).style.display=
         paused
-        ? "flex"
-        : "none";
+        ?"flex"
+        :"none";
 
 }
 
@@ -2282,9 +2212,20 @@ function drawArena(){
         );
 
 
-    bg.addColorStop(0,"#071b32");
-    bg.addColorStop(.5,"#0b3a29");
-    bg.addColorStop(1,"#04140e");
+    bg.addColorStop(
+        0,
+        "#071b32"
+    );
+
+    bg.addColorStop(
+        .5,
+        "#0b3a29"
+    );
+
+    bg.addColorStop(
+        1,
+        "#04140e"
+    );
 
 
     ctx.fillStyle=bg;
@@ -2308,10 +2249,10 @@ function drawArena(){
                 );
 
 
-            ctx.fillStyle =
+            ctx.fillStyle=
                 n>0
-                ? "rgba(80,180,75,.035)"
-                : "rgba(0,0,0,.04)";
+                ?"rgba(80,180,75,.035)"
+                :"rgba(0,0,0,.04)";
 
 
             ctx.fillRect(
@@ -2377,9 +2318,20 @@ function drawArena(){
         );
 
 
-    arena.addColorStop(0,"#477e3f");
-    arena.addColorStop(.5,"#285c35");
-    arena.addColorStop(1,"#102f24");
+    arena.addColorStop(
+        0,
+        "#477e3f"
+    );
+
+    arena.addColorStop(
+        .5,
+        "#285c35"
+    );
+
+    arena.addColorStop(
+        1,
+        "#102f24"
+    );
 
 
     ctx.beginPath();
@@ -2397,7 +2349,11 @@ function drawArena(){
     ctx.fill();
 
 
-    for(let r=70;r<radius;r+=38){
+    for(
+        let r=70;
+        r<radius;
+        r+=38
+    ){
 
         ctx.beginPath();
 
@@ -2501,60 +2457,14 @@ function drawArena(){
 
     ctx.fill();
 
-
-    ctx.strokeStyle=
-        "rgba(255,255,255,.13)";
-
-    ctx.lineWidth=2;
-
-
-    for(let i=0;i<12;i++){
-
-        const a=i*Math.PI/6;
-
-
-        const x1=
-            cx+
-            Math.cos(a)*
-            radius*.75;
-
-        const y1=
-            cy+
-            Math.sin(a)*
-            radius*.75;
-
-
-        const x2=
-            cx+
-            Math.cos(a)*
-            radius*.88;
-
-        const y2=
-            cy+
-            Math.sin(a)*
-            radius*.88;
-
-
-        ctx.beginPath();
-
-        ctx.moveTo(x1,y1);
-
-        ctx.lineTo(x2,y2);
-
-        ctx.stroke();
-
-    }
-
 }
 
 
 /* =====================================================
-   DIBUJAR TROMPO
+   TROMPO
 ===================================================== */
 
 function drawPlayer(p){
-
-    /* sombra */
 
     ctx.beginPath();
 
@@ -2568,12 +2478,11 @@ function drawPlayer(p){
         Math.PI*2
     );
 
-    ctx.fillStyle="rgba(0,0,0,.42)";
+    ctx.fillStyle=
+        "rgba(0,0,0,.42)";
 
     ctx.fill();
 
-
-    /* ataque */
 
     if(p.attack){
 
@@ -2624,10 +2533,10 @@ function drawPlayer(p){
     );
 
 
-    p.angle +=
+    p.angle+=
         p.attack
-        ? .30
-        : .15;
+        ? .35
+        : .20;
 
 
     ctx.rotate(p.angle);
@@ -2645,24 +2554,6 @@ function drawPlayer(p){
 
     const c=
         colors[p.id%4];
-
-
-    ctx.beginPath();
-
-    ctx.arc(
-        0,
-        0,
-        p.radius+4,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fillStyle=
-        p.attack
-        ? "rgba(255,225,50,.18)"
-        : "rgba(80,210,255,.06)";
-
-    ctx.fill();
 
 
     const gradient=
@@ -2706,7 +2597,6 @@ function drawPlayer(p){
 
     ctx.fill();
 
-
     ctx.strokeStyle="#ffffff";
 
     ctx.lineWidth=2;
@@ -2746,8 +2636,9 @@ function drawPlayer(p){
 
         ctx.fillStyle=
             i%2===0
-            ? "rgba(255,255,255,.28)"
-            : "rgba(0,0,0,.18)";
+            ?"rgba(255,255,255,.28)"
+            :"rgba(0,0,0,.18)";
+
 
         ctx.fill();
 
@@ -2775,33 +2666,6 @@ function drawPlayer(p){
     ctx.stroke();
 
 
-    const core=
-        ctx.createRadialGradient(
-            -3,
-            -3,
-            1,
-            0,
-            0,
-            9
-        );
-
-
-    core.addColorStop(
-        0,
-        "#ffffff"
-    );
-
-    core.addColorStop(
-        .35,
-        "#bcefff"
-    );
-
-    core.addColorStop(
-        1,
-        "#183d65"
-    );
-
-
     ctx.beginPath();
 
     ctx.arc(
@@ -2812,7 +2676,7 @@ function drawPlayer(p){
         Math.PI*2
     );
 
-    ctx.fillStyle=core;
+    ctx.fillStyle="#bcefff";
 
     ctx.fill();
 
@@ -2831,6 +2695,7 @@ function drawPlayer(p){
 
     const barWidth=68;
     const barHeight=7;
+
 
     const percent=
         Math.max(
@@ -2889,7 +2754,8 @@ function drawPlayer(p){
 
     /* NOMBRE */
 
-    ctx.font="bold 12px Arial";
+    ctx.font=
+        "bold 12px Arial";
 
     ctx.textAlign="center";
 
@@ -2910,7 +2776,7 @@ function drawPlayer(p){
     ctx.shadowBlur=0;
 
 
-    /* CÍRCULO DE ATAQUE */
+    /* ATAQUE */
 
     if(p.attack){
 
@@ -2988,28 +2854,26 @@ loop();
 
 
 /* =====================================================
-   CONTROLES CELULAR
+   CELULAR
 ===================================================== */
 
 let touchStartX=0;
 let touchStartY=0;
 
+
 canvas.addEventListener(
     "touchstart",
     e=>{
 
-        if(!gameRunning){
-            return;
-        }
+        if(!gameRunning)return;
+
 
         const t=e.touches[0];
+
 
         touchStartX=t.clientX;
         touchStartY=t.clientY;
 
-        /*
-           Tocar la pantalla = ataque
-        */
 
         keys[" "]=true;
 
@@ -3022,9 +2886,7 @@ canvas.addEventListener(
     "touchmove",
     e=>{
 
-        if(!gameRunning){
-            return;
-        }
+        if(!gameRunning)return;
 
 
         const t=e.touches[0];
@@ -3041,16 +2903,16 @@ canvas.addEventListener(
 
 
         keys["arrowup"]=
-            dy<-25;
+            dy<-20;
 
         keys["arrowdown"]=
-            dy>25;
+            dy>20;
 
         keys["arrowleft"]=
-            dx<-25;
+            dx<-20;
 
         keys["arrowright"]=
-            dx>25;
+            dx>20;
 
     },
     {passive:true}
@@ -3065,7 +2927,6 @@ canvas.addEventListener(
         keys["arrowdown"]=false;
         keys["arrowleft"]=false;
         keys["arrowright"]=false;
-
         keys[" "]=false;
 
     },
