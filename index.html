@@ -164,13 +164,7 @@ font-size:100px;
 font-weight:1000;
 z-index:10;
 text-shadow:0 0 25px #ff36d7,0 0 50px #5f46ff;
-pointer-events:none;
-animation:countPulse .8s ease-in-out infinite
-}
-
-@keyframes countPulse{
-0%,100%{transform:translate(-50%,-50%) scale(.85)}
-50%{transform:translate(-50%,-50%) scale(1.12)}
+pointer-events:none
 }
 
 .pc{
@@ -366,7 +360,6 @@ let players={};
 
 let playing=false;
 let ended=false;
-let countdownActive=false;
 
 let keys={};
 
@@ -477,7 +470,6 @@ last:Date.now()
 
 document.getElementById("roomCode").textContent=roomCode;
 document.getElementById("start").classList.remove("hidden");
-document.getElementById("start").style.display="block";
 
 updateLobby();
 
@@ -485,6 +477,8 @@ show("lobby");
 });
 
 peer.on("connection",function(c){
+
+c.on("open",function(){
 
 c.on("data",function(data){
 hostMessage(c,data);
@@ -496,6 +490,8 @@ connectionClosed(c);
 
 c.on("error",function(){
 connectionClosed(c);
+});
+
 });
 
 });
@@ -673,46 +669,41 @@ updateLobby();
 
 function updateLobby(){
 
-let count=Object.keys(players).length;
-
-let status=document.getElementById("lobbyStatus");
 let list=document.getElementById("playerList");
-let startButton=document.getElementById("start");
-
-status.textContent="PARTICIPANTES EN LA SALA: "+count+"/4";
+let status=document.getElementById("lobbyStatus");
+let startBtn=document.getElementById("start");
+let count=Object.keys(players).length;
 
 list.innerHTML="";
 
 Object.values(players).forEach(function(p,i){
 
 let div=document.createElement("div");
-
 div.className="player";
 
 let a=document.createElement("span");
 a.textContent=(i===0?"👑 ":"⚡ ")+p.name;
 
 let b=document.createElement("span");
-b.textContent=i===0?"ANFITRIÓN":"🟢 LISTO";
+b.textContent=i===0?"ANFITRIÓN":"🟢 CONECTADO";
 
 div.appendChild(a);
 div.appendChild(b);
-
 list.appendChild(div);
 
 });
 
+document.getElementById("roomCode").textContent=roomCode;
+
+status.textContent="PARTICIPANTES EN LA SALA: "+count+"/4";
+
 if(host && count>=2){
-
-startButton.classList.remove("hidden");
-startButton.style.display="block";
-startButton.textContent="🔥 INICIAR PARTIDA";
-
+startBtn.classList.remove("hidden");
+startBtn.style.display="block";
+startBtn.textContent="🔥 INICIAR PARTIDA";
 }else{
-
-startButton.classList.add("hidden");
-startButton.style.display="none";
-
+startBtn.classList.add("hidden");
+startBtn.style.display="none";
 }
 
 }
@@ -906,18 +897,15 @@ list.appendChild(div);
 document.getElementById("roomCode").textContent=roomCode;
 
 document.getElementById("lobbyStatus").textContent=
-"PARTICIPANTES EN LA SALA: "+Object.keys(players).length+"/4 — Esperando que el anfitrión inicie la partida...";
+"Esperando que el anfitrión inicie la partida...";
 
 document.getElementById("start").classList.add("hidden");
-document.getElementById("start").style.display="none";
 
 }
 
 function startOnline(){
 
 if(!host)return;
-
-document.getElementById("start").style.display="none";
 
 players=copyPlayers();
 
@@ -987,14 +975,9 @@ countdown();
 
 function countdown(){
 
-countdownActive=true;
-
-let el=document.getElementById("count");
-
-el.style.display="block";
-el.textContent="3";
-
 let n=3;
+
+document.getElementById("count").textContent=n;
 
 let timer=setInterval(function(){
 
@@ -1002,29 +985,20 @@ n--;
 
 if(n>0){
 
-el.textContent=String(n);
+document.getElementById("count").textContent=n;
 
 }else if(n===0){
 
-el.textContent="¡GO!";
-countdownActive=false;
-
-setTimeout(function(){
-
-el.textContent="";
-el.style.display="none";
-
-},700);
+document.getElementById("count").textContent="¡GO!";
 
 }else{
 
+document.getElementById("count").textContent="";
 clearInterval(timer);
-el.textContent="";
-el.style.display="none";
 
 }
 
-},1000);
+},650);
 
 }
 
@@ -1231,7 +1205,7 @@ attack();
 
 function attack(){
 
-if(!playing||ended||countdownActive)return;
+if(!playing||ended)return;
 
 if(host){
 
