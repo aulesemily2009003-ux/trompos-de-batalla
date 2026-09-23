@@ -302,7 +302,7 @@ display:none
 
 <div id="playerList" class="list"></div>
 
-<button id="start" type="button">🔥 INICIAR PARTIDA</button>
+<button id="start" type="button" onclick="return iniciarPartidaAhora();">🔥 INICIAR PARTIDA</button>
 <button class="back" onclick="leaveRoom()">🚪 SALIR DE LA SALA</button>
 </div>
 </div>
@@ -957,35 +957,40 @@ document.getElementById("start").classList.add("hidden");
 
 }
 
-function startOnline(){
+function iniciarPartidaAhora(){
 
 try{
 
-/* Si este cliente es el host, su id siempre es "host". */
 if(myId==="host") host=true;
 
 if(!host){
 
-document.getElementById("lobbyStatus").textContent=
-"Solo el ANFITRIÓN puede iniciar.";
-
-return;
-
-}
-
-let count=Object.keys(players).length;
-
-if(count<2){
-
-document.getElementById("lobbyStatus").textContent=
-"PARTICIPANTES EN LA SALA: "+count+"/4 — FALTA OTRO JUGADOR";
-
-return;
+let status=document.getElementById("lobbyStatus");
+if(status) status.textContent="Solo el ANFITRIÓN puede iniciar.";
+return false;
 
 }
 
-/* Preparar jugadores. */
-Object.values(players).forEach(function(p,i){
+let total=Object.keys(players).length;
+
+if(total<2){
+
+let status=document.getElementById("lobbyStatus");
+if(status) status.textContent="PARTICIPANTES EN LA SALA: "+total+"/4 — FALTA OTRO JUGADOR";
+return false;
+
+}
+
+/* Arrancar localmente SIN esperar ninguna respuesta de red. */
+playing=true;
+ended=false;
+countdownActive=true;
+
+show("game");
+
+/* Preparar posiciones. */
+let i=0;
+Object.values(players).forEach(function(p){
 
 p.hp=100;
 p.maxHp=100;
@@ -995,35 +1000,22 @@ p.inputX=0;
 p.inputY=0;
 p.last=Date.now();
 
-if(i===0){
-p.x=W/2;
-p.y=H/2;
-}else{
-p.x=120+Math.random()*Math.max(100,W-240);
-p.y=120+Math.random()*Math.max(100,H-240);
-}
+p.x=i===0?W/2:120+Math.random()*Math.max(100,W-240);
+p.y=i===0?H/2:120+Math.random()*Math.max(100,H-240);
+
+i++;
 
 });
 
-/* CAMBIO DE PANTALLA DEL HOST PRIMERO. */
-playing=true;
-ended=false;
-
-show("game");
+/* Cuenta regresiva local del anfitrión. */
 startCountdown();
 
-/* Después avisar a los invitados. */
-let state=copyPlayers();
+/* Mandar START a los invitados. */
+if(peer && peer.connections){
 
-if(peer){
+peer.connections.forEach(function(list){
 
-Object.keys(peer.connections).forEach(function(key){
-
-let list=peer.connections[key];
-
-if(!Array.isArray(list)) list=[list];
-
-list.forEach(function(c){
+(list||[]).forEach(function(c){
 
 if(c && c.open){
 
@@ -1031,10 +1023,14 @@ try{
 
 c.send({
 type:"start",
-players:state
+players:copyPlayers()
 });
 
-}catch(e){}
+}catch(err){
+
+console.error(err);
+
+}
 
 }
 
@@ -1044,16 +1040,25 @@ players:state
 
 }
 
-}catch(error){
+return false;
 
-console.error("Error al iniciar:",error);
+}catch(err){
 
-document.getElementById("lobbyStatus").textContent=
-"Error al iniciar. Pulsa INICIAR PARTIDA otra vez.";
+console.error(err);
+
+let status=document.getElementById("lobbyStatus");
+if(status) status.textContent="No se pudo iniciar: "+err.message;
+
+return false;
 
 }
 
 }
+
+function startOnline(){
+return iniciarPartidaAhora();
+}
+
 function startLocal(){
 
 playing=true;
@@ -1963,21 +1968,7 @@ e.preventDefault();
 
 
 
-document.getElementById("start").addEventListener("click",function(e){
 
-e.preventDefault();
-
-if(this.disabled)return;
-
-this.disabled=true;
-
-startOnline();
-
-setTimeout(function(){
-document.getElementById("start").disabled=false;
-},1000);
-
-});
 
 </script>
 
