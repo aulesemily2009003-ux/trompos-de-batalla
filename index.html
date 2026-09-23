@@ -478,14 +478,41 @@ show("lobby");
 
 peer.on("connection",function(c){
 
-c.on("data",function(data){
-hostMessage(c,data);
-});
+let provisionalId="p"+Math.random().toString(36).substring(2,9);
+c.playerId=provisionalId;
+
+if(!playing && Object.keys(players).length<4){
+
+players[provisionalId]={
+id:provisionalId,
+name:"Jugador conectando...",
+x:120+Math.random()*Math.max(100,W-240),
+y:120+Math.random()*Math.max(100,H-240),
+hp:100,
+maxHp:100,
+color:colors[Object.keys(players).length%colors.length],
+alive:true,
+cpu:false,
+angle:Math.random()*6.28,
+attack:false,
+inputX:0,
+inputY:0,
+last:Date.now()
+};
+
+updateLobby();
+}
 
 c.on("open",function(){
+
 if(!playing){
 broadcastLobby();
 }
+
+});
+
+c.on("data",function(data){
+hostMessage(c,data);
 });
 
 c.on("close",function(){
@@ -495,12 +522,6 @@ connectionClosed(c);
 c.on("error",function(){
 connectionClosed(c);
 });
-
-if(c.open && !playing){
-setTimeout(function(){
-broadcastLobby();
-},50);
-}
 
 });
 peer.on("error",function(e){
@@ -526,24 +547,21 @@ if(!data)return;
 
 if(data.type==="join"){
 
-if(Object.keys(players).length>=4){
-
+if(Object.keys(players).length>4){
 c.send({type:"full"});
 return;
-
 }
 
-if(c.playerId)return;
+let id=c.playerId;
 
-let id="p"+Math.random().toString(36).substring(2,9);
+if(!id || !players[id]){
 
+id="p"+Math.random().toString(36).substring(2,9);
 c.playerId=id;
-
-let n=String(data.name||"Jugador").substring(0,14);
 
 players[id]={
 id:id,
-name:n,
+name:"Jugador",
 x:120+Math.random()*Math.max(100,W-240),
 y:120+Math.random()*Math.max(100,H-240),
 hp:100,
@@ -558,6 +576,12 @@ inputY:0,
 last:Date.now()
 };
 
+}
+
+players[id].name=String(data.name||"Jugador").substring(0,14);
+players[id].cpu=false;
+players[id].last=Date.now();
+
 c.send({
 type:"welcome",
 id:id,
@@ -567,13 +591,8 @@ players:copyPlayers()
 
 broadcastLobby();
 
-setTimeout(function(){
-broadcastLobby();
-},100);
-
 return;
 }
-
 if(data.type==="input"&&c.playerId&&players[c.playerId]){
 
 let p=players[c.playerId];
@@ -705,7 +724,6 @@ list.appendChild(div);
 });
 
 document.getElementById("roomCode").textContent=roomCode;
-
 status.textContent="PARTICIPANTES EN LA SALA: "+count+"/4";
 
 if(host && count>=2){
