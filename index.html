@@ -486,8 +486,6 @@ show("lobby");
 
 peer.on("connection",function(c){
 
-c.on("open",function(){
-
 c.on("data",function(data){
 hostMessage(c,data);
 });
@@ -498,8 +496,6 @@ connectionClosed(c);
 
 c.on("error",function(){
 connectionClosed(c);
-});
-
 });
 
 });
@@ -676,47 +672,50 @@ updateLobby();
 }
 
 function updateLobby(){
-  const count=Object.keys(players).length;
-  const status=document.getElementById("lobbyStatus");
-  const list=document.getElementById("playerList");
-
-  status.textContent="PARTICIPANTES EN LA SALA: "+count+"/4";
-
-  list.innerHTML="";
-  Object.values(players).forEach(function(p){
-    const item=document.createElement("div");
-    item.textContent=(p.host?"👑 ":"👤 ")+p.name;
-    list.appendChild(item);
-  });
-
-  if(isHost && count>=2){
-    startBtn.style.display="block";
-    startBtn.textContent="INICIAR PARTIDA";
-  }else{
-    startBtn.style.display="none";
-  }
-
-  if(!isHost && count<4){
-    status.textContent="PARTICIPANTES EN LA SALA: "+count+"/4 — Esperando al anfitrión...";
-  }
-});
-
-document.getElementById("roomCode").textContent=roomCode;
 
 let count=Object.keys(players).length;
 
-document.getElementById("lobbyStatus").textContent=
-"PARTICIPANTES EN LA SALA: "+count+"/4";
+let status=document.getElementById("lobbyStatus");
+let list=document.getElementById("playerList");
+let startButton=document.getElementById("start");
 
-if(count<2){
+status.textContent="PARTICIPANTES EN LA SALA: "+count+"/4";
 
-document.getElementById("lobbyStatus").textContent=
-"PARTICIPANTES EN LA SALA: "+count+"/4 — Esperando jugadores...";
+list.innerHTML="";
+
+Object.values(players).forEach(function(p,i){
+
+let div=document.createElement("div");
+
+div.className="player";
+
+let a=document.createElement("span");
+a.textContent=(i===0?"👑 ":"⚡ ")+p.name;
+
+let b=document.createElement("span");
+b.textContent=i===0?"ANFITRIÓN":"🟢 LISTO";
+
+div.appendChild(a);
+div.appendChild(b);
+
+list.appendChild(div);
+
+});
+
+if(host && count>=2){
+
+startButton.classList.remove("hidden");
+startButton.style.display="block";
+startButton.textContent="🔥 INICIAR PARTIDA";
+
+}else{
+
+startButton.classList.add("hidden");
+startButton.style.display="none";
 
 }
 
 }
-
 function joinRoom(){
 
 let code=document.getElementById("room").value.replace(/\D/g,"").substring(0,4);
