@@ -4,7 +4,30 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>GUERRA BEYBLADE</title>
-<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js">
+setInterval(function(){
+
+if(host && playing){
+broadcastGameState();
+}
+
+},50);
+
+
+let startButton=document.getElementById("start");
+
+if(startButton){
+
+startButton.addEventListener("click",function(e){
+
+e.preventDefault();
+startOnline();
+
+});
+
+}
+
+</script>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#050510;color:white}
@@ -359,6 +382,7 @@ let myName="Jugador";
 let players={};
 
 let playing=false;
+let countdownActive=false;
 let ended=false;
 
 let keys={};
@@ -673,6 +697,27 @@ updateLobby();
 
 }
 
+function broadcastGameState(){
+
+if(!host || !playing)return;
+
+let data={
+type:"state",
+players:copyPlayers()
+};
+
+roomConnections.forEach(function(c){
+
+if(c && c.open){
+
+try{c.send(data);}catch(e){}
+
+}
+
+});
+
+}
+
 function updateLobby(){
 
 let list=document.getElementById("playerList");
@@ -934,23 +979,40 @@ function startOnline(){
 
 if(!host)return;
 
+let count=Object.keys(players).length;
+
+if(count<2){
+
+document.getElementById("lobbyStatus").textContent=
+"PARTICIPANTES EN LA SALA: "+count+"/4 — SE NECESITAN 2 JUGADORES";
+
+return;
+
+}
+
+/*
+ El anfitrión prepara la partida y manda a TODOS los invitados
+ la orden de comenzar. El jugador invitado conserva su propio
+ myId, así ambos pueden controlar su propio trompo.
+*/
+
 players=copyPlayers();
 
 Object.values(players).forEach(function(p,i){
 
 p.hp=100;
 p.alive=true;
+p.attack=false;
+p.inputX=0;
+p.inputY=0;
+p.last=Date.now();
 
 if(i===0){
-
 p.x=W/2;
 p.y=H/2;
-
 }else{
-
-p.x=100+Math.random()*Math.max(100,W-200);
-p.y=100+Math.random()*Math.max(100,H-200);
-
+p.x=120+Math.random()*Math.max(100,W-240);
+p.y=120+Math.random()*Math.max(100,H-240);
 }
 
 });
@@ -958,17 +1020,16 @@ p.y=100+Math.random()*Math.max(100,H-200);
 playing=true;
 ended=false;
 
-peer.connections.forEach(function(list){
+/* Avisar a cada jugador que la partida empieza. */
+roomConnections.forEach(function(c){
 
-list.forEach(function(c){
-
-if(c.open){
+if(c && c.open && c.playerId){
 
 try{
 
 c.send({
 type:"start",
-players:players,
+players:copyPlayers(),
 myId:c.playerId
 });
 
@@ -978,12 +1039,11 @@ myId:c.playerId
 
 });
 
-});
-
-startLocal();
+/* El anfitrión también empieza localmente. */
+show("game");
+startCountdown();
 
 }
-
 function startLocal(){
 
 playing=true;
@@ -1000,11 +1060,15 @@ countdown();
 
 }
 
-function countdown(){
+function startCountdown(){
 
 let n=3;
 
-document.getElementById("count").textContent=n;
+countdownActive=true;
+
+let el=document.getElementById("count");
+
+if(el)el.textContent=n;
 
 let timer=setInterval(function(){
 
@@ -1012,22 +1076,26 @@ n--;
 
 if(n>0){
 
-document.getElementById("count").textContent=n;
+if(el)el.textContent=n;
 
 }else if(n===0){
 
-document.getElementById("count").textContent="¡GO!";
+if(el)el.textContent="¡GO!";
+
+countdownActive=false;
 
 }else{
 
-document.getElementById("count").textContent="";
+if(el)el.textContent="";
+
 clearInterval(timer);
 
 }
 
-},650);
+},700);
 
 }
+
 
 function solo(){
 
@@ -1232,7 +1300,7 @@ attack();
 
 function attack(){
 
-if(!playing||ended)return;
+if(!playing||ended||countdownActive)return;
 
 if(host){
 
