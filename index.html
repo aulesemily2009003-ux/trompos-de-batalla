@@ -2,11 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-
-<title>⚡ GUERRA BEYBLADE ⚡</title>
-
-<script src="https://unpkg.com/peerjs/dist/peerjs.min.js"></script>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=no">
+<title>TURBO CAR</title>
 
 <style>
 *{
@@ -15,907 +12,1070 @@
     padding:0;
     user-select:none;
     -webkit-user-select:none;
+    -webkit-tap-highlight-color:transparent;
 }
 
 html,body{
     width:100%;
     height:100%;
     overflow:hidden;
-    background:#050816;
     font-family:Arial,sans-serif;
-}
-
-body{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-}
-
-#game{
-    position:relative;
-    width:100vw;
-    height:100vh;
-    overflow:hidden;
-}
-
-canvas{
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-}
-
-/* =========================
-   PANTALLAS
-========================= */
-
-.screen{
-    position:absolute;
-    inset:0;
-    z-index:50;
-
-    display:flex;
-    flex-direction:column;
-    justify-content:center;
-    align-items:center;
-
-    padding:20px;
-
-    background:
-    radial-gradient(
-        circle at center,
-        #1b2b55 0%,
-        #090d1d 60%,
-        #03050c 100%
-    );
-
+    background:#050812;
     color:white;
-}
-
-.hidden{
-    display:none !important;
-}
-
-/* =========================
-   TITULO
-========================= */
-
-.title{
-    font-size:clamp(35px,8vw,75px);
-    font-weight:900;
-    text-align:center;
-
-    color:white;
-
-    text-shadow:
-        0 0 10px #00aaff,
-        0 0 25px #0066ff,
-        0 0 45px #0044ff;
-
-    margin-bottom:10px;
-}
-
-.subtitle{
-    color:#b9c9e8;
-    text-align:center;
-    font-size:clamp(14px,3vw,20px);
-    margin-bottom:22px;
-}
-
-/* =========================
-   BOTONES
-========================= */
-
-.menu{
-    width:min(430px,92vw);
-    display:flex;
-    flex-direction:column;
-    gap:12px;
 }
 
 button{
-    border:none;
-    border-radius:15px;
-    padding:15px 20px;
-    font-size:18px;
-    font-weight:bold;
-    color:white;
+    font-family:Arial,sans-serif;
+    border:0;
+}
 
+.hidden{
+    display:none!important;
+}
+
+/* ======================================================
+   INTRO
+====================================================== */
+
+#intro{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
     background:
-    linear-gradient(
-        135deg,
-        #168cff,
-        #5835ff
-    );
-
-    box-shadow:0 7px 22px #0008;
-    cursor:pointer;
-    transition:.12s;
+        linear-gradient(
+            #06142f 0%,
+            #143d76 42%,
+            #ff884b 76%,
+            #080b12 100%
+        );
 }
 
-button:hover{
-    transform:scale(1.03);
-}
-
-button:active{
-    transform:scale(.95);
-}
-
-.green{
-    background:
-    linear-gradient(
-        135deg,
-        #00bd7c,
-        #007b66
-    );
-}
-
-.red{
-    background:
-    linear-gradient(
-        135deg,
-        #ff3155,
-        #a90029
-    );
-}
-
-.orange{
-    background:
-    linear-gradient(
-        135deg,
-        #ff8c00,
-        #e53b00
-    );
-}
-
-/* =========================
-   INFORMACION
-========================= */
-
-.info{
-    margin-top:18px;
-    padding:13px 20px;
-    border-radius:13px;
-    background:#ffffff0d;
-    border:1px solid #ffffff1c;
-    color:#d4def0;
-    text-align:center;
-    line-height:1.6;
-}
-
-.controlsBox{
-    margin-top:15px;
-    width:min(560px,92vw);
-    padding:14px;
-    border-radius:15px;
-    background:#00000028;
-    border:1px solid #ffffff18;
-    text-align:center;
-    color:#c9d5ec;
-    line-height:1.7;
-}
-
-/* =========================
-   ONLINE
-========================= */
-
-.onlineBox{
-    width:min(500px,94vw);
-    padding:24px;
-    border-radius:22px;
-    background:#0c1327;
-    border:1px solid #ffffff25;
-    box-shadow:0 15px 50px #0009;
-    text-align:center;
-}
-
-.roomCode{
-    margin:16px 0;
-    font-size:clamp(25px,7vw,45px);
-    font-weight:900;
-    letter-spacing:5px;
-    color:#40baff;
-    text-shadow:0 0 18px #008cff;
-    word-break:break-all;
-}
-
-input{
-    width:100%;
-    padding:15px;
-    margin:8px 0;
-    border-radius:12px;
-    border:1px solid #ffffff25;
-    background:#050916;
-    color:white;
-    text-align:center;
-    font-size:18px;
-    outline:none;
-}
-
-.status{
-    min-height:28px;
-    margin:12px 0;
-    color:#c4d0e8;
-}
-
-.playersNumber{
-    font-size:23px;
-    font-weight:bold;
-    margin:13px;
-    color:white;
-}
-
-/* =========================
-   HUD
-========================= */
-
-#hud{
+.sun{
     position:absolute;
-    top:7px;
-    left:0;
-    width:100%;
-    z-index:20;
-    pointer-events:none;
+    width:170px;
+    height:170px;
+    left:50%;
+    top:13%;
+    transform:translateX(-50%);
+    border-radius:50%;
+    background:#ffd86b;
+    box-shadow:
+        0 0 40px #ffd86b,
+        0 0 110px #ff793c;
 }
 
-.hud{
+.mountain{
+    position:absolute;
+    bottom:23%;
+    width:100%;
+    height:40%;
+    background:#182943;
+    clip-path:polygon(
+        0 75%,
+        10% 42%,
+        20% 68%,
+        32% 22%,
+        43% 67%,
+        57% 25%,
+        69% 65%,
+        82% 34%,
+        92% 60%,
+        100% 38%,
+        100% 100%,
+        0 100%
+    );
+}
+
+.roadIntro{
+    position:absolute;
+    bottom:-10%;
+    left:50%;
+    transform:translateX(-50%);
+    width:125%;
+    height:55%;
+    background:#242931;
+    clip-path:polygon(
+        42% 0,
+        58% 0,
+        100% 100%,
+        0 100%
+    );
+}
+
+.roadIntro:after{
+    content:"";
+    position:absolute;
+    left:50%;
+    width:7px;
+    height:100%;
+    background:repeating-linear-gradient(
+        to bottom,
+        white 0 45px,
+        transparent 45px 90px
+    );
+}
+
+.introContent{
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+}
+
+.introCar{
+    font-size:100px;
+    filter:drop-shadow(0 15px 15px #000);
+    animation:carFloat 1s infinite alternate;
+}
+
+@keyframes carFloat{
+    to{transform:translateY(-12px);}
+}
+
+.logo{
+    font-size:clamp(48px,12vw,115px);
+    font-weight:1000;
+    letter-spacing:7px;
+    background:linear-gradient(
+        #fff,
+        #ffe000 45%,
+        #ff3500
+    );
+    -webkit-background-clip:text;
+    color:transparent;
+    filter:drop-shadow(0 8px 8px #000);
+}
+
+.subtitle{
+    letter-spacing:6px;
+    color:#eaf0ff;
+    font-size:14px;
+}
+
+.start{
+    margin-top:35px;
+    padding:18px 42px;
+    border-radius:50px;
+    color:white;
+    font-weight:bold;
+    font-size:18px;
+    background:linear-gradient(
+        135deg,
+        #ff321d,
+        #ff9d00
+    );
+    box-shadow:0 10px 35px #0009;
+}
+
+/* ======================================================
+   MENU
+====================================================== */
+
+#menu{
+    position:fixed;
+    inset:0;
+    overflow:hidden;
+    background:
+        radial-gradient(
+            circle at 50% 0%,
+            #3158a0,
+            #0a1227 55%,
+            #03050b
+        );
+}
+
+.city{
+    position:absolute;
+    bottom:0;
+    width:100%;
+    height:38%;
+    background:
+        repeating-linear-gradient(
+            90deg,
+            #111a2c 0 45px,
+            #192641 45px 90px
+        );
+    clip-path:polygon(
+        0 55%,
+        6% 25%,
+        12% 48%,
+        20% 17%,
+        28% 51%,
+        36% 25%,
+        45% 52%,
+        54% 13%,
+        64% 47%,
+        73% 22%,
+        82% 53%,
+        90% 18%,
+        100% 47%,
+        100% 100%,
+        0 100%
+    );
+}
+
+.menuContent{
+    position:relative;
+    z-index:2;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+}
+
+.menuTitle{
+    font-size:clamp(50px,11vw,105px);
+    font-weight:1000;
+    letter-spacing:5px;
+    background:linear-gradient(
+        white,
+        #ffe000 45%,
+        #ff3900
+    );
+    -webkit-background-clip:text;
+    color:transparent;
+}
+
+.menuSubtitle{
+    color:#afc0e7;
+    letter-spacing:3px;
+    margin-bottom:25px;
+}
+
+.mode{
+    width:min(600px,94%);
+    padding:25px;
+    border-radius:25px;
+    background:#09101fe6;
+    border:1px solid #ffffff25;
+    box-shadow:0 20px 60px #0009;
+    text-align:center;
+    backdrop-filter:blur(15px);
+}
+
+.mode h2{
+    margin-bottom:18px;
+}
+
+.playerSelect{
     display:flex;
     justify-content:center;
-    flex-wrap:wrap;
-    gap:7px;
-    padding:0 70px;
+    gap:10px;
+    margin-bottom:20px;
 }
 
-.card{
-    width:135px;
-    padding:6px 9px;
-    border-radius:10px;
-    background:#030712d9;
+.playerBtn{
+    padding:12px 22px;
+    border-radius:12px;
+    color:white;
+    background:#ffffff12;
     border:1px solid #ffffff22;
 }
 
-.name{
+.playerBtn.active{
+    color:#111;
+    background:#ffd400;
+}
+
+.startRace{
+    padding:16px 35px;
+    border-radius:14px;
+    color:white;
+    font-weight:bold;
+    font-size:17px;
+    background:linear-gradient(
+        135deg,
+        #ff3b22,
+        #ff9b00
+    );
+}
+
+.info{
+    color:#7f8eae;
     font-size:12px;
-    margin-bottom:4px;
+    margin-top:15px;
 }
 
-.lifeBack{
-    height:8px;
-    background:#1b1f2c;
-    border-radius:10px;
+/* ======================================================
+   JUEGO
+====================================================== */
+
+#game{
+    position:fixed;
+    inset:0;
     overflow:hidden;
+    background:#76a957;
 }
 
-.life{
-    height:100%;
+#canvas{
     width:100%;
-    transition:.15s;
+    height:100%;
+    display:block;
 }
 
-/* =========================
-   BOTON MENU
-========================= */
+/* HUD */
 
-#gameMenu{
+.hud{
     position:absolute;
     top:10px;
     left:10px;
-    z-index:40;
-    padding:9px 13px;
-    font-size:13px;
+    right:10px;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:7px;
+    z-index:20;
 }
 
-/* =========================
-   RESULTADO
-========================= */
+.hudPlayer{
+    padding:9px 6px;
+    border-radius:11px;
+    background:#050b16dd;
+    border:1px solid #ffffff20;
+    text-align:center;
+    font-size:12px;
+    font-weight:bold;
+}
 
-#result{
+.p1{border-bottom:3px solid #1590ff;}
+.p2{border-bottom:3px solid #ff3535;}
+.p3{border-bottom:3px solid #25d96b;}
+.p4{border-bottom:3px solid #ffd21c;}
+
+.position{
+    font-size:16px;
+}
+
+/* ======================================================
+   MINIMAPA GRANDE
+====================================================== */
+
+#map{
+    position:absolute;
+    top:75px;
+    right:14px;
+    width:185px;
+    height:250px;
+    border-radius:18px;
+    background:#07101be8;
+    border:1px solid #ffffff35;
+    box-shadow:0 10px 35px #0008;
+    overflow:hidden;
+    z-index:25;
+}
+
+#mapTitle{
+    position:absolute;
+    top:8px;
+    left:0;
+    right:0;
+    text-align:center;
+    font-size:11px;
+    letter-spacing:2px;
+    color:#aab8d7;
+    z-index:4;
+}
+
+#track{
+    position:absolute;
+    left:50%;
+    top:25px;
+    width:125px;
+    height:205px;
+    transform:translateX(-50%);
+}
+
+.mapOuter{
     position:absolute;
     inset:0;
-    z-index:60;
+    border:25px solid #303842;
+    border-radius:45% 55% 48% 52%;
+    transform:rotate(-8deg);
+}
 
+.mapInner{
+    position:absolute;
+    inset:24px;
+    border:4px dashed #f1f1f1;
+    border-radius:45% 55% 48% 52%;
+}
+
+.mapDot{
+    position:absolute;
+    width:13px;
+    height:13px;
+    border-radius:50%;
+    transform:translate(-50%,-50%);
+    border:2px solid white;
+    z-index:10;
+}
+
+#dot1{background:#168cff;}
+#dot2{background:#ff3535;}
+#dot3{background:#23d66b;}
+#dot4{background:#ffd21c;}
+
+.legend{
+    position:absolute;
+    bottom:7px;
+    left:8px;
+    right:8px;
+    display:flex;
+    justify-content:space-around;
+    font-size:9px;
+    color:#aab4ca;
+}
+
+/* ======================================================
+   PROGRESO
+====================================================== */
+
+.progress{
+    position:absolute;
+    left:50%;
+    top:58px;
+    transform:translateX(-50%);
+    width:min(400px,45%);
+    height:10px;
+    background:#050812bb;
+    border-radius:20px;
+    z-index:20;
+    overflow:hidden;
+}
+
+.progressFinish{
+    position:absolute;
+    right:0;
+    width:4px;
+    height:100%;
+    background:white;
+}
+
+.progressDot{
+    position:absolute;
+    top:0;
+    width:8px;
+    height:100%;
+}
+
+#prog1{background:#168cff;}
+#prog2{background:#ff3535;}
+#prog3{background:#23d66b;}
+#prog4{background:#ffd21c;}
+
+/* ======================================================
+   CUENTA
+====================================================== */
+
+#countdown{
+    position:absolute;
+    inset:0;
     display:flex;
     justify-content:center;
     align-items:center;
+    font-size:110px;
+    font-weight:1000;
+    z-index:60;
+    pointer-events:none;
+    text-shadow:0 10px 30px #000;
+}
 
-    background:#0006;
+/* ======================================================
+   CONTROLES CELULAR
+====================================================== */
+
+.mobileControls{
+    position:absolute;
+    bottom:12px;
+    left:12px;
+    right:12px;
+    display:none;
+    justify-content:space-between;
+    z-index:40;
+}
+
+.wheelArea{
+    width:150px;
+    height:150px;
+}
+
+.wheel{
+    width:135px;
+    height:135px;
+    margin:7px;
+    border:13px solid #dce2e9;
+    border-radius:50%;
+    background:#16191f;
+    position:relative;
+    box-shadow:
+        0 10px 25px #0009,
+        inset 0 0 25px #000;
+    touch-action:none;
+}
+
+.wheel:before{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:80px;
+    height:11px;
+    transform:translate(-50%,-50%);
+    background:#dce2e9;
+    border-radius:10px;
+}
+
+.wheel:after{
+    content:"";
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:11px;
+    height:80px;
+    transform:translate(-50%,-50%);
+    background:#dce2e9;
+    border-radius:10px;
+}
+
+.wheelCenter{
+    position:absolute;
+    left:50%;
+    top:50%;
+    width:28px;
+    height:28px;
+    transform:translate(-50%,-50%);
+    border-radius:50%;
+    background:#ed3030;
+    z-index:5;
+}
+
+.pedals{
+    display:flex;
+    flex-direction:column;
+    gap:9px;
+}
+
+.pedal{
+    width:75px;
+    height:65px;
+    border-radius:18px;
+    color:white;
+    font-size:25px;
+    font-weight:bold;
+    box-shadow:0 8px 20px #0009;
+    touch-action:none;
+}
+
+.gas{
+    background:linear-gradient(#26df65,#078b39);
+}
+
+.brake{
+    background:linear-gradient(#ff5151,#9f0000);
+}
+
+/* ======================================================
+   RESULTADOS
+====================================================== */
+
+#results{
+    position:fixed;
+    inset:0;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    background:
+        radial-gradient(
+            circle,
+            #29478d,
+            #070b15
+        );
 }
 
 .resultBox{
-    width:min(410px,90vw);
+    width:min(600px,92%);
     padding:30px;
-    border-radius:22px;
+    background:#101827ee;
+    border:1px solid #ffffff20;
+    border-radius:25px;
+    box-shadow:0 20px 60px #0009;
     text-align:center;
-    background:#050817f2;
-    border:1px solid #ffffff25;
-    box-shadow:0 20px 70px #000;
 }
 
-.resultBox h2{
-    font-size:40px;
-    margin-bottom:12px;
+.resultBox h1{
+    font-size:42px;
+    margin-bottom:20px;
 }
 
-/* =========================
-   CONTROLES CELULAR
-========================= */
-
-#mobileControls{
-    position:absolute;
-    inset:0;
-    z-index:35;
-    pointer-events:none;
+.resultRow{
+    display:flex;
+    justify-content:space-between;
+    padding:14px;
+    margin:7px 0;
+    background:#ffffff0b;
+    border-radius:10px;
 }
 
-#joystick{
-    position:absolute;
-    left:22px;
-    bottom:22px;
-    width:135px;
-    height:135px;
-    border-radius:50%;
-    background:#ffffff10;
-    border:2px solid #ffffff28;
-    pointer-events:auto;
-    touch-action:none;
+.winner{
+    color:#ffd400;
+    font-weight:bold;
 }
 
-#stick{
-    position:absolute;
-    left:39px;
-    top:39px;
-    width:55px;
-    height:55px;
-    border-radius:50%;
-    background:#ffffff35;
-    border:2px solid #ffffff50;
-}
-
-#attack{
-    position:absolute;
-    right:25px;
-    bottom:30px;
-    width:110px;
-    height:110px;
-    padding:0;
-    border-radius:50%;
-    background:
-    radial-gradient(
-        circle,
-        #ff526c,
-        #c60030
+.resultButton{
+    margin-top:12px;
+    padding:14px 25px;
+    border-radius:12px;
+    color:white;
+    font-weight:bold;
+    background:linear-gradient(
+        135deg,
+        #ff3d24,
+        #ff9b00
     );
-    border:4px solid #ffffff40;
-    font-size:17px;
-    pointer-events:auto;
-    touch-action:none;
 }
 
-@media(max-width:800px){
+@media(max-width:700px){
 
     .hud{
-        padding:0 5px;
+        grid-template-columns:repeat(4,1fr);
+        top:7px;
     }
 
-    .card{
-        width:105px;
+    .hudPlayer{
+        font-size:9px;
+        padding:6px 2px;
     }
 
-    .name{
-        font-size:10px;
+    .position{
+        font-size:13px;
     }
 
-    #joystick{
+    .progress{
+        top:48px;
+        width:40%;
+    }
+
+    #map{
         width:120px;
-        height:120px;
+        height:165px;
+        top:75px;
+        right:7px;
     }
 
-    #stick{
-        left:34px;
-        top:34px;
-        width:50px;
-        height:50px;
+    #track{
+        width:80px;
+        height:125px;
+        top:22px;
     }
 
-    #attack{
-        width:95px;
-        height:95px;
+    .mapOuter{
+        border-width:16px;
     }
 
-    .title{
-        font-size:38px;
+    .mapInner{
+        inset:16px;
     }
+
+    .mobileControls{
+        display:flex;
+    }
+
 }
 </style>
 </head>
 
 <body>
 
-<div id="game">
+<!-- ======================================================
+     INTRO
+====================================================== -->
 
-<canvas id="canvas"></canvas>
+<section id="intro">
 
-<!-- =========================
-     MENU
-========================= -->
+    <div class="sun"></div>
+    <div class="mountain"></div>
+    <div class="roadIntro"></div>
 
-<div id="mainMenu" class="screen">
+    <div class="introContent">
 
-    <div class="title">
-        ⚡ GUERRA BEYBLADE ⚡
-    </div>
+        <div class="introCar">🏎️</div>
 
-    <div class="subtitle">
-        ¡Entra a la arena y demuestra quién es el campeón!
-    </div>
-
-    <div class="menu">
-
-        <button onclick="soloGame()">
-            🌀 JUGAR SOLO
-        </button>
-
-        <button onclick="openOnline()">
-            🌐 PARTIDA ONLINE
-        </button>
-
-        <button class="green" onclick="openOnlineCPU()">
-            🤖 ONLINE + CPU
-        </button>
-
-    </div>
-
-    <div class="info">
-
-        👥 <b>ONLINE: HASTA 4 JUGADORES</b>
-        <br>
-
-        📱 Celular + 💻 Computadora
-        <br>
-
-        🔵 🔴 🟡 🟣 4 jugadores por sala
-
-    </div>
-
-    <div class="controlsBox">
-
-        🎮 <b>CONTROLES</b>
-        <br>
-
-        💻 PC:
-        WASD / Flechas = Mover
-        • ESPACIO = Atacar
-
-        <br>
-
-        📱 CELULAR:
-        🕹️ Joystick = Mover
-        • ⚔️ Botón = Atacar
-
-    </div>
-
-</div>
-
-
-<!-- =========================
-     ONLINE
-========================= -->
-
-<div id="onlineMenu" class="screen hidden">
-
-    <div class="title"
-    style="font-size:clamp(30px,7vw,55px)">
-
-        ⚡ GUERRA BEYBLADE ⚡
-
-    </div>
-
-    <div class="onlineBox">
+        <div class="logo">
+            TURBO CAR
+        </div>
 
         <div class="subtitle">
-            🌐 PARTIDA ONLINE
+            4 PILOTOS • 1 CIRCUITO • 1 CAMPEÓN
         </div>
 
-        <div class="info">
-
-            👥 <b>LÍMITE: 4 JUGADORES</b>
-
-            <br>
-
-            📱💻 Celular y computadora
-            pueden jugar juntos
-
-        </div>
-
-        <br>
-
-        <button onclick="createRoom()">
-            ➕ CREAR SALA
-        </button>
-
-        <div id="hostArea" class="hidden">
-
-            <p style="margin-top:18px">
-                🔑 CÓDIGO DE LA SALA
-            </p>
-
-            <div id="roomCode" class="roomCode">
-                ----
-            </div>
-
-            <button onclick="copyCode()">
-                📋 COPIAR CÓDIGO
-            </button>
-
-            <div id="playersNumber" class="playersNumber">
-                👥 JUGADORES: 1/4
-            </div>
-
-            <div id="hostStatus" class="status">
-                Esperando jugadores...
-            </div>
-
-            <button
-            id="startOnline"
-            class="green hidden"
-            onclick="startOnline()">
-
-                ⚔️ INICIAR BATALLA
-
-            </button>
-
-            <button
-            id="startCPU"
-            class="orange hidden"
-            onclick="startCPUOnline()">
-
-                🤖 INICIAR CON CPU
-
-            </button>
-
-        </div>
-
-        <div id="joinArea">
-
-            <input
-            id="roomInput"
-            placeholder="CÓDIGO DE LA SALA"
-            maxlength="40"
-            >
-
-            <button onclick="joinRoom()">
-                🚀 ENTRAR A LA SALA
-            </button>
-
-        </div>
-
-        <div id="joinStatus" class="status"></div>
-
-        <button class="red" onclick="mainMenu()">
-            ↩️ MENÚ PRINCIPAL
+        <button class="start" onclick="showMenu()">
+            ENTRAR AL CIRCUITO
         </button>
 
     </div>
 
-</div>
+</section>
 
 
-<!-- HUD -->
+<!-- ======================================================
+     MENU
+====================================================== -->
 
-<div id="hud" class="hidden">
-    <div id="hudPlayers" class="hud"></div>
-</div>
+<section id="menu" class="hidden">
 
-<button
-id="gameMenu"
-class="red hidden"
-onclick="mainMenu()">
+    <div class="city"></div>
 
-    ↩️ MENÚ
+    <div class="menuContent">
 
-</button>
+        <div class="menuTitle">
+            TURBO CAR
+        </div>
+
+        <div class="menuSubtitle">
+            STREET RACING
+        </div>
+
+        <div class="mode">
+
+            <h2>🏁 CONFIGURA LA CARRERA</h2>
+
+            <div class="playerSelect">
+
+                <button class="playerBtn"
+                    onclick="selectPlayers(1)">
+                    1 JUGADOR
+                </button>
+
+                <button class="playerBtn"
+                    onclick="selectPlayers(2)">
+                    2
+                </button>
+
+                <button class="playerBtn"
+                    onclick="selectPlayers(3)">
+                    3
+                </button>
+
+                <button class="playerBtn active"
+                    onclick="selectPlayers(4)">
+                    4
+                </button>
+
+            </div>
+
+            <button
+                class="startRace"
+                onclick="startGame()">
+
+                🏎️ INICIAR CARRERA
+
+            </button>
+
+            <div class="info">
+                Hasta 4 jugadores en el mismo dispositivo.
+                Cada piloto tiene su propio carril.
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
 
 
-<!-- RESULTADO -->
+<!-- ======================================================
+     JUEGO
+====================================================== -->
 
-<div id="result" class="hidden">
+<section id="game" class="hidden">
+
+    <canvas id="canvas"></canvas>
+
+
+    <!-- HUD -->
+
+    <div class="hud">
+
+        <div class="hudPlayer p1">
+            🔵 J1
+            <div class="position" id="pos1">1º</div>
+            <div>
+                <span id="speed1">0</span> km/h
+            </div>
+        </div>
+
+        <div class="hudPlayer p2">
+            🔴 J2
+            <div class="position" id="pos2">2º</div>
+            <div>
+                <span id="speed2">0</span> km/h
+            </div>
+        </div>
+
+        <div class="hudPlayer p3">
+            🟢 J3
+            <div class="position" id="pos3">3º</div>
+            <div>
+                <span id="speed3">0</span> km/h
+            </div>
+        </div>
+
+        <div class="hudPlayer p4">
+            🟡 J4
+            <div class="position" id="pos4">4º</div>
+            <div>
+                <span id="speed4">0</span> km/h
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- PROGRESO -->
+
+    <div class="progress">
+
+        <div
+            id="prog1"
+            class="progressDot"
+            style="left:0%">
+        </div>
+
+        <div
+            id="prog2"
+            class="progressDot"
+            style="left:0%">
+        </div>
+
+        <div
+            id="prog3"
+            class="progressDot"
+            style="left:0%">
+        </div>
+
+        <div
+            id="prog4"
+            class="progressDot"
+            style="left:0%">
+        </div>
+
+        <div class="progressFinish"></div>
+
+    </div>
+
+
+    <!-- MAPA -->
+
+    <div id="map">
+
+        <div id="mapTitle">
+            CIRCUITO
+        </div>
+
+        <div id="track">
+
+            <div class="mapOuter"></div>
+            <div class="mapInner"></div>
+
+            <div
+                id="dot1"
+                class="mapDot">
+            </div>
+
+            <div
+                id="dot2"
+                class="mapDot">
+            </div>
+
+            <div
+                id="dot3"
+                class="mapDot">
+            </div>
+
+            <div
+                id="dot4"
+                class="mapDot">
+            </div>
+
+        </div>
+
+        <div class="legend">
+            🔵 J1
+            🔴 J2
+            🟢 J3
+            🟡 J4
+        </div>
+
+    </div>
+
+
+    <div id="countdown"></div>
+
+
+    <!-- CONTROLES CELULAR -->
+
+    <div class="mobileControls">
+
+        <div class="wheelArea">
+
+            <div
+                id="wheel"
+                class="wheel">
+
+                <div class="wheelCenter"></div>
+
+            </div>
+
+        </div>
+
+        <div class="pedals">
+
+            <button
+                id="gas"
+                class="pedal gas">
+                ▲
+            </button>
+
+            <button
+                id="brake"
+                class="pedal brake">
+                ▼
+            </button>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ======================================================
+     RESULTADOS
+====================================================== -->
+
+<section id="results" class="hidden">
 
     <div class="resultBox">
 
-        <h2 id="resultTitle">
-            🏆 GANADOR
-        </h2>
+        <h1>🏆 RESULTADOS</h1>
 
-        <p id="resultText">
-            Ganaste la batalla.
-        </p>
+        <div id="resultList"></div>
+
+        <button
+            class="resultButton"
+            onclick="startGame()">
+
+            🔄 OTRA CARRERA
+
+        </button>
 
         <br>
 
-        <button onclick="rematch()">
-            🔄 JUGAR OTRA VEZ
-        </button>
+        <button
+            class="resultButton"
+            onclick="backMenu()">
 
-        <br><br>
+            MENÚ
 
-        <button class="red" onclick="mainMenu()">
-            ↩️ MENÚ PRINCIPAL
         </button>
 
     </div>
 
-</div>
-
-
-<!-- CONTROLES CELULAR -->
-
-<div id="mobileControls" class="hidden">
-
-    <div id="joystick">
-
-        <div id="stick"></div>
-
-    </div>
-
-    <button id="attack">
-
-        ⚔️
-        <br>
-        ATACAR
-
-    </button>
-
-</div>
-
-</div>
+</section>
 
 
 <script>
 
-/* =========================================================
+/* ======================================================
    CONFIGURACIÓN
-========================================================= */
+====================================================== */
 
 const canvas =
-document.getElementById("canvas");
+    document.getElementById("canvas");
 
 const ctx =
-canvas.getContext("2d");
+    canvas.getContext("2d");
 
-let W = innerWidth;
-let H = innerHeight;
+let selectedPlayers=4;
 
-function resize(){
+let gameRunning=false;
+let raceStarted=false;
+let finished=false;
 
-    W = canvas.width = innerWidth;
-    H = canvas.height = innerHeight;
+let keys={};
 
-}
+let gas=false;
+let brake=false;
 
-resize();
+let steering=0;
 
-addEventListener("resize",resize);
-
-
-const MAX_PLAYERS = 4;
-
-const playerColors = [
-    "#18a9ff",
-    "#ff3155",
-    "#ffd21f",
-    "#a855f7"
-];
+const TOTAL=8000;
 
 
-let mode = "menu";
+/* ======================================================
+   PISTA
+====================================================== */
 
-let peer = null;
+const track=[];
 
-let hostConnection = null;
+for(let i=0;i<900;i++){
 
-let connections = {};
+    track.push({
 
-let roomCode = "";
+        x:
+            Math.sin(i*.027)*190+
+            Math.sin(i*.009)*330+
+            Math.sin(i*.075)*35,
 
-let isHost = false;
+        y:i*10
 
-let localPlayer = 0;
-
-let running = false;
-
-let attack = false;
-
-let keys = {};
-
-let joyX = 0;
-
-let joyY = 0;
-
-let lastTime = performance.now();
-
-let lastSend = 0;
-
-
-let state = {
-    players:[],
-    started:false
-};
-
-
-/* =========================================================
-   MENÚ
-========================================================= */
-
-function hideMenus(){
-
-    document
-    .getElementById("mainMenu")
-    .classList.add("hidden");
-
-    document
-    .getElementById("onlineMenu")
-    .classList.add("hidden");
+    });
 
 }
 
 
-function mainMenu(){
+/* ======================================================
+   AUTOS
+====================================================== */
 
-    running = false;
+let cars=[];
 
-    mode = "menu";
+function createCars(){
 
-    if(peer){
-
-        try{
-            peer.destroy();
-        }catch(e){}
-
-    }
-
-    peer = null;
-
-    hostConnection = null;
-
-    connections = {};
-
-    hideMenus();
-
-    document
-    .getElementById("mainMenu")
-    .classList
-    .remove("hidden");
-
-    document
-    .getElementById("hud")
-    .classList
-    .add("hidden");
-
-    document
-    .getElementById("gameMenu")
-    .classList
-    .add("hidden");
-
-    document
-    .getElementById("mobileControls")
-    .classList
-    .add("hidden");
-
-    document
-    .getElementById("result")
-    .classList
-    .add("hidden");
-
-}
-
-
-/* =========================================================
-   JUGAR SOLO
-========================================================= */
-
-function soloGame(){
-
-    mode = "solo";
-
-    isHost = true;
-
-    localPlayer = 0;
-
-    createPlayers(4);
-
-    /*
-       LOS 3 SON CPU
-    */
-
-    state.players[1].cpu = true;
-    state.players[2].cpu = true;
-    state.players[3].cpu = true;
-
-    startBattle();
-
-}
-
-
-/* =========================================================
-   CREAR JUGADORES
-========================================================= */
-
-function createPlayers(number){
-
-    state.players = [];
-
-    const centerX = W / 2;
-    const centerY = H / 2;
-
-    const radius =
-        Math.min(W,H) * 0.40;
-
-    const positions = [
-
-        {
-            x:centerX,
-            y:centerY-radius*.50
-        },
-
-        {
-            x:centerX+radius*.50,
-            y:centerY
-        },
-
-        {
-            x:centerX,
-            y:centerY+radius*.50
-        },
-
-        {
-            x:centerX-radius*.50,
-            y:centerY
-        }
-
+    const colors=[
+        "#168cff",
+        "#ff3535",
+        "#23d66b",
+        "#ffd21c"
     ];
 
+    cars=[];
 
-    for(
-        let i=0;
-        i<number;
-        i++
-    ){
+    for(let i=0;i<4;i++){
 
-        state.players.push({
+        cars.push({
 
             id:i,
 
-            x:positions[i].x,
+            progress:0,
 
-            y:positions[i].y,
+            speed:0,
 
-            life:100,
+            maxSpeed:
+                10+
+                Math.random()*1.2,
 
-            angle:
-            Math.random()*Math.PI*2,
+            acceleration:.20,
 
-            alive:true,
+            x:
+                [-165,-55,55,165][i],
 
-            attack:false,
+            color:colors[i],
 
-            cooldown:0,
-
-            cpu:false,
-
-            cpuSpeed:
-            210+i*15,
-
-            cpuOrbit:
-            i%2===0 ? 1 : -1,
-
-            cpuAttackTimer:
-            .2+Math.random()*.5,
-
-            input:{
-                x:0,
-                y:0,
-                attack:false
-            }
+            finished:false
 
         });
 
@@ -924,2079 +1084,1549 @@ function createPlayers(number){
 }
 
 
-/* =========================================================
-   ACTUALIZAR
-========================================================= */
-
-function update(dt){
-
-    if(!running)return;
-
-
-    if(mode === "solo"){
-
-        updateSolo(dt);
-
-        return;
-
-    }
-
-
-    if(isHost){
-
-        updateHost(dt);
-
-    }else{
-
-        sendInput();
-
-    }
-
-}
-
-
-/* =========================================================
-   MODO SOLO
-========================================================= */
-
-function updateSolo(dt){
-
-    /*
-       JUGADOR
-    */
-
-    const player =
-    state.players[0];
-
-
-    if(player && player.alive){
-
-        const input = getInput();
-
-        const speed = 270;
-
-        player.x +=
-        input.x*speed*dt;
-
-        player.y +=
-        input.y*speed*dt;
-
-        player.angle += 13*dt;
-
-        keepInsideArena(player);
-
-
-        if(
-            input.attack &&
-            player.cooldown<=0
-        ){
-
-            player.attack=true;
-
-            player.cooldown=.25;
-
-        }else{
-
-            player.attack=false;
-
-        }
-
-        player.cooldown-=dt;
-
-    }
-
-
-    /*
-       ROBOTS
-
-       AHORA TODOS PUEDEN
-       ATACAR A TODOS.
-    */
-
-    for(
-        let i=1;
-        i<state.players.length;
-        i++
-    ){
-
-        const cpu =
-        state.players[i];
-
-        if(!cpu || !cpu.alive){
-            continue;
-        }
-
-        cpuAIReal(cpu,dt);
-
-    }
-
-
-    /*
-       ATAQUES
-    */
-
-    collisions();
-
-
-    /*
-       GANADOR
-    */
-
-    checkWinner();
-
-}
-
-
-/* =========================================================
-   IA DE ROBOTS
-========================================================= */
-
-function cpuAIReal(cpu,dt){
-
-    /*
-       BUSCAR ENEMIGO MÁS CERCANO
-    */
-
-    let target = null;
-
-    let closestDistance = Infinity;
-
-
-    state.players.forEach(other=>{
-
-        if(!other.alive){
-            return;
-        }
-
-        if(other.id === cpu.id){
-            return;
-        }
-
-
-        const dx =
-        other.x-cpu.x;
-
-        const dy =
-        other.y-cpu.y;
-
-        const distance =
-        Math.hypot(dx,dy);
-
-
-        if(
-            distance < closestDistance
-        ){
-
-            closestDistance =
-            distance;
-
-            target = other;
-
-        }
-
-    });
-
-
-    if(!target){
-
-        cpu.attack=false;
-
-        return;
-
-    }
-
-
-    /*
-       DIRECCIÓN
-    */
-
-    const dx =
-    target.x-cpu.x;
-
-    const dy =
-    target.y-cpu.y;
-
-    const distance =
-    Math.hypot(dx,dy)||1;
-
-
-    const dirX =
-    dx/distance;
-
-    const dirY =
-    dy/distance;
-
-
-    /*
-       VELOCIDAD
-    */
-
-    let speed =
-    cpu.cpuSpeed;
-
-
-    /*
-       IR HACIA EL ENEMIGO
-    */
-
-    if(distance>105){
-
-        cpu.x +=
-        dirX*speed*dt;
-
-        cpu.y +=
-        dirY*speed*dt;
-
-    }
-
-    else{
-
-        /*
-           GIRAR ALREDEDOR
-           DEL ENEMIGO
-        */
-
-        const sideX =
-        -dirY*cpu.cpuOrbit;
-
-        const sideY =
-        dirX*cpu.cpuOrbit;
-
-
-        const orbitSpeed=125;
-
-
-        cpu.x +=
-        (
-            dirX*.40+
-            sideX*.60
-        )*
-        orbitSpeed*
-        dt;
-
-
-        cpu.y +=
-        (
-            dirY*.40+
-            sideY*.60
-        )*
-        orbitSpeed*
-        dt;
-
-    }
-
-
-    keepInsideArena(cpu);
-
-
-    cpu.angle +=
-    (11+cpu.id*2)*dt;
-
-
-    /*
-       ATAQUE
-    */
-
-    cpu.cpuAttackTimer-=dt;
-
-
-    if(
-        distance<110 &&
-        cpu.cpuAttackTimer<=0
-    ){
-
-        cpu.attack=true;
-
-        cpu.cpuAttackTimer =
-        .30+Math.random()*.30;
-
-    }else{
-
-        cpu.attack=false;
-
-    }
-
-
-    /*
-       GOLPE CERCANO
-    */
-
-    if(distance<65){
-
-        cpu.attack=true;
-
-    }
-
-}
-
-
-/* =========================================================
-   MANTENER EN ARENA
-========================================================= */
-
-function keepInsideArena(p){
-
-    const cx=W/2;
-    const cy=H/2;
-
-    const radius =
-    Math.min(W,H)*.40-38;
-
-
-    const dx=p.x-cx;
-    const dy=p.y-cy;
-
-    const distance =
-    Math.hypot(dx,dy);
-
-
-    if(distance>radius){
-
-        p.x =
-        cx+
-        dx/distance*radius;
-
-        p.y =
-        cy+
-        dy/distance*radius;
-
-    }
-
-}
-
-
-/* =========================================================
-   COLISIONES
-========================================================= */
-
-function collisions(){
-
-    for(
-        let i=0;
-        i<state.players.length;
-        i++
-    ){
-
-        const a =
-        state.players[i];
-
-
-        if(!a.alive)continue;
-
-
-        for(
-            let j=i+1;
-            j<state.players.length;
-            j++
-        ){
-
-            const b =
-            state.players[j];
-
-
-            if(!b.alive)continue;
-
-
-            const dx =
-            b.x-a.x;
-
-            const dy =
-            b.y-a.y;
-
-
-            const distance =
-            Math.hypot(dx,dy)||1;
-
-
-            /*
-               CHOQUE
-            */
-
-            if(distance<66){
-
-                /*
-                   A GOLPEA B
-                */
-
-                if(a.attack){
-
-                    b.life-=5;
-
-
-                    b.x +=
-                    dx/distance*14;
-
-                    b.y +=
-                    dy/distance*14;
-
-                }
-
-
-                /*
-                   B GOLPEA A
-                */
-
-                if(b.attack){
-
-                    a.life-=5;
-
-
-                    a.x -=
-                    dx/distance*14;
-
-                    a.y -=
-                    dy/distance*14;
-
-                }
-
-
-                /*
-                   SEPARAR
-                */
-
-                const overlap =
-                66-distance;
-
-
-                const pushX =
-                dx/distance*
-                overlap*.5;
-
-
-                const pushY =
-                dy/distance*
-                overlap*.5;
-
-
-                a.x-=pushX;
-                a.y-=pushY;
-
-                b.x+=pushX;
-                b.y+=pushY;
-
-
-                keepInsideArena(a);
-                keepInsideArena(b);
-
-            }
-
-        }
-
-    }
-
-
-    /*
-       ELIMINADOS
-    */
-
-    state.players.forEach(p=>{
-
-        if(p.life<=0){
-
-            p.life=0;
-
-            p.alive=false;
-
-            p.attack=false;
-
-        }
-
-    });
-
-}
-
-
-/* =========================================================
-   GANADOR
-========================================================= */
-
-function checkWinner(){
-
-    const alive =
-    state.players.filter(
-        p=>p.alive && p.life>0
-    );
-
-
-    /*
-       SI HAY DOS O MÁS,
-       LA PELEA CONTINÚA.
-    */
-
-    if(alive.length>1){
-
-        return;
-
-    }
-
-
-    /*
-       QUEDA UNO
-    */
-
-    if(alive.length===1){
-
-        running=false;
-
-
-        const winner =
-        alive[0];
-
-
-        if(winner.cpu){
-
-            showResult(
-
-                "🤖 ¡GANÓ LA CPU!",
-
-                "El último trompo fue el CPU "+
-                (winner.id+1)+
-                "."
-
-            );
-
-        }
-
-        else{
-
-            showResult(
-
-                "🏆 ¡GANASTE!",
-
-                "¡Fuiste el último trompo en la arena!"
-
-            );
-
-        }
-
-    }
-
-}
-
-
-/* =========================================================
-   ONLINE
-========================================================= */
-
-function openOnline(){
-
-    mode="online";
-
-    hideMenus();
+/* ======================================================
+   PANTALLAS
+====================================================== */
+
+function hideScreens(){
 
     document
-    .getElementById("onlineMenu")
-    .classList
-    .remove("hidden");
-
-    resetLobby();
-
-}
-
-
-function openOnlineCPU(){
-
-    mode="onlineCPU";
-
-    hideMenus();
-
-    document
-    .getElementById("onlineMenu")
-    .classList
-    .remove("hidden");
-
-    resetLobby();
-
-}
-
-
-function resetLobby(){
-
-    document
-    .getElementById("hostArea")
-    .classList
-    .add("hidden");
-
-    document
-    .getElementById("joinArea")
-    .classList
-    .remove("hidden");
-
-    document
-    .getElementById("joinStatus")
-    .textContent="";
-
-}
-
-
-/* =========================================================
-   CREAR SALA
-========================================================= */
-
-function createRoom(){
-
-    if(peer){
-
-        try{
-            peer.destroy();
-        }catch(e){}
-
-    }
-
-
-    peer=new Peer();
-
-    isHost=true;
-
-
-    peer.on("open",id=>{
-
-        roomCode=id;
-
-
-        document
-        .getElementById("roomCode")
-        .textContent=id;
-
-
-        document
-        .getElementById("hostArea")
-        .classList
-        .remove("hidden");
-
-
-        document
-        .getElementById("joinArea")
-        .classList
-        .add("hidden");
-
-
-        updateLobby();
-
-    });
-
-
-    peer.on("connection",conn=>{
-
-        if(
-            Object.keys(connections).length>=3
-        ){
-
-            conn.on("open",()=>{
-
-                conn.send({
-                    type:"full"
-                });
-
-            });
-
-            return;
-
-        }
-
-
-        conn.on("open",()=>{
-
-            const player =
-            getFreePlayer();
-
-
-            connections[player]=conn;
-
-            conn.playerIndex=player;
-
-
-            conn.send({
-
-                type:"assigned",
-
-                player:player
-
-            });
-
-
-            updateLobby();
-
-
-            conn.on("data",data=>{
-
-                if(
-                    data.type==="input"
-                ){
-
-                    if(state.players[player]){
-
-                        state
-                        .players[player]
-                        .input=data.input;
-
-                    }
-
-                }
-
-
-                if(
-                    data.type==="rematch"
-                ){
-
-                    restartHost();
-
-                }
-
-            });
-
-
-            conn.on("close",()=>{
-
-                delete connections[player];
-
-
-                if(state.players[player]){
-
-                    state
-                    .players[player]
-                    .alive=false;
-
-                    state
-                    .players[player]
-                    .life=0;
-
-                }
-
-
-                updateLobby();
-
-            });
-
-        });
-
-    });
-
-
-    peer.on("error",()=>{
-
-        document
-        .getElementById("hostStatus")
-        .textContent=
-        "❌ Error de conexión.";
-
-    });
-
-}
-
-
-/* =========================================================
-   JUGADOR LIBRE
-========================================================= */
-
-function getFreePlayer(){
-
-    const used=[0];
-
-
-    Object
-    .values(connections)
-    .forEach(c=>{
-
-        used.push(c.playerIndex);
-
-    });
-
-
-    for(let i=1;i<4;i++){
-
-        if(!used.includes(i)){
-
-            return i;
-
-        }
-
-    }
-
-    return 1;
-
-}
-
-
-/* =========================================================
-   ENTRAR
-========================================================= */
-
-function joinRoom(){
-
-    const code =
-    document
-    .getElementById("roomInput")
-    .value
-    .trim();
-
-
-    if(!code){
-
-        document
-        .getElementById("joinStatus")
-        .textContent=
-        "⚠️ Escribe el código.";
-
-        return;
-
-    }
-
-
-    peer=new Peer();
-
-    isHost=false;
-
-
-    peer.on("open",()=>{
-
-        hostConnection =
-        peer.connect(code);
-
-
-        hostConnection.on("open",()=>{
-
-            document
-            .getElementById("joinStatus")
-            .textContent=
-            "🟢 Conectado a la sala.";
-
-        });
-
-
-        hostConnection.on("data",data=>{
-
-            if(data.type==="full"){
-
-                document
-                .getElementById("joinStatus")
-                .textContent=
-                "❌ SALA LLENA — 4/4 JUGADORES";
-
-                return;
-
-            }
-
-
-            if(data.type==="assigned"){
-
-                localPlayer=
-                data.player;
-
-            }
-
-
-            if(data.type==="start"){
-
-                state=data.state;
-
-                startBattle();
-
-            }
-
-
-            if(data.type==="state"){
-
-                state=data.state;
-
-                updateHUD();
-
-            }
-
-
-            if(data.type==="result"){
-
-                showResult(
-                    data.title,
-                    data.text
-                );
-
-            }
-
-        });
-
-
-        hostConnection.on("close",()=>{
-
-            if(running){
-
-                showResult(
-                    "⚠️ SALA CERRADA",
-                    "El creador salió de la partida."
-                );
-
-            }
-
-        });
-
-    });
-
-
-    peer.on("error",()=>{
-
-        document
-        .getElementById("joinStatus")
-        .textContent=
-        "❌ No se pudo encontrar la sala.";
-
-    });
-
-}
-
-
-/* =========================================================
-   LOBBY
-========================================================= */
-
-function updateLobby(){
-
-    const count =
-    1+
-    Object.keys(connections).length;
-
-
-    document
-    .getElementById("playersNumber")
-    .textContent=
-    `👥 JUGADORES: ${count}/4`;
-
-
-    document
-    .getElementById("hostStatus")
-    .textContent=
-    count>=4
-    ?
-    "🔥 SALA LLENA — 4/4"
-    :
-    `🟢 Esperando jugadores... ${count}/4`;
-
-
-    if(count>=2){
-
-        document
-        .getElementById("startOnline")
-        .classList
-        .remove("hidden");
-
-    }
-
-
-    if(mode==="onlineCPU"){
-
-        document
-        .getElementById("startCPU")
-        .classList
-        .remove("hidden");
-
-    }
-
-}
-
-
-/* =========================================================
-   INICIAR ONLINE
-========================================================= */
-
-function startOnline(){
-
-    if(!isHost)return;
-
-
-    const count =
-    1+
-    Object.keys(connections).length;
-
-
-    if(count<2)return;
-
-
-    createPlayers(count);
-
-
-    state.started=true;
-
-
-    broadcast({
-
-        type:"start",
-
-        state:state
-
-    });
-
-
-    startBattle();
-
-}
-
-
-/* =========================================================
-   ONLINE + CPU
-========================================================= */
-
-function startCPUOnline(){
-
-    if(!isHost)return;
-
-
-    const humans =
-    1+
-    Object.keys(connections).length;
-
-
-    createPlayers(4);
-
-
-    for(
-        let i=humans;
-        i<4;
-        i++
-    ){
-
-        state.players[i].cpu=true;
-
-    }
-
-
-    state.started=true;
-
-
-    broadcast({
-
-        type:"start",
-
-        state:state
-
-    });
-
-
-    startBattle();
-
-}
-
-
-/* =========================================================
-   COMENZAR
-========================================================= */
-
-function startBattle(){
-
-    hideMenus();
-
-
-    document
-    .getElementById("hud")
-    .classList
-    .remove("hidden");
-
-
-    document
-    .getElementById("gameMenu")
-    .classList
-    .remove("hidden");
-
-
-    document
-    .getElementById("mobileControls")
-    .classList
-    .remove("hidden");
-
-
-    document
-    .getElementById("result")
-    .classList
-    .add("hidden");
-
-
-    running=true;
-
-
-    updateHUD();
-
-}
-
-
-/* =========================================================
-   TECLADO
-========================================================= */
-
-addEventListener("keydown",e=>{
-
-    keys[e.key.toLowerCase()]=true;
-
-
-    if(e.code==="Space"){
-
-        attack=true;
-
-        e.preventDefault();
-
-    }
-
-});
-
-
-addEventListener("keyup",e=>{
-
-    keys[e.key.toLowerCase()]=false;
-
-
-    if(e.code==="Space"){
-
-        attack=false;
-
-    }
-
-});
-
-
-/* =========================================================
-   INPUT
-========================================================= */
-
-function getInput(){
-
-    let x=0;
-    let y=0;
-
-
-    if(
-        keys["w"] ||
-        keys["arrowup"]
-    ){
-        y--;
-    }
-
-
-    if(
-        keys["s"] ||
-        keys["arrowdown"]
-    ){
-        y++;
-    }
-
-
-    if(
-        keys["a"] ||
-        keys["arrowleft"]
-    ){
-        x--;
-    }
-
-
-    if(
-        keys["d"] ||
-        keys["arrowright"]
-    ){
-        x++;
-    }
-
-
-    x+=joyX;
-    y+=joyY;
-
-
-    const length =
-    Math.hypot(x,y);
-
-
-    if(length>1){
-
-        x/=length;
-        y/=length;
-
-    }
-
-
-    return{
-        x:x,
-        y:y,
-        attack:attack
-    };
-
-}
-
-
-/* =========================================================
-   JOYSTICK
-========================================================= */
-
-const joystick =
-document.getElementById("joystick");
-
-const stick =
-document.getElementById("stick");
-
-
-function moveJoystick(x,y){
-
-    const r =
-    joystick.getBoundingClientRect();
-
-
-    const cx=
-    r.left+r.width/2;
-
-    const cy=
-    r.top+r.height/2;
-
-
-    let dx=x-cx;
-    let dy=y-cy;
-
-
-    const max=r.width*.35;
-
-    const distance=
-    Math.hypot(dx,dy);
-
-
-    if(distance>max){
-
-        dx=
-        dx/distance*max;
-
-        dy=
-        dy/distance*max;
-
-    }
-
-
-    joyX=dx/max;
-    joyY=dy/max;
-
-
-    stick.style.transform=
-    `translate(${dx}px,${dy}px)`;
-
-}
-
-
-function resetJoystick(){
-
-    joyX=0;
-    joyY=0;
-
-    stick.style.transform=
-    "translate(0,0)";
-
-}
-
-
-joystick.addEventListener(
-"touchstart",
-e=>{
-
-    e.preventDefault();
-
-    const t=e.touches[0];
-
-    moveJoystick(
-        t.clientX,
-        t.clientY
-    );
-
-},
-{passive:false}
-);
-
-
-joystick.addEventListener(
-"touchmove",
-e=>{
-
-    e.preventDefault();
-
-    const t=e.touches[0];
-
-    moveJoystick(
-        t.clientX,
-        t.clientY
-    );
-
-},
-{passive:false}
-);
-
-
-joystick.addEventListener(
-"touchend",
-e=>{
-
-    e.preventDefault();
-
-    resetJoystick();
-
-},
-{passive:false}
-);
-
-
-/* =========================================================
-   ATAQUE CELULAR
-========================================================= */
-
-const attackButton =
-document.getElementById("attack");
-
-
-attackButton.addEventListener(
-"touchstart",
-e=>{
-
-    e.preventDefault();
-
-    attack=true;
-
-},
-{passive:false}
-);
-
-
-attackButton.addEventListener(
-"touchend",
-e=>{
-
-    e.preventDefault();
-
-    attack=false;
-
-},
-{passive:false}
-);
-
-
-/* =========================================================
-   ONLINE HOST
-========================================================= */
-
-function updateHost(dt){
-
-    const speed=260;
-
-
-    state.players.forEach((p,i)=>{
-
-        if(!p.alive)return;
-
-
-        let input={
-            x:0,
-            y:0,
-            attack:false
-        };
-
-
-        if(p.cpu){
-
-            input=
-            onlineCPU(p,i);
-
-        }
-
-        else if(i===0){
-
-            input=
-            getInput();
-
-        }
-
-        else{
-
-            input=
-            p.input||input;
-
-        }
-
-
-        p.x+=
-        input.x*speed*dt;
-
-        p.y+=
-        input.y*speed*dt;
-
-
-        keepInsideArena(p);
-
-
-        p.angle+=10*dt;
-
-
-        if(
-            input.attack &&
-            p.cooldown<=0
-        ){
-
-            p.attack=true;
-
-            p.cooldown=.28;
-
-        }else{
-
-            p.attack=false;
-
-        }
-
-
-        p.cooldown-=dt;
-
-    });
-
-
-    collisions();
-
-    checkWinner();
-
-    sendState();
-
-}
-
-
-/* =========================================================
-   CPU ONLINE
-========================================================= */
-
-function onlineCPU(cpu,index){
-
-    let target=null;
-
-    let closest=Infinity;
-
-
-    state.players.forEach((p,i)=>{
-
-        if(
-            i===index ||
-            p.cpu ||
-            !p.alive
-        ){
-            return;
-        }
-
-
-        const d=
-        Math.hypot(
-            p.x-cpu.x,
-            p.y-cpu.y
+        .querySelectorAll(
+            "#intro,#menu,#game,#results"
+        )
+        .forEach(e=>
+            e.classList.add("hidden")
         );
 
-
-        if(d<closest){
-
-            closest=d;
-            target=p;
-
-        }
-
-    });
-
-
-    if(!target){
-
-        return{
-            x:0,
-            y:0,
-            attack:false
-        };
-
-    }
-
-
-    const dx=
-    target.x-cpu.x;
-
-    const dy=
-    target.y-cpu.y;
-
-
-    const distance=
-    Math.hypot(dx,dy)||1;
-
-
-    return{
-
-        x:dx/distance,
-
-        y:dy/distance,
-
-        attack:
-        distance<105
-
-    };
-
 }
 
+function showMenu(){
 
-/* =========================================================
-   ENVIAR INPUT
-========================================================= */
-
-function sendInput(){
-
-    if(!hostConnection)return;
-
-
-    const now=
-    performance.now();
-
-
-    if(now-lastSend<35){
-
-        return;
-
-    }
-
-
-    lastSend=now;
-
-
-    hostConnection.send({
-
-        type:"input",
-
-        input:getInput()
-
-    });
-
-}
-
-
-/* =========================================================
-   ESTADO
-========================================================= */
-
-function sendState(){
-
-    broadcast({
-
-        type:"state",
-
-        state:state
-
-    });
-
-}
-
-
-function broadcast(data){
-
-    Object
-    .values(connections)
-    .forEach(conn=>{
-
-        try{
-
-            conn.send(data);
-
-        }catch(e){}
-
-    });
-
-}
-
-
-/* =========================================================
-   HUD
-========================================================= */
-
-function updateHUD(){
-
-    const hud=
-    document.getElementById(
-        "hudPlayers"
-    );
-
-
-    hud.innerHTML="";
-
-
-    state.players.forEach((p,i)=>{
-
-        const div=
-        document.createElement("div");
-
-
-        div.className="card";
-
-
-        div.innerHTML=`
-
-            <div
-            class="name"
-            style="color:${playerColors[i]}">
-
-                ● JUGADOR ${i+1}
-
-                ${p.cpu ? " 🤖 CPU" : ""}
-
-            </div>
-
-            <div class="lifeBack">
-
-                <div
-                class="life"
-                style="
-                width:${p.life}%;
-                background:${playerColors[i]}
-                ">
-                </div>
-
-            </div>
-        `;
-
-
-        hud.appendChild(div);
-
-    });
-
-}
-
-
-/* =========================================================
-   RESULTADO
-========================================================= */
-
-function showResult(title,text){
-
-    running=false;
-
+    hideScreens();
 
     document
-    .getElementById("resultTitle")
-    .textContent=title;
+        .getElementById("menu")
+        .classList.remove("hidden");
 
+}
 
-    document
-    .getElementById("resultText")
-    .textContent=text;
+function backMenu(){
 
+    gameRunning=false;
 
-    document
-    .getElementById("result")
-    .classList
-    .remove("hidden");
+    showMenu();
 
 }
 
 
-/* =========================================================
-   REVANCHA
-========================================================= */
+/* ======================================================
+   JUGADORES
+====================================================== */
 
-function rematch(){
+function selectPlayers(n){
+
+    selectedPlayers=n;
 
     document
-    .getElementById("result")
-    .classList
-    .add("hidden");
+        .querySelectorAll(".playerBtn")
+        .forEach((b,i)=>{
 
-
-    if(!isHost){
-
-        if(hostConnection){
-
-            hostConnection.send({
-                type:"rematch"
-            });
-
-        }
-
-        return;
-
-    }
-
-
-    restartHost();
-
-}
-
-
-function restartHost(){
-
-    if(mode==="solo"){
-
-        createPlayers(4);
-
-        state.players[1].cpu=true;
-        state.players[2].cpu=true;
-        state.players[3].cpu=true;
-
-    }
-
-    else if(mode==="onlineCPU"){
-
-        const humans=
-        1+
-        Object.keys(connections).length;
-
-
-        createPlayers(4);
-
-
-        for(
-            let i=humans;
-            i<4;
-            i++
-        ){
-
-            state.players[i].cpu=true;
-
-        }
-
-    }
-
-    else{
-
-        const humans=
-        1+
-        Object.keys(connections).length;
-
-
-        createPlayers(humans);
-
-    }
-
-
-    state.started=true;
-
-    running=true;
-
-
-    broadcast({
-
-        type:"start",
-
-        state:state
-
-    });
-
-}
-
-
-/* =========================================================
-   COPIAR CÓDIGO
-========================================================= */
-
-function copyCode(){
-
-    if(!roomCode)return;
-
-
-    if(navigator.clipboard){
-
-        navigator.clipboard
-        .writeText(roomCode)
-        .then(()=>{
-
-            document
-            .getElementById("hostStatus")
-            .textContent=
-            "✅ Código copiado. Envíalo a los jugadores.";
+            b.classList.toggle(
+                "active",
+                i===n-1
+            );
 
         });
 
+}
+
+
+/* ======================================================
+   INICIO
+====================================================== */
+
+function resize(){
+
+    canvas.width=innerWidth;
+    canvas.height=innerHeight;
+
+}
+
+window.addEventListener(
+    "resize",
+    resize
+);
+
+
+function startGame(){
+
+    hideScreens();
+
+    document
+        .getElementById("game")
+        .classList.remove("hidden");
+
+    resize();
+
+    createCars();
+
+    finished=false;
+    raceStarted=false;
+    gameRunning=true;
+
+    countdown();
+
+    requestAnimationFrame(loop);
+
+}
+
+
+/* ======================================================
+   CUENTA
+====================================================== */
+
+function countdown(){
+
+    const box=
+        document.getElementById(
+            "countdown"
+        );
+
+    let n=3;
+
+    box.textContent=n;
+
+    const timer=setInterval(()=>{
+
+        n--;
+
+        if(n>0){
+
+            box.textContent=n;
+
+        }else{
+
+            box.textContent="¡YA!";
+
+            raceStarted=true;
+
+            setTimeout(()=>{
+                box.textContent="";
+            },700);
+
+            clearInterval(timer);
+
+        }
+
+    },1000);
+
+}
+
+
+/* ======================================================
+   TECLADO
+====================================================== */
+
+document.addEventListener(
+    "keydown",
+    e=>{
+        keys[e.key.toLowerCase()]=true;
+    }
+);
+
+document.addEventListener(
+    "keyup",
+    e=>{
+        keys[e.key.toLowerCase()]=false;
+    }
+);
+
+
+/*
+   J1:
+   W A S D
+
+   J2:
+   Flechas
+
+   J3:
+   I J K L
+
+   J4:
+   T F G H
+*/
+
+
+/* ======================================================
+   ACTUALIZAR AUTO
+====================================================== */
+
+function controlCar(
+    car,
+    accelerate,
+    reverse,
+    left,
+    right
+){
+
+    if(keys[accelerate]){
+
+        car.speed+=car.acceleration;
+
+    }else{
+
+        car.speed*=.975;
+
+    }
+
+    if(keys[reverse]){
+
+        car.speed-=.25;
+
+    }
+
+    car.speed=Math.max(
+        -2,
+        Math.min(
+            car.maxSpeed,
+            car.speed
+        )
+    );
+
+
+    if(car.speed>.2){
+
+        if(keys[left])
+            car.x-=.18*car.speed;
+
+        if(keys[right])
+            car.x+=.18*car.speed;
+
+    }
+
+
+    /*
+       El coche intenta volver
+       suavemente a su carril.
+    */
+
+    car.x*=.992;
+
+    car.progress+=
+        Math.max(0,car.speed)*.75;
+
+}
+
+
+/* ======================================================
+   ACTUALIZAR TODOS
+====================================================== */
+
+function updateCars(){
+
+    if(!raceStarted)
+        return;
+
+
+    if(selectedPlayers>=1){
+
+        controlCar(
+            cars[0],
+            "w",
+            "s",
+            "a",
+            "d"
+        );
+
+    }
+
+
+    if(selectedPlayers>=2){
+
+        controlCar(
+            cars[1],
+            "arrowup",
+            "arrowdown",
+            "arrowleft",
+            "arrowright"
+        );
+
+    }
+
+
+    if(selectedPlayers>=3){
+
+        controlCar(
+            cars[2],
+            "i",
+            "k",
+            "j",
+            "l"
+        );
+
+    }
+
+
+    if(selectedPlayers>=4){
+
+        controlCar(
+            cars[3],
+            "t",
+            "g",
+            "f",
+            "h"
+        );
+
+    }
+
+
+    /*
+       Los jugadores que no participan
+       permanecen quietos.
+    */
+
+    for(let i=selectedPlayers;i<4;i++){
+
+        cars[i].speed=0;
+
+    }
+
+
+    cars.forEach(car=>{
+
+        if(
+            car.progress>=TOTAL
+        ){
+
+            car.progress=TOTAL;
+
+            car.finished=true;
+
+        }
+
+    });
+
+
+    if(
+        cars
+        .slice(0,selectedPlayers)
+        .every(c=>c.finished)
+    ){
+
+        endRace();
+
     }
 
 }
 
 
-/* =========================================================
-   ARENA
-========================================================= */
+/* ======================================================
+   CIELO
+====================================================== */
 
-function drawArena(){
+function drawSky(){
 
-    ctx.clearRect(
-        0,
-        0,
-        W,
-        H
-    );
+    const g=
+        ctx.createLinearGradient(
+            0,0,
+            0,canvas.height
+        );
 
+    g.addColorStop(0,"#63bdf4");
+    g.addColorStop(.48,"#c7e9f4");
+    g.addColorStop(1,"#76aa56");
 
-    const bg=
-    ctx.createRadialGradient(
-        W/2,
-        H/2,
-        50,
-        W/2,
-        H/2,
-        Math.max(W,H)
-    );
-
-
-    bg.addColorStop(
-        0,
-        "#1a2c54"
-    );
-
-    bg.addColorStop(
-        1,
-        "#050816"
-    );
-
-
-    ctx.fillStyle=bg;
+    ctx.fillStyle=g;
 
     ctx.fillRect(
-        0,
-        0,
-        W,
-        H
+        0,0,
+        canvas.width,
+        canvas.height
     );
 
 
-    const radius=
-    Math.min(W,H)*.40;
+    /*
+       SOL
+    */
 
+    ctx.fillStyle="#ffe08a";
 
     ctx.beginPath();
 
     ctx.arc(
-        W/2,
-        H/2,
-        radius,
+        canvas.width*.77,
+        canvas.height*.18,
+        48,
         0,
         Math.PI*2
     );
-
-
-    ctx.fillStyle="#101a2d";
 
     ctx.fill();
 
 
-    ctx.strokeStyle="#405c86";
+    /*
+       MONTAÑAS
+    */
 
-    ctx.lineWidth=8;
-
-    ctx.stroke();
-
+    ctx.fillStyle="#60875d";
 
     ctx.beginPath();
 
-    ctx.arc(
-        W/2,
-        H/2,
-        radius*.78,
+    ctx.moveTo(
         0,
-        Math.PI*2
+        canvas.height*.43
     );
 
+    for(
+        let x=0;
+        x<=canvas.width;
+        x+=80
+    ){
 
-    ctx.strokeStyle="#243d62";
+        ctx.lineTo(
+            x,
+            canvas.height*.31+
+            Math.sin(x*.015)*60
+        );
 
-    ctx.lineWidth=3;
+    }
 
-    ctx.stroke();
+    ctx.lineTo(
+        canvas.width,
+        canvas.height
+    );
+
+    ctx.lineTo(
+        0,
+        canvas.height
+    );
+
+    ctx.fill();
+
+
+    /*
+       MONTAÑAS LEJANAS
+    */
+
+    ctx.fillStyle="#849b79";
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        0,
+        canvas.height*.45
+    );
+
+    for(
+        let x=0;
+        x<=canvas.width;
+        x+=120
+    ){
+
+        ctx.lineTo(
+            x,
+            canvas.height*.37+
+            Math.sin(x*.009)*40
+        );
+
+    }
+
+    ctx.lineTo(
+        canvas.width,
+        canvas.height
+    );
+
+    ctx.lineTo(
+        0,
+        canvas.height
+    );
+
+    ctx.fill();
 
 }
 
 
-/* =========================================================
-   DIBUJAR TROMPO
-========================================================= */
+/* ======================================================
+   ÁRBOL
+====================================================== */
 
-function drawPlayer(p,i){
+function drawTree(x,y,s){
 
-    if(!p.alive)return;
+    ctx.fillStyle="#553923";
+
+    ctx.fillRect(
+        x-5*s,
+        y,
+        10*s,
+        35*s
+    );
+
+    ctx.fillStyle="#14582e";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x,
+        y-12*s,
+        25*s,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.fillStyle="#267a40";
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x-17*s,
+        y,
+        18*s,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+    ctx.beginPath();
+
+    ctx.arc(
+        x+17*s,
+        y,
+        18*s,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fill();
+
+}
+
+
+/* ======================================================
+   EDIFICIOS
+====================================================== */
+
+function drawBuilding(x,y,s){
+
+    ctx.fillStyle="#35435b";
+
+    ctx.fillRect(
+        x,
+        y,
+        60*s,
+        90*s
+    );
+
+    for(
+        let r=0;
+        r<5;
+        r++
+    ){
+
+        for(
+            let c=0;
+            c<3;
+            c++
+        ){
+
+            ctx.fillStyle=
+                r%2===0
+                ?"rgba(255,222,130,.9)"
+                :"rgba(150,210,255,.8)";
+
+            ctx.fillRect(
+                x+
+                9*s+
+                c*17*s,
+                y+
+                10*s+
+                r*16*s,
+                8*s,
+                10*s
+            );
+
+        }
+
+    }
+
+}
+
+
+/* ======================================================
+   PUENTE
+====================================================== */
+
+function drawBridge(y){
+
+    ctx.fillStyle="#495463";
+
+    ctx.fillRect(
+        0,
+        y,
+        canvas.width,
+        18
+    );
+
+    ctx.fillStyle="#303945";
+
+    ctx.fillRect(
+        0,
+        y+18,
+        canvas.width,
+        8
+    );
+
+    for(
+        let x=0;
+        x<canvas.width;
+        x+=70
+    ){
+
+        ctx.fillStyle="#252c36";
+
+        ctx.fillRect(
+            x,
+            y+26,
+            12,
+            80
+        );
+
+    }
+
+}
+
+
+/* ======================================================
+   CARRETERA
+====================================================== */
+
+function drawRoad(){
+
+    const horizon=
+        canvas.height*.29;
+
+    const center=
+        canvas.width/2;
+
+
+    for(
+        let i=0;
+        i<38;
+        i++
+    ){
+
+        const index=
+            Math.floor(
+                cars[0].progress/10
+            )+i;
+
+
+        if(index>=track.length-1)
+            continue;
+
+
+        const p=track[index];
+        const next=track[index+1];
+
+        const depth=i/38;
+
+        const perspective=
+            depth*depth;
+
+        const y=
+            horizon+
+            perspective*
+            (canvas.height-horizon);
+
+        const nextY=
+            horizon+
+            ((i+1)/38)*
+            ((i+1)/38)*
+            (canvas.height-horizon);
+
+
+        const roadWidth=
+            45+
+            perspective*590;
+
+
+        const cx=
+            center+
+            p.x*perspective;
+
+        const nx=
+            center+
+            next.x*
+            ((i+1)/38)*
+            ((i+1)/38);
+
+
+        /*
+           césped
+        */
+
+        ctx.fillStyle=
+            i%2===0
+            ?"#71a84f"
+            :"#6ba04b";
+
+
+        ctx.fillRect(
+            0,
+            y,
+            canvas.width,
+            nextY-y+3
+        );
+
+
+        /*
+           bordes rojos/blancos
+        */
+
+        ctx.fillStyle=
+            i%2===0
+            ?"white"
+            :"#e33b35";
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            cx-roadWidth/2-9,
+            y
+        );
+
+        ctx.lineTo(
+            cx-roadWidth/2+2,
+            y
+        );
+
+        ctx.lineTo(
+            nx-roadWidth/2+2,
+            nextY
+        );
+
+        ctx.lineTo(
+            nx-roadWidth/2-9,
+            nextY
+        );
+
+        ctx.fill();
+
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            cx+roadWidth/2-2,
+            y
+        );
+
+        ctx.lineTo(
+            cx+roadWidth/2+9,
+            y
+        );
+
+        ctx.lineTo(
+            nx+roadWidth/2+9,
+            nextY
+        );
+
+        ctx.lineTo(
+            nx+roadWidth/2-2,
+            nextY
+        );
+
+        ctx.fill();
+
+
+        /*
+           ASFALTO
+        */
+
+        ctx.fillStyle="#2c3037";
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            cx-roadWidth/2,
+            y
+        );
+
+        ctx.lineTo(
+            cx+roadWidth/2,
+            y
+        );
+
+        ctx.lineTo(
+            nx+roadWidth/2,
+            nextY
+        );
+
+        ctx.lineTo(
+            nx-roadWidth/2,
+            nextY
+        );
+
+        ctx.fill();
+
+
+        /*
+           cuatro carriles
+        */
+
+        ctx.strokeStyle=
+            "rgba(255,255,255,.65)";
+
+        ctx.lineWidth=
+            2+
+            perspective*3;
+
+
+        for(let lane=1;lane<4;lane++){
+
+            const offset=
+                -roadWidth/2+
+                roadWidth*(lane/4);
+
+            const nextOffset=
+                -roadWidth/2+
+                roadWidth*(lane/4);
+
+
+            if(i%2===0){
+
+                ctx.beginPath();
+
+                ctx.moveTo(
+                    cx+offset,
+                    y
+                );
+
+                ctx.lineTo(
+                    nx+nextOffset,
+                    nextY
+                );
+
+                ctx.stroke();
+
+            }
+
+        }
+
+
+        /*
+           Línea central decorativa
+        */
+
+        if(i%3===0){
+
+            ctx.fillStyle="#ffe85d";
+
+            ctx.fillRect(
+                cx-2,
+                y,
+                4+
+                perspective*4,
+                15+
+                perspective*18
+            );
+
+        }
+
+
+        /*
+           árboles
+        */
+
+        if(i%4===0){
+
+            const s=
+                .25+
+                perspective*.8;
+
+            drawTree(
+                cx-
+                roadWidth/2-
+                60*s,
+                y,
+                s
+            );
+
+            drawTree(
+                cx+
+                roadWidth/2+
+                60*s,
+                y,
+                s
+            );
+
+        }
+
+
+        /*
+           edificios
+        */
+
+        if(i===8){
+
+            drawBuilding(
+                cx-
+                roadWidth/2-
+                150,
+                y-80,
+                .7
+            );
+
+            drawBuilding(
+                cx+
+                roadWidth/2+
+                90,
+                y-80,
+                .6
+            );
+
+        }
+
+
+        /*
+           puente
+        */
+
+        if(i===19){
+
+            drawBridge(y);
+
+        }
+
+    }
+
+}
+
+
+/* ======================================================
+   CARRO 3D
+====================================================== */
+
+function drawCar(car){
+
+    const index=
+        Math.min(
+            track.length-1,
+            Math.floor(
+                car.progress/10
+            )
+        );
+
+    const p=track[index];
+
+    const center=
+        canvas.width/2+
+        p.x*.035;
+
+
+    /*
+       Cada auto mantiene su carril.
+    */
+
+    const x=
+        center+
+        car.x;
+
+    const y=
+        canvas.height*.73;
 
 
     ctx.save();
 
-
-    ctx.translate(
-        p.x,
-        p.y
-    );
-
-
-    ctx.rotate(
-        p.angle
-    );
+    ctx.translate(x,y);
 
 
     /*
-       SOMBRA
+       sombra
     */
+
+    ctx.fillStyle="#0009";
 
     ctx.beginPath();
 
     ctx.ellipse(
-        4,
-        8,
-        34,
+        0,
+        25,
+        48,
         13,
         0,
         0,
         Math.PI*2
     );
 
-    ctx.fillStyle="#0009";
+    ctx.fill();
+
+
+    /*
+       carro
+    */
+
+    ctx.fillStyle=car.color;
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+        -35,
+        -65,
+        70,
+        105,
+        15
+    );
 
     ctx.fill();
 
 
     /*
-       TROMPO
+       brillo
     */
+
+    ctx.fillStyle=
+        "rgba(255,255,255,.18)";
 
     ctx.beginPath();
 
-    ctx.arc(
-        0,
-        0,
-        30,
-        0,
-        Math.PI*2
+    ctx.roundRect(
+        -28,
+        -57,
+        20,
+        75,
+        8
+    );
+
+    ctx.fill();
+
+
+    /*
+       techo
+    */
+
+    ctx.fillStyle="#bfe7ff";
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+        -25,
+        -46,
+        50,
+        38,
+        11
+    );
+
+    ctx.fill();
+
+
+    /*
+       vidrio
+    */
+
+    ctx.fillStyle="#152537";
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+        -20,
+        -41,
+        40,
+        27,
+        7
+    );
+
+    ctx.fill();
+
+
+    /*
+       capó
+    */
+
+    ctx.fillStyle=car.color;
+
+    ctx.beginPath();
+
+    ctx.roundRect(
+        -29,
+        -5,
+        58,
+        38,
+        8
+    );
+
+    ctx.fill();
+
+
+    /*
+       faros
+    */
+
+    ctx.fillStyle="#fff7bf";
+
+    ctx.fillRect(
+        -25,
+        15,
+        13,
+        8
+    );
+
+    ctx.fillRect(
+        12,
+        15,
+        13,
+        8
     );
 
 
-    ctx.fillStyle=
-    playerColors[i];
-
-    ctx.fill();
-
-
-    ctx.lineWidth=5;
-
-    ctx.strokeStyle="#ffffffaa";
-
-    ctx.stroke();
-
-
     /*
-       CENTRO
+       ruedas
     */
 
-    ctx.beginPath();
+    ctx.fillStyle="#111";
 
-    ctx.arc(
-        0,
-        0,
+    ctx.fillRect(
+        -40,
+        -25,
         11,
-        0,
-        Math.PI*2
+        31
     );
 
-    ctx.fillStyle="#ffffff";
-
-    ctx.fill();
-
-
-    ctx.beginPath();
-
-    ctx.arc(
-        0,
-        0,
-        5,
-        0,
-        Math.PI*2
+    ctx.fillRect(
+        29,
+        -25,
+        11,
+        31
     );
-
-    ctx.fillStyle=
-    playerColors[i];
-
-    ctx.fill();
 
 
     /*
-       ATAQUE
+       spoiler
     */
 
-    if(p.attack){
+    ctx.fillStyle="#111";
 
-        ctx.beginPath();
+    ctx.fillRect(
+        -31,
+        -63,
+        62,
+        7
+    );
 
-        ctx.arc(
-            0,
-            0,
-            44,
-            0,
-            Math.PI*2
-        );
 
-        ctx.strokeStyle="#ffffff";
+    /*
+       número
+    */
 
-        ctx.lineWidth=5;
+    ctx.fillStyle="white";
 
-        ctx.stroke();
+    ctx.font="bold 18px Arial";
 
-    }
+    ctx.textAlign="center";
+
+    ctx.fillText(
+        car.id+1,
+        0,
+        17
+    );
 
 
     ctx.restore();
 
-
-    /*
-       NOMBRE
-    */
-
-    ctx.textAlign="center";
-
-    ctx.font="bold 12px Arial";
-
-    ctx.fillStyle="#ffffff";
+}
 
 
-    ctx.fillText(
+/* ======================================================
+   POSICIONES
+====================================================== */
 
-        p.cpu
-        ? "🤖 CPU"
-        : "JUGADOR "+(i+1),
+function getOrder(){
 
-        p.x,
-        p.y-43
-
-    );
+    return cars
+        .slice(0,selectedPlayers)
+        .sort(
+            (a,b)=>
+                b.progress-a.progress
+        );
 
 }
 
 
-/* =========================================================
-   LOOP
-========================================================= */
+function updateHUD(){
 
-function gameLoop(now){
+    const order=getOrder();
 
-    const dt=
-    Math.min(
-        .033,
-        (now-lastTime)/1000
+    order.forEach(
+        (car,index)=>{
+
+            document
+                .getElementById(
+                    "pos"+
+                    (car.id+1)
+                )
+                .textContent=
+                    (index+1)+"º";
+
+        }
     );
 
 
-    lastTime=now;
+    cars.forEach(car=>{
 
-
-    update(dt);
-
-
-    drawArena();
-
-
-    state.players.forEach((p,i)=>{
-
-        drawPlayer(p,i);
+        document
+            .getElementById(
+                "speed"+
+                (car.id+1)
+            )
+            .textContent=
+                Math.round(
+                    Math.max(
+                        0,
+                        car.speed*25
+                    )
+                );
 
     });
+
+
+    /*
+       barra de progreso
+    */
+
+    cars.forEach(car=>{
+
+        document
+            .getElementById(
+                "prog"+
+                (car.id+1)
+            )
+            .style.left=
+                (
+                    car.progress/
+                    TOTAL*
+                    100
+                )+"%";
+
+    });
+
+
+    updateMap();
+
+}
+
+
+/* ======================================================
+   MINIMAPA
+====================================================== */
+
+function updateMap(){
+
+    /*
+       Movemos los cuatro puntos
+       alrededor del circuito.
+    */
+
+    cars.forEach(car=>{
+
+        const p=
+            car.progress/TOTAL;
+
+        /*
+           trayectoria elíptica
+        */
+
+        const angle=
+            p*Math.PI*2-
+            Math.PI/2;
+
+        const x=
+            50+
+            Math.cos(angle)*36;
+
+        const y=
+            50+
+            Math.sin(angle)*40;
+
+        const dot=
+            document
+            .getElementById(
+                "dot"+
+                (car.id+1)
+            );
+
+        dot.style.left=x+"%";
+        dot.style.top=y+"%";
+
+    });
+
+}
+
+
+/* ======================================================
+   LOOP
+====================================================== */
+
+function loop(){
+
+    if(!gameRunning)
+        return;
+
+
+    drawSky();
+
+    updateCars();
+
+    drawRoad();
+
+
+    /*
+       Autos en orden de profundidad.
+    */
+
+    const visible=
+        cars
+        .slice(0,selectedPlayers)
+        .sort(
+            (a,b)=>
+                a.x-b.x
+        );
+
+
+    visible.forEach(
+        car=>drawCar(car)
+    );
 
 
     updateHUD();
 
 
-    requestAnimationFrame(
-        gameLoop
+    requestAnimationFrame(loop);
+
+}
+
+
+/* ======================================================
+   FINAL
+====================================================== */
+
+function endRace(){
+
+    if(finished)
+        return;
+
+    finished=true;
+    gameRunning=false;
+
+
+    setTimeout(()=>{
+
+        hideScreens();
+
+        document
+            .getElementById(
+                "results"
+            )
+            .classList.remove(
+                "hidden"
+            );
+
+
+        const order=getOrder();
+
+        const list=
+            document
+            .getElementById(
+                "resultList"
+            );
+
+        list.innerHTML="";
+
+
+        order.forEach(
+            (car,index)=>{
+
+                const row=
+                    document
+                    .createElement(
+                        "div"
+                    );
+
+                row.className=
+                    "resultRow";
+
+
+                if(index===0)
+                    row.classList.add(
+                        "winner"
+                    );
+
+
+                row.innerHTML=`
+
+                    <span>
+                        ${index+1}º
+                        JUGADOR ${car.id+1}
+                    </span>
+
+                    <span>
+                        ${
+                            index===0
+                            ?"🏆"
+                            :""
+                        }
+                    </span>
+
+                `;
+
+                list.appendChild(row);
+
+            }
+        );
+
+    },800);
+
+}
+
+
+/* ======================================================
+   VOLANTE CELULAR
+====================================================== */
+
+const wheel=
+    document.getElementById(
+        "wheel"
+    );
+
+let wheelDown=false;
+let wheelStart=0;
+
+
+wheel.addEventListener(
+    "pointerdown",
+    e=>{
+
+        wheelDown=true;
+
+        wheelStart=e.clientX;
+
+        wheel.setPointerCapture(
+            e.pointerId
+        );
+
+    }
+);
+
+
+wheel.addEventListener(
+    "pointermove",
+    e=>{
+
+        if(!wheelDown)
+            return;
+
+        steering=
+            Math.max(
+                -1,
+                Math.min(
+                    1,
+                    (e.clientX-wheelStart)/60
+                )
+            );
+
+
+        /*
+           El volante móvil controla
+           al Jugador 1.
+        */
+
+        keys["a"]=
+            steering<-.15;
+
+        keys["d"]=
+            steering>.15;
+
+    }
+);
+
+
+wheel.addEventListener(
+    "pointerup",
+    ()=>{
+        wheelDown=false;
+        steering=0;
+        keys["a"]=false;
+        keys["d"]=false;
+    }
+);
+
+
+wheel.addEventListener(
+    "pointercancel",
+    ()=>{
+        wheelDown=false;
+        steering=0;
+        keys["a"]=false;
+        keys["d"]=false;
+    }
+);
+
+
+/* ======================================================
+   GAS Y FRENO
+====================================================== */
+
+function holdButton(
+    element,
+    key
+){
+
+    element.addEventListener(
+        "pointerdown",
+        e=>{
+            e.preventDefault();
+            keys[key]=true;
+        }
+    );
+
+    element.addEventListener(
+        "pointerup",
+        e=>{
+            e.preventDefault();
+            keys[key]=false;
+        }
+    );
+
+    element.addEventListener(
+        "pointercancel",
+        ()=>{
+            keys[key]=false;
+        }
     );
 
 }
 
 
-requestAnimationFrame(
-    gameLoop
+holdButton(
+    document.getElementById("gas"),
+    "w"
 );
+
+holdButton(
+    document.getElementById("brake"),
+    "s"
+);
+
+
+/* ======================================================
+   INICIALIZACIÓN
+====================================================== */
+
+resize();
 
 </script>
 
 </body>
 </html>
+
