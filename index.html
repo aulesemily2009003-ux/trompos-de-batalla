@@ -467,7 +467,10 @@ angle:0,
 attack:false,
 inputX:0,
 inputY:0,
-last:Date.now()
+last:Date.now(),
+lastInput:Date.now(),
+ready:false,
+started:false
 }
 };
 
@@ -559,7 +562,10 @@ angle:Math.random()*6.28,
 attack:false,
 inputX:0,
 inputY:0,
-last:Date.now()
+last:Date.now(),
+lastInput:Date.now(),
+ready:false,
+started:false
 };
 
 c.send({
@@ -611,6 +617,7 @@ p.cpu=false;
 if(data.attack){
   p.attack=true;
 }
+p.lastInput=Date.now();
 
 }
 
@@ -655,6 +662,8 @@ id:p.id,
 name:p.name,
 x:p.x,
 y:p.y,
+worldW:W,
+worldH:H,
 hp:p.hp,
 maxHp:p.maxHp,
 color:p.color,
@@ -874,6 +883,25 @@ document.getElementById("onlineStatus").textContent=
 
 }
 
+function applyNetworkPlayers(incoming){
+
+let source=Object.values(incoming||{});
+let sourceW=Number(source[0]&&source[0].worldW)||W;
+let sourceH=Number(source[0]&&source[0].worldH)||H;
+
+let mapped={};
+source.forEach(function(raw){
+  let p=Object.assign({},raw);
+  /* Todos comparten un mundo lógico aunque cada pantalla tenga
+     un tamaño distinto. Esto evita que un jugador aparezca fuera
+     de la pantalla del celular. */
+  p.x=Math.max(45,Math.min(W-45,(Number(raw.x)||0)/sourceW*W));
+  p.y=Math.max(75,Math.min(H-45,(Number(raw.y)||0)/sourceH*H));
+  mapped[p.id]=p;
+});
+return mapped;
+}
+
 function guestMessage(data){
 
 if(!data)return;
@@ -889,7 +917,7 @@ if(data.type==="welcome"){
 
 myId=data.id;
 roomCode=data.room;
-players=data.players||{};
+players=applyNetworkPlayers(data.players||{});
 
 document.getElementById("roomCode").textContent=roomCode;
 
@@ -905,7 +933,7 @@ if(data.type==="lobby"){
 
 if(playing)return;
 
-players=data.players||{};
+players=applyNetworkPlayers(data.players||{});
 
 roomCode=data.room||roomCode;
 
@@ -920,7 +948,7 @@ return;
 if(data.type==="start"){
 
 /* El invitado entra al juego inmediatamente. */
-players=data.players||{};
+players=applyNetworkPlayers(data.players||{});
 playing=true;
 ended=false;
 
@@ -953,26 +981,24 @@ return;
 
 if(data.type==="state"){
 
-/* El anfitrión es la autoridad del estado online. */
+/* El anfitrión es la única autoridad de la partida.
+   El cliente NO decide posiciones, vida ni ganador. */
 let incoming=data.players||{};
-players=incoming;
+players=applyNetworkPlayers(incoming);
 
-/* Si el anfitrión ya marcó a alguien como eliminado, el invitado
-   también termina la partida aunque el mensaje "result" se pierda. */
 if(data.gameOver){
-  /* El resultado SIEMPRE depende del ID real del ganador, nunca del nombre.
-     Esto funciona igual aunque entren jugadores llamados Emily, Eliana, Eva, etc. */
-  let ganadorId=data.winnerId||null;
-  finalizarPartidaRemota(null,null,ganadorId);
+  finalizarPartidaRemota(null,null,data.winnerId||null);
   return;
 }
 
-let vivos=Object.values(players).filter(function(p){return p.alive;});
-if(Object.keys(players).length>1 && vivos.length<=1){
-  let ganador=vivos[0]||null;
-  finalizarPartidaRemota(null,null,ganador?ganador.id:null);
+/* Si por alguna razón el mensaje result se perdió, el estado final
+   también permite terminar la partida correctamente por ID. */
+if(playing){
+  let vivos=Object.values(players).filter(function(p){return p.alive;});
+  if(Object.keys(players).length>1 && vivos.length<=1){
+    finalizarPartidaRemota(null,null,vivos[0]?vivos[0].id:null);
+  }
 }
-
 return;
 
 }
@@ -1099,6 +1125,7 @@ p.attack=false;
 p.inputX=0;
 p.inputY=0;
 p.last=Date.now();
+p.lastInput=Date.now();
 
 p.x=i===0?W/2:120+Math.random()*Math.max(100,W-240);
 p.y=i===0?H/2:120+Math.random()*Math.max(100,H-240);
@@ -1792,7 +1819,7 @@ Object.values(players).forEach(function(p){
 
 if(p.id!=="host"&&p.id!=="me"&&!p.cpu){
 
-if(now-p.last>5000){
+if(now-(p.lastInput||p.last)>12000){
 
 p.cpu=true;
 
@@ -1846,9 +1873,10 @@ if(conn&&conn.open&&myId){
 try{
 conn.send({
   type:"input",
-  x:x,
-  y:y,
-  attack:false
+  x:Math.max(-1,Math.min(1,Number(x)||0)),
+  y:Math.max(-1,Math.min(1,Number(y)||0)),
+  attack:false,
+  t:Date.now()
 });
 }catch(e){}
 }
@@ -1861,87 +1889,42 @@ function checkWinner(){
 
 if(ended)return;
 
-let alive=Object.values(players).filter(function(p){
+let alive=Object.values(players).filter(function(p){return p.alive;});
 
-return p.alive;
-
-});
-
-if(alive.length<=1&&Object.keys(players).length>1){
+if(alive.length<=1 && Object.keys(players).length>1){
 
 ended=true;
 playing=false;
+let winner=alive[0]||null;
+let winnerId=winner?winner.id:null;
 
-let winner=alive[0];
-
-let title="";
-let text="";
-
-if(winner){
-
-if(winner.id===myId){
-
-title="🏆 ¡GANASTE!";
-text="Tu Beyblade quedó como el último en la arena.";
-
-}else{
-
-title="💥 PERDISTE";
-text=winner.name+" ganó la batalla.";
-
-}
-
-}else{
-
-title="💥 EMPATE";
-text="Todos los Beyblade fueron eliminados.";
-
-}
-
-showResult(title,text);
-
-if(host&&roomCode!=="SOLO"){
-
-let finalState=copyPlayers();
-let msg={
-  type:"result",
-  title:title,
-  text:text,
-  winnerId:winner ? winner.id : null,
-  gameOver:true,
-  players:finalState
-};
-
-/* Enviar el final por las conexiones que realmente usa la sala. */
-let enviados=[];
-roomConnections.forEach(function(c){
-  if(c&&c.open){
-    try{ c.send(msg); enviados.push(c); }catch(e){}
-  }
-});
-
-/* Compatibilidad con conexiones PeerJS que no estén en roomConnections. */
-if(peer&&peer.connections){
-  peer.connections.forEach(function(list){
-    list.forEach(function(c){
-      if(!c||!c.open||enviados.indexOf(c)!==-1)return;
-      try{c.send(msg);}catch(e){}
-    });
+if(host && roomCode!=="SOLO"){
+  let finalState=copyPlayers();
+  let msg={type:"result",gameOver:true,winnerId:winnerId,players:finalState};
+  let sent=new Set();
+  roomConnections.forEach(function(c){
+    if(c&&c.open){
+      try{c.send(msg);sent.add(c);}catch(e){}
+    }
   });
-}
-
-/* También mandamos el estado final inmediatamente, antes de que el
-   bucle del anfitrión se detenga. */
-roomConnections.forEach(function(c){
-  if(c&&c.open){
-    try{c.send({type:"state",players:finalState,gameOver:true,title:title,text:text,winnerId:winner?winner.id:null});}catch(e){}
+  if(peer&&peer.connections){
+    peer.connections.forEach(function(list){
+      list.forEach(function(c){
+        if(c&&c.open&&!sent.has(c)){try{c.send(msg);}catch(e){}}
+      });
+    });
   }
-});
+}
 
+if(winnerId===myId){
+  showResult("🏆 ¡GANASTE!","Tu Beyblade quedó como el último en la arena.");
+}else if(winner){
+  showResult("💥 PERDISTE",(winner.name||"Otro jugador")+" ganó la batalla.");
+}else{
+  showResult("💥 EMPATE","Todos los Beyblade fueron eliminados.");
 }
 
 }
-
 }
 
 function showResult(title,text){
