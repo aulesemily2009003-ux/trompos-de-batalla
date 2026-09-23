@@ -9,474 +9,449 @@
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 
 <style>
-
 *{
     box-sizing:border-box;
-    -webkit-user-select:none;
+    margin:0;
+    padding:0;
     user-select:none;
-    -webkit-touch-callout:none;
+    -webkit-user-select:none;
 }
 
 html,body{
-    margin:0;
-    padding:0;
     width:100%;
     height:100%;
     overflow:hidden;
-    font-family:Arial,sans-serif;
-    background:linear-gradient(135deg,#ff8dce,#7bdcff);
+    font-family:Arial,Helvetica,sans-serif;
+    background:
+        radial-gradient(circle at top,#3d9cff,#061b45 55%,#020817);
+    color:white;
 }
-
-button,input{
-    font-family:Arial,sans-serif;
-}
-
-/* ================= PANTALLAS ================= */
 
 .screen{
-    position:fixed;
-    inset:0;
     display:none;
-    justify-content:center;
-    align-items:center;
-    z-index:20;
+    width:100%;
+    height:100%;
 }
 
 .screen.active{
     display:flex;
 }
 
-/* ================= TARJETAS ================= */
+button{
+    border:none;
+    cursor:pointer;
+    font-weight:bold;
+    color:white;
+}
 
-.card{
-    width:min(92%,500px);
-    background:rgba(255,255,255,.96);
-    padding:28px;
-    border-radius:28px;
+#menuScreen{
+    justify-content:center;
+    align-items:center;
     text-align:center;
-    box-shadow:0 15px 45px rgba(0,0,0,.25);
+    padding:20px;
+}
+
+.menuBox{
+    width:min(500px,94vw);
+    padding:35px 25px;
+    border-radius:30px;
+    background:linear-gradient(145deg,rgba(20,74,160,.95),rgba(3,20,58,.98));
+    border:2px solid #61c7ff;
+    box-shadow:
+        0 0 25px #168cff,
+        inset 0 0 30px rgba(50,160,255,.2);
 }
 
 .logo{
-    font-size:38px;
-    font-weight:900;
-    color:#ff399f;
-    text-shadow:3px 3px #ffd7ec;
-    margin-bottom:10px;
+    font-size:clamp(38px,10vw,70px);
+    font-weight:1000;
+    color:#fff;
+    text-shadow:
+        0 0 8px #36bfff,
+        0 0 25px #0077ff,
+        4px 4px 0 #06245f;
+    margin-bottom:8px;
 }
 
 .subtitle{
-    color:#666;
-    margin-bottom:22px;
+    color:#aee5ff;
+    font-size:18px;
+    margin-bottom:28px;
+}
+
+.menuButton{
+    width:100%;
+    padding:17px;
+    margin:8px 0;
+    border-radius:18px;
+    font-size:20px;
+    background:linear-gradient(90deg,#087cff,#22c9ff);
+    box-shadow:0 5px 15px rgba(0,0,0,.4);
+    transition:.2s;
+}
+
+.menuButton:hover{
+    transform:scale(1.03);
+    box-shadow:0 0 20px #19aaff;
+}
+
+.menuButton.secondary{
+    background:linear-gradient(90deg,#164b9b,#3978d9);
+}
+
+#onlineScreen,
+#lobbyScreen{
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:15px;
+}
+
+.panel{
+    width:min(550px,95vw);
+    max-height:95vh;
+    overflow:auto;
+    padding:28px 22px;
+    border-radius:28px;
+    background:linear-gradient(145deg,rgba(8,42,100,.97),rgba(2,14,43,.98));
+    border:2px solid #46c7ff;
+    box-shadow:0 0 30px rgba(0,153,255,.6);
+}
+
+.panel h2{
+    font-size:34px;
+    margin-bottom:18px;
+    text-shadow:0 0 12px #22bfff;
 }
 
 input{
     width:100%;
-    padding:15px;
-    border:3px solid #ff9bce;
+    padding:16px;
+    margin:7px 0;
     border-radius:15px;
-    font-size:18px;
-    text-align:center;
-    outline:none;
-    margin-bottom:10px;
-}
-
-button{
-    width:100%;
-    padding:15px;
-    margin:6px 0;
-    border:0;
-    border-radius:17px;
-    font-size:18px;
-    font-weight:bold;
+    border:2px solid #349dff;
+    background:#031637;
     color:white;
-    background:linear-gradient(135deg,#ff4fa7,#8d72ff);
-    box-shadow:0 5px 12px rgba(0,0,0,.2);
-    cursor:pointer;
+    font-size:18px;
+    outline:none;
+    text-align:center;
 }
 
-button:active{
-    transform:scale(.97);
+input:focus{
+    border-color:#6ed8ff;
+    box-shadow:0 0 15px #168cff;
 }
-
-.blue{
-    background:linear-gradient(135deg,#4fcfff,#657dff);
-}
-
-.green{
-    background:linear-gradient(135deg,#55d86a,#20b96b);
-}
-
-.gray{
-    background:#777;
-}
-
-.red{
-    background:linear-gradient(135deg,#ff687d,#e83c61);
-}
-
-/* ================= ONLINE ================= */
 
 .roomCode{
     font-size:48px;
-    font-weight:900;
     letter-spacing:10px;
-    color:#ff399f;
-    background:#ffe2f1;
-    border-radius:18px;
-    padding:13px;
-    margin:15px 0;
-}
-
-.status{
-    color:#555;
-    min-height:24px;
-    margin:8px 0;
-}
-
-.playersBox{
-    background:#fff3f9;
-    border-radius:18px;
+    font-weight:1000;
+    color:#7cddff;
+    text-shadow:0 0 20px #008cff;
     padding:15px;
-    text-align:left;
+}
+
+.info{
+    color:#bceaff;
+    margin:10px 0 18px;
+}
+
+.playersList{
     margin:15px 0;
 }
 
 .playerItem{
-    background:white;
+    padding:13px;
+    margin:7px 0;
+    border-radius:14px;
+    background:linear-gradient(90deg,#0c3984,#075cae);
+    border:1px solid #3bc5ff;
+    text-align:left;
+}
+
+.status{
     padding:10px;
     border-radius:12px;
-    margin:6px 0;
-    font-weight:bold;
+    background:#03183b;
+    color:#7ddcff;
+    margin:10px 0;
 }
-
-.hostTag{
-    color:#ff3e9f;
-    font-size:12px;
-}
-
-/* ================= JUEGO ================= */
 
 #gameScreen{
-    background:#65c653;
+    position:relative;
+    background:#020b20;
 }
 
-#canvas{
-    position:fixed;
-    left:0;
-    top:0;
+#gameCanvas{
+    position:absolute;
+    inset:0;
     width:100%;
     height:100%;
     display:block;
+    background:#061634;
 }
 
-/* ================= INFORMACIÓN ================= */
-
-#gameUI{
-    position:fixed;
-    top:8px;
-    left:8px;
-    right:8px;
-    z-index:10;
+#topBar{
+    position:absolute;
+    left:10px;
+    right:10px;
+    top:10px;
     display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    pointer-events:none;
-}
-
-#scoreBoard{
-    display:flex;
-    flex-wrap:wrap;
-    gap:5px;
-    max-width:80%;
-}
-
-.score{
-    background:rgba(255,255,255,.92);
-    border-radius:12px;
-    padding:6px 9px;
-    min-width:95px;
-}
-
-.scoreName{
-    font-size:13px;
-    font-weight:bold;
-}
-
-.hpBar{
-    width:85px;
-    height:8px;
-    background:#ddd;
-    border-radius:10px;
-    overflow:hidden;
-    margin-top:3px;
-}
-
-.hpFill{
-    height:100%;
-    background:#ff4f83;
-}
-
-#pauseButton{
-    width:auto;
-    margin:0;
-    padding:9px 13px;
-    font-size:14px;
-    pointer-events:auto;
-}
-
-/* ================= CONTROLES ================= */
-
-#controls{
-    position:fixed;
-    left:15px;
-    right:15px;
-    bottom:15px;
-    z-index:15;
-    display:none;
     justify-content:space-between;
     align-items:center;
     pointer-events:none;
+    z-index:5;
+}
+
+.gameTitle{
+    padding:9px 15px;
+    border-radius:14px;
+    background:rgba(3,27,68,.85);
+    border:1px solid #35bfff;
+    color:#9ce8ff;
+    font-weight:bold;
+}
+
+.pauseButton{
+    pointer-events:auto;
+    padding:10px 16px;
+    border-radius:14px;
+    background:#0b65cf;
+    border:1px solid #75dfff;
+    font-size:16px;
+}
+
+#touchControls{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:20px;
+    height:190px;
+    pointer-events:none;
+    z-index:10;
 }
 
 #joystick{
-    width:125px;
-    height:125px;
+    position:absolute;
+    left:25px;
+    bottom:15px;
+    width:145px;
+    height:145px;
     border-radius:50%;
-    background:rgba(255,255,255,.25);
-    border:3px solid rgba(255,255,255,.7);
-    position:relative;
+    background:rgba(25,124,210,.3);
+    border:3px solid rgba(99,218,255,.75);
+    box-shadow:0 0 25px rgba(0,155,255,.5);
     pointer-events:auto;
     touch-action:none;
 }
 
-#knob{
+#stick{
     position:absolute;
-    left:32px;
-    top:32px;
-    width:55px;
-    height:55px;
+    width:62px;
+    height:62px;
+    left:50%;
+    top:50%;
+    transform:translate(-50%,-50%);
     border-radius:50%;
-    background:#ff4fa7;
-    border:3px solid white;
+    background:linear-gradient(145deg,#65ddff,#0879ff);
+    border:2px solid white;
+    box-shadow:0 0 18px #009dff;
 }
 
 #attackButton{
-    width:100px;
-    height:100px;
+    position:absolute;
+    right:25px;
+    bottom:25px;
+    width:125px;
+    height:125px;
     border-radius:50%;
-    background:linear-gradient(135deg,#ff4b9e,#ff8bc8);
-    border:4px solid white;
-    color:white;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    font-weight:bold;
+    background:linear-gradient(145deg,#2ed8ff,#075dff);
+    border:4px solid #a8efff;
+    box-shadow:0 0 25px #008cff;
+    font-size:18px;
     pointer-events:auto;
     touch-action:none;
 }
 
-/* ================= PAUSA ================= */
-
-#pauseOverlay{
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.55);
-    z-index:100;
-    display:none;
-    justify-content:center;
-    align-items:center;
-}
-
-/* ================= FINAL ================= */
-
+#pauseOverlay,
 #resultOverlay{
-    position:fixed;
+    position:absolute;
     inset:0;
-    background:rgba(0,0,0,.65);
-    z-index:110;
+    z-index:20;
     display:none;
     justify-content:center;
     align-items:center;
+    background:rgba(0,8,25,.78);
+    backdrop-filter:blur(7px);
 }
 
-#resultOverlay .card{
-    max-width:380px;
+.overlayBox{
+    width:min(450px,90vw);
+    padding:30px;
+    border-radius:28px;
+    text-align:center;
+    background:linear-gradient(145deg,#0a438d,#031838);
+    border:2px solid #4ed5ff;
+    box-shadow:0 0 35px #008cff;
 }
 
-#winnerText{
+.overlayBox h2{
+    font-size:38px;
+    color:#9beaff;
+    margin-bottom:15px;
+}
+
+.winner{
     font-size:27px;
-    color:#ff3d9f;
-    font-weight:bold;
-    margin:15px 0;
+    margin:20px 0;
+    color:#fff;
 }
 
-/* ================= CELULAR ================= */
+#mobileOnlyInfo{
+    display:none;
+}
 
 @media(max-width:700px){
-
-    .logo{
-        font-size:31px;
+    #mobileOnlyInfo{
+        display:block;
+        color:#8edfff;
+        font-size:13px;
+        margin-top:12px;
     }
 
-    .card{
-        padding:22px;
+    .logo{
+        font-size:45px;
     }
 
     .roomCode{
-        font-size:39px;
+        font-size:40px;
     }
 
-    #scoreBoard{
-        max-width:72%;
+    .panel{
+        padding:23px 17px;
     }
-
-    .score{
-        min-width:78px;
-        padding:5px;
-    }
-
-    .hpBar{
-        width:68px;
-    }
-
 }
 
+@media(min-width:701px){
+    #touchControls{
+        display:none;
+    }
+}
 </style>
 </head>
 
 <body>
 
-<!-- ======================================================
-     MENÚ
-====================================================== -->
+<!-- ================= MENU ================= -->
 
 <div id="menuScreen" class="screen active">
 
-    <div class="card">
+    <div class="menuBox">
 
-        <div class="logo">
-            ⚡ GUERRA BEYBLADE ⚡
-        </div>
+        <div class="logo">⚡ BEYBLADE ⚡</div>
+        <div class="subtitle">GUERRA DE TROMPOS</div>
 
-        <div class="subtitle">
-            ¡Haz girar tu trompo y gana la batalla!
-        </div>
-
-        <input
-            id="nameInput"
-            maxlength="12"
-            placeholder="Escribe tu nombre"
-        >
-
-        <button onclick="startSolo()">
+        <button class="menuButton" onclick="startSolo()">
             🎮 JUGAR SOLO
         </button>
 
-        <button class="blue" onclick="openOnline()">
+        <button class="menuButton" onclick="openOnline()">
             🌐 JUGAR ONLINE
         </button>
+
+        <button class="menuButton secondary" onclick="showInstructions()">
+            📖 CÓMO JUGAR
+        </button>
+
+        <div id="mobileOnlyInfo">
+            📱 En celular usa el joystick azul para moverte.
+        </div>
 
     </div>
 
 </div>
 
 
-<!-- ======================================================
-     ONLINE
-====================================================== -->
+<!-- ================= ONLINE ================= -->
 
 <div id="onlineScreen" class="screen">
 
-    <div class="card">
+    <div class="panel">
 
-        <div class="logo">
-            🌐 ONLINE
-        </div>
+        <h2>🌐 BATALLA ONLINE</h2>
 
         <input
-            id="onlineName"
+            id="playerName"
             maxlength="12"
             placeholder="Tu nombre"
         >
 
-        <button onclick="createRoom()">
+        <button class="menuButton" onclick="createRoom()">
             🏠 CREAR SALA
         </button>
 
-        <div style="color:#777;margin:10px;">
-            O entra a una sala
-        </div>
+        <div style="margin:12px;color:#7ecfff;">O</div>
 
         <input
             id="roomInput"
             maxlength="4"
             inputmode="numeric"
-            placeholder="CÓDIGO DE 4 NÚMEROS"
-            oninput="numbersOnly(this)"
+            placeholder="Código de 4 números"
+            oninput="onlyNumbers(this)"
         >
 
-        <button class="blue" onclick="joinRoom()">
-            🚀 ENTRAR A SALA
+        <button class="menuButton" onclick="joinRoom()">
+            🚪 ENTRAR A SALA
         </button>
 
-        <div id="onlineStatus" class="status"></div>
-
-        <button class="gray" onclick="backMenu()">
+        <button class="menuButton secondary" onclick="backToMenu()">
             ⬅ VOLVER
         </button>
+
+        <div id="connectionStatus" class="status">
+            Listo para jugar.
+        </div>
 
     </div>
 
 </div>
 
 
-<!-- ======================================================
-     SALA DE ESPERA
-====================================================== -->
+<!-- ================= LOBBY ================= -->
 
 <div id="lobbyScreen" class="screen">
 
-    <div class="card">
+    <div class="panel">
 
-        <div class="logo">
-            ⚔️ SALA DE BATALLA
+        <h2>🏆 SALA DE BATALLA</h2>
+
+        <div>CODIGO DE SALA</div>
+
+        <div id="roomDisplay" class="roomCode">
+            ----
         </div>
 
-        <div>
-            Código de reunión:
-        </div>
+        <div id="hostText" class="info"></div>
 
-        <div id="roomCode" class="roomCode">
-            0000
-        </div>
+        <h3>👥 JUGADORES</h3>
+
+        <div id="playersList" class="playersList"></div>
 
         <div id="lobbyStatus" class="status">
             Esperando jugadores...
         </div>
 
-        <div class="playersBox">
-
-            <b>👥 Jugadores en la sala</b>
-
-            <div id="playerList"></div>
-
-        </div>
-
-        <!-- SOLO EL ANFITRIÓN VE ESTE BOTÓN -->
-
         <button
             id="startMatchButton"
-            class="green"
-            onclick="hostStartMatch()"
-            style="display:none;"
+            class="menuButton"
+            onclick="hostStartGame()"
+            style="display:none"
         >
-            ⚔️ INICIAR PARTIDA
+            ▶ INICIAR PARTIDA
         </button>
 
         <button
-            class="gray"
+            class="menuButton secondary"
             onclick="leaveRoom()"
         >
             🚪 SALIR DE LA SALA
@@ -487,113 +462,88 @@ button:active{
 </div>
 
 
-<!-- ======================================================
-     JUEGO
-====================================================== -->
+<!-- ================= GAME ================= -->
 
 <div id="gameScreen" class="screen">
 
-    <canvas id="canvas"></canvas>
+    <canvas id="gameCanvas"></canvas>
 
-    <div id="gameUI">
+    <div id="topBar">
 
-        <div id="scoreBoard"></div>
+        <div class="gameTitle">
+            ⚡ GUERRA BEYBLADE
+        </div>
 
-        <button
-            id="pauseButton"
-            onclick="togglePause()"
-        >
-            ⏸
+        <button class="pauseButton" onclick="togglePause()">
+            ⏸ PAUSA
         </button>
 
     </div>
 
-    <div id="controls">
+    <div id="touchControls">
 
         <div id="joystick">
-
-            <div id="knob"></div>
-
+            <div id="stick"></div>
         </div>
 
-        <div id="attackButton">
-            ⚡<br>
-            ATACAR
-        </div>
-
-    </div>
-
-</div>
-
-
-<!-- ======================================================
-     PAUSA
-====================================================== -->
-
-<div id="pauseOverlay">
-
-    <div class="card">
-
-        <div class="logo">
-            ⏸ PAUSA
-        </div>
-
-        <button onclick="togglePause()">
-            ▶ CONTINUAR
-        </button>
-
-        <button onclick="returnMenu()">
-            🏠 MENÚ
+        <button id="attackButton">
+            ⚡ ATAQUE
         </button>
 
     </div>
 
-</div>
 
+    <div id="pauseOverlay">
 
-<!-- ======================================================
-     RESULTADO
-====================================================== -->
+        <div class="overlayBox">
 
-<div id="resultOverlay">
+            <h2>⏸ PAUSA</h2>
 
-    <div class="card">
+            <button
+                class="menuButton"
+                onclick="togglePause()"
+            >
+                ▶ CONTINUAR
+            </button>
 
-        <div class="logo">
-            🏆 BATALLA TERMINADA
+            <button
+                class="menuButton secondary"
+                onclick="returnToMenuFromGame()"
+            >
+                🚪 SALIR
+            </button>
+
         </div>
 
-        <div id="winnerText">
-            Ganador
+    </div>
+
+
+    <div id="resultOverlay">
+
+        <div class="overlayBox">
+
+            <h2>🏆 FIN DE BATALLA</h2>
+
+            <div id="winnerText" class="winner">
+                Ganador
+            </div>
+
+            <button
+                id="playAgainButton"
+                class="menuButton"
+                onclick="playAgain()"
+            >
+                🔄 VOLVER A JUGAR
+            </button>
+
+            <button
+                class="menuButton secondary"
+                onclick="leaveRoom()"
+            >
+                🚪 SALIR DE LA SALA
+            </button>
+
         </div>
-
-        <!-- ANFITRIÓN -->
-
-        <button
-            id="hostAgainButton"
-            class="green"
-            onclick="hostBackToLobby()"
-        >
-            🔄 VOLVER A JUGAR
-        </button>
-
-        <!-- INVITADO -->
-
-        <button
-            id="guestAgainButton"
-            class="green"
-            onclick="guestBackToLobby()"
-            style="display:none;"
-        >
-            🔄 VOLVER A LA SALA
-        </button>
-
-        <button
-            class="red"
-            onclick="leaveFromResult()"
-        >
-            🚪 SALIR DE LA SALA
-        </button>
 
     </div>
 
@@ -602,221 +552,314 @@ button:active{
 
 <script>
 
-/* ======================================================
+/* =========================================================
+   CONFIGURACIÓN
+========================================================= */
+
+const canvas = document.getElementById("gameCanvas");
+const ctx = canvas.getContext("2d");
+
+let W = 0;
+let H = 0;
+
+let peer = null;
+let hostConnection = null;
+
+let isHost = false;
+let onlineMode = false;
+
+let roomCode = "";
+let myId = 0;
+let myName = "";
+
+let players = [];
+let guestConnections = [];
+
+let gameRunning = false;
+let gamePaused = false;
+
+let lastStateSend = 0;
+let lastInputSend = 0;
+
+
+/* =========================================================
+   PANTALLAS
+========================================================= */
+
+function showScreen(id){
+
+    document.querySelectorAll(".screen").forEach(s=>{
+        s.classList.remove("active");
+    });
+
+    document.getElementById(id).classList.add("active");
+
+    if(id === "gameScreen"){
+        setTimeout(resizeCanvas,50);
+    }
+}
+
+
+function backToMenu(){
+
+    cleanupNetwork();
+
+    showScreen("menuScreen");
+}
+
+
+function openOnline(){
+
+    showScreen("onlineScreen");
+
+    document.getElementById("connectionStatus").textContent =
+        "Escribe tu nombre para comenzar.";
+}
+
+
+function showInstructions(){
+
+    alert(
+`🎮 GUERRA BEYBLADE
+
+JUGAR SOLO:
+• Mueves tu trompo.
+• Los otros trompos son CPU.
+• Derriba a todos.
+
+JUGAR ONLINE:
+• Crea una sala.
+• Comparte el código de 4 números.
+• Pueden entrar hasta 4 jugadores.
+• Cada jugador controla SU PROPIO trompo.
+
+PC:
+WASD o flechas = mover
+ESPACIO = atacar
+
+CELULAR:
+Joystick = mover
+Botón ATAQUE = atacar`
+    );
+}
+
+
+/* =========================================================
    CANVAS
-====================================================== */
-
-const canvas =
-    document.getElementById("canvas");
-
-const ctx =
-    canvas.getContext("2d");
-
-let W = innerWidth;
-let H = innerHeight;
+========================================================= */
 
 function resizeCanvas(){
 
-    W = innerWidth;
-    H = innerHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1,2);
 
-    canvas.width = W;
-    canvas.height = H;
+    W = window.innerWidth;
+    H = window.innerHeight;
 
+    canvas.width = Math.floor(W*dpr);
+    canvas.height = Math.floor(H*dpr);
+
+    canvas.style.width = W+"px";
+    canvas.style.height = H+"px";
+
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+}
+
+
+window.addEventListener("resize",resizeCanvas);
+
+if(window.visualViewport){
+    window.visualViewport.addEventListener("resize",resizeCanvas);
 }
 
 resizeCanvas();
 
-window.addEventListener(
-    "resize",
-    resizeCanvas
-);
 
+/* =========================================================
+   UTILIDADES
+========================================================= */
 
-/* ======================================================
-   VARIABLES DE RED
-====================================================== */
+function onlyNumbers(input){
 
-let peer = null;
-
-let hostConnection = null;
-
-let guestConnections = [];
-
-let roomCode = "";
-
-let isHost = false;
-
-let myId = 0;
-
-let myName = "Jugador";
-
-
-/* ======================================================
-   JUEGO
-====================================================== */
-
-let players = [];
-
-let gameMode = "";
-
-let gameRunning = false;
-
-let paused = false;
-
-let lastTime = 0;
-
-let attackCooldown = 0;
-
-
-/* ======================================================
-   CONTROLES
-====================================================== */
-
-let keys = {};
-
-let moveX = 0;
-
-let moveY = 0;
-
-let attackRequest = false;
-
-
-/* ======================================================
-   COLORES
-====================================================== */
-
-const COLORS = [
-    "#ff4fa5",
-    "#667dff",
-    "#52d35e",
-    "#ffae3d"
-];
-
-
-/* ======================================================
-   PANTALLAS
-====================================================== */
-
-function showScreen(id){
-
-    document
-        .querySelectorAll(".screen")
-        .forEach(screen=>{
-            screen.classList.remove("active");
-        });
-
-    document
-        .getElementById(id)
-        .classList.add("active");
-
-}
-
-
-/* ======================================================
-   NÚMERO
-====================================================== */
-
-function numbersOnly(input){
-
-    input.value =
-        input.value
-        .replace(/[^0-9]/g,"")
+    input.value = input.value
+        .replace(/\D/g,"")
         .slice(0,4);
-
 }
 
-
-/* ======================================================
-   MENÚ ONLINE
-====================================================== */
-
-function openOnline(){
-
-    const name =
-        document
-        .getElementById("nameInput")
-        .value
-        .trim();
-
-    document
-        .getElementById("onlineName")
-        .value =
-        name || "";
-
-    showScreen("onlineScreen");
-
-}
-
-
-/* ======================================================
-   CREAR CÓDIGO
-====================================================== */
 
 function makeRoomCode(){
 
     return String(
-        Math.floor(
-            1000 +
-            Math.random()*9000
-        )
+        Math.floor(1000 + Math.random()*9000)
     );
-
 }
 
 
-/* ======================================================
-   CREAR SALA
-====================================================== */
+function randomColor(i){
+
+    const colors = [
+        "#28bfff",
+        "#1677ff",
+        "#55e8ff",
+        "#704cff"
+    ];
+
+    return colors[i % colors.length];
+}
+
+
+function distance(a,b){
+
+    return Math.hypot(
+        a.x-b.x,
+        a.y-b.y
+    );
+}
+
+
+/* =========================================================
+   JUGADORES
+========================================================= */
+
+function createPlayer(id,name,x,y,isCPU=false){
+
+    return {
+        id:id,
+        name:name || "Jugador",
+        x:x,
+        y:y,
+
+        vx:0,
+        vy:0,
+
+        radius:25,
+
+        hp:100,
+        maxHp:100,
+
+        color:randomColor(id),
+
+        angle:Math.random()*Math.PI*2,
+
+        input:{
+            x:0,
+            y:0,
+            attack:false
+        },
+
+        attackTimer:0,
+        hitCooldown:0,
+
+        cpu:isCPU,
+        alive:true
+    };
+}
+
+
+function getFreePlayerId(){
+
+    for(let i=1;i<=3;i++){
+
+        if(!players.some(p=>p.id===i)){
+            return i;
+        }
+    }
+
+    return null;
+}
+
+
+/* =========================================================
+   SOLO
+========================================================= */
+
+function startSolo(){
+
+    onlineMode = false;
+    isHost = true;
+
+    players = [];
+
+    const positions = [
+        [W/2, H-150],
+        [W/2, 150],
+        [150, H/2],
+        [W-150, H/2]
+    ];
+
+    players.push(
+        createPlayer(
+            0,
+            "TÚ",
+            positions[0][0],
+            positions[0][1],
+            false
+        )
+    );
+
+    players.push(
+        createPlayer(
+            1,
+            "CPU 1",
+            positions[1][0],
+            positions[1][1],
+            true
+        )
+    );
+
+    players.push(
+        createPlayer(
+            2,
+            "CPU 2",
+            positions[2][0],
+            positions[2][1],
+            true
+        )
+    );
+
+    players.push(
+        createPlayer(
+            3,
+            "CPU 3",
+            positions[3][0],
+            positions[3][1],
+            true
+        )
+    );
+
+    myId = 0;
+
+    startGame();
+}
+
+
+/* =========================================================
+   ONLINE - CREAR SALA
+========================================================= */
 
 function createRoom(){
 
     myName =
-        document
-        .getElementById("onlineName")
-        .value
-        .trim();
+        document.getElementById("playerName")
+        .value.trim()
+        .slice(0,12);
 
     if(!myName){
-
-        myName = "Jugador";
-
+        myName = "Jugador 1";
     }
 
-    myName =
-        myName.substring(0,12);
-
+    onlineMode = true;
     isHost = true;
-
-    gameMode = "online";
-
-    createHostPeer(0);
-
-}
-
-
-/* ======================================================
-   PEER DEL ANFITRIÓN
-====================================================== */
-
-function createHostPeer(attempt){
-
-    if(attempt > 20){
-
-        document
-        .getElementById("onlineStatus")
-        .textContent =
-        "No se pudo crear la sala.";
-
-        return;
-
-    }
 
     roomCode = makeRoomCode();
 
-    const internalId =
-        "beyblade" + roomCode;
+    document.getElementById("connectionStatus").textContent =
+        "Creando sala...";
 
+    createHostPeer();
+}
+
+
+function createHostPeer(){
 
     if(peer){
 
@@ -825,118 +868,74 @@ function createHostPeer(attempt){
         }catch(e){}
 
         peer = null;
-
     }
 
-
-    document
-    .getElementById("onlineStatus")
-    .textContent =
-    "Creando sala...";
-
+    const internalId = "beyblade" + roomCode;
 
     peer = new Peer(
         internalId,
         {
-            debug:1
+            debug:0
         }
     );
 
 
-    /* SALA LISTA */
-
     peer.on("open",()=>{
 
-        players = [];
+        myId = 0;
+
+        players = [
+            createPlayer(
+                0,
+                myName,
+                W/2,
+                H-150,
+                false
+            )
+        ];
 
         guestConnections = [];
 
-        addHostPlayer();
+        document.getElementById("roomDisplay")
+            .textContent = roomCode;
 
+        document.getElementById("hostText")
+            .textContent =
+            "👑 Tú eres el anfitrión. Comparte este código.";
 
-        document
-        .getElementById("roomCode")
-        .textContent =
-        roomCode;
-
-
-        document
-        .getElementById("lobbyStatus")
-        .textContent =
-        "Comparte el código y espera a tus jugadores.";
-
+        document.getElementById("lobbyStatus")
+            .textContent =
+            "Esperando jugadores...";
 
         updateLobby();
-
 
         showScreen("lobbyScreen");
 
     });
 
 
-    /* ENTRA UN JUGADOR */
+    peer.on("connection",(conn)=>{
 
-    peer.on("connection",conn=>{
-
-        if(
-            guestConnections.length >= 3
-        ){
-
-            conn.on("open",()=>{
-
-                conn.send({
-                    type:"full"
-                });
-
-                setTimeout(()=>{
-                    conn.close();
-                },500);
-
-            });
-
-            return;
-
-        }
-
-
-        guestConnections.push(conn);
-
-        setupGuestConnection(conn);
+        setupHostConnection(conn);
 
     });
 
 
-    /* ERROR */
+    peer.on("error",(err)=>{
 
-    peer.on("error",error=>{
+        console.log("Peer error:",err);
 
-        console.log("HOST ERROR",error);
+        if(err.type === "unavailable-id"){
 
+            roomCode = makeRoomCode();
 
-        if(
-            error.type === "unavailable-id"
-        ){
-
-            try{
-                peer.destroy();
-            }catch(e){}
-
-
-            setTimeout(()=>{
-
-                createHostPeer(
-                    attempt+1
-                );
-
-            },300);
+            createHostPeer();
 
         }else{
 
-            document
-            .getElementById("onlineStatus")
-            .textContent =
-            "Error de conexión.";
-
+            document.getElementById("connectionStatus")
+                .textContent =
+                "Error de conexión. Intenta nuevamente.";
         }
 
     });
@@ -944,192 +943,127 @@ function createHostPeer(attempt){
 }
 
 
-/* ======================================================
-   AGREGAR ANFITRIÓN
-====================================================== */
+/* =========================================================
+   HOST - CONEXIÓN DE JUGADOR
+========================================================= */
 
-function addHostPlayer(){
+function setupHostConnection(conn){
 
-    players.push({
+    const id = getFreePlayerId();
 
-        id:0,
+    if(id === null){
 
-        name:myName,
+        conn.on("open",()=>{
+            conn.send({
+                type:"full",
+                message:"Sala llena"
+            });
 
-        x:W/2,
+            setTimeout(()=>{
+                try{conn.close();}catch(e){}
+            },500);
+        });
 
-        y:H/2,
-
-        vx:0,
-
-        vy:0,
-
-        hp:100,
-
-        maxHp:100,
-
-        alive:true,
-
-        color:COLORS[0],
-
-        attack:false,
-
-        input:{
-            x:0,
-            y:0,
-            attack:false
-        }
-
-    });
-
-    myId = 0;
-
-}
+        return;
+    }
 
 
-/* ======================================================
-   CONEXIÓN DE INVITADO
-====================================================== */
+    conn.playerId = id;
 
-function setupGuestConnection(conn){
+    guestConnections.push(conn);
+
 
     conn.on("open",()=>{
 
-        /*
-          ID del invitado:
-          1, 2 o 3
-        */
-
-        const id =
-            players.length;
-
-        conn.playerId = id;
-
-
-        players.push({
-
-            id:id,
-
-            name:"Jugador "+id,
-
-            x:W/2,
-
-            y:H/2,
-
-            vx:0,
-
-            vy:0,
-
-            hp:100,
-
-            maxHp:100,
-
-            alive:true,
-
-            color:COLORS[id],
-
-            attack:false,
-
-            input:{
-                x:0,
-                y:0,
-                attack:false
-            }
-
-        });
-
-
-        /*
-          Le mandamos su ID.
-        */
-
         conn.send({
-
             type:"welcome",
-
-            myId:id,
-
+            playerId:id,
+            roomCode:roomCode,
             players:getLobbyData()
-
         });
-
-
-        /*
-          Actualizamos la sala
-          para TODOS.
-        */
-
-        broadcastLobby();
-
-        updateLobby();
 
     });
 
 
-    conn.on("data",data=>{
+    conn.on("data",(data)=>{
 
-        /* NOMBRE */
+        if(!data) return;
 
-        if(data.type === "name"){
 
-            const p =
-                players.find(
-                    x =>
-                    x.id === conn.playerId
+        /* ----------- UNIRSE ----------- */
+
+        if(data.type === "join"){
+
+            const existing =
+                players.find(p=>p.id===id);
+
+            if(!existing){
+
+                players.push(
+                    createPlayer(
+                        id,
+                        data.name || ("Jugador "+(id+1)),
+                        120 + id*130,
+                        H/2,
+                        false
+                    )
                 );
 
-            if(p){
+            }else{
 
-                p.name =
-                    String(
-                        data.name ||
-                        "Jugador"
-                    ).substring(0,12);
-
-                broadcastLobby();
-
-                updateLobby();
+                existing.name =
+                    data.name || existing.name;
 
             }
 
+            broadcastLobby();
+
+            return;
         }
 
 
-        /* CONTROLES */
+        /* ----------- CONTROL ----------- */
 
         if(data.type === "input"){
 
             const p =
-                players.find(
-                    x =>
-                    x.id === conn.playerId
-                );
+                players.find(p=>p.id===id);
 
-            if(p){
+            if(!p || !p.alive) return;
 
-                p.input.x =
-                    Number(data.x) || 0;
+            let x = Number(data.x) || 0;
+            let y = Number(data.y) || 0;
 
-                p.input.y =
-                    Number(data.y) || 0;
+            const len = Math.hypot(x,y);
 
-                p.input.attack =
-                    Boolean(data.attack);
+            if(len > 1){
 
+                x /= len;
+                y /= len;
             }
 
+            p.input.x = x;
+            p.input.y = y;
+
+            if(data.attack){
+                p.input.attack = true;
+            }
+
+            return;
         }
 
 
-        /* VOLVER A SALA */
+        /* ----------- VOLVER A JUGAR ----------- */
 
-        if(
-            data.type ===
-            "guestReady"
-        ){
+        if(data.type === "guestReady"){
 
-            broadcastLobby();
+            if(gameRunning){
+                return;
+            }
 
+            resetOnlineLobby();
+
+            return;
         }
 
     });
@@ -1137,170 +1071,70 @@ function setupGuestConnection(conn){
 
     conn.on("close",()=>{
 
-        const id =
-            conn.playerId;
+        const index =
+            guestConnections.indexOf(conn);
 
-
-        guestConnections =
-            guestConnections.filter(
-                c=>c !== conn
-            );
-
+        if(index !== -1){
+            guestConnections.splice(index,1);
+        }
 
         players =
-            players.filter(
-                p=>p.id !== id
-            );
+            players.filter(p=>p.id!==id);
 
-
-        broadcastLobby();
-
-        updateLobby();
-
-    });
-
-}
-
-
-/* ======================================================
-   DATOS DE LA SALA
-====================================================== */
-
-function getLobbyData(){
-
-    return players.map(p=>({
-
-        id:p.id,
-
-        name:p.name,
-
-        color:p.color
-
-    }));
-
-}
-
-
-/* ======================================================
-   ENVIAR SALA
-====================================================== */
-
-function broadcastLobby(){
-
-    if(!isHost)return;
-
-
-    const message = {
-
-        type:"lobby",
-
-        players:getLobbyData()
-
-    };
-
-
-    guestConnections.forEach(conn=>{
-
-        if(conn.open){
-
-            try{
-
-                conn.send(message);
-
-            }catch(e){}
-
+        if(!gameRunning){
+            broadcastLobby();
         }
 
     });
 
+
+    conn.on("error",()=>{});
+
 }
 
 
-/* ======================================================
-   UNIRSE
-====================================================== */
+/* =========================================================
+   ENTRAR A SALA
+========================================================= */
 
 function joinRoom(){
 
-    const code =
-        document
-        .getElementById("roomInput")
-        .value
-        .replace(/[^0-9]/g,"");
-
-
-    if(code.length !== 4){
-
-        document
-        .getElementById("onlineStatus")
-        .textContent =
-        "Escribe exactamente 4 números.";
-
-        return;
-
-    }
-
-
     myName =
-        document
-        .getElementById("onlineName")
-        .value
-        .trim();
+        document.getElementById("playerName")
+        .value.trim()
+        .slice(0,12);
+
+    roomCode =
+        document.getElementById("roomInput")
+        .value.trim();
 
 
     if(!myName){
-
         myName = "Jugador";
-
     }
 
 
-    myName =
-        myName.substring(0,12);
+    if(!/^\d{4}$/.test(roomCode)){
+
+        alert("El código debe tener exactamente 4 números.");
+
+        return;
+    }
 
 
-    roomCode = code;
-
+    onlineMode = true;
     isHost = false;
 
-    gameMode = "online";
+
+    document.getElementById("connectionStatus")
+        .textContent =
+        "Conectando a la sala "+roomCode+"...";
 
 
-    if(peer){
-
-        try{
-            peer.destroy();
-        }catch(e){}
-
-    }
-
-
-    document
-    .getElementById("onlineStatus")
-    .textContent =
-    "Conectando...";
-
-
-    /*
-      El invitado crea su Peer.
-    */
-
-    peer =
-        new Peer({
-            debug:1
-        });
+    peer = new Peer();
 
 
     peer.on("open",()=>{
-
-        /*
-          Conecta con:
-
-          beyblade + código
-
-          Ejemplo:
-          beyblade4827
-        */
 
         hostConnection =
             peer.connect(
@@ -1311,397 +1145,373 @@ function joinRoom(){
             );
 
 
-        hostConnection.on("open",()=>{
-
-            /*
-              Mandamos nuestro nombre.
-            */
-
-            hostConnection.send({
-
-                type:"name",
-
-                name:myName
-
-            });
-
-
-            document
-            .getElementById("roomCode")
-            .textContent =
-            roomCode;
-
-
-            document
-            .getElementById("lobbyStatus")
-            .textContent =
-            "Conectado. Esperando al anfitrión...";
-
-
-            showScreen("lobbyScreen");
-
-        });
-
-
-        hostConnection.on("data",data=>{
-
-            /* SALA LLENA */
-
-            if(data.type === "full"){
-
-                document
-                .getElementById("lobbyStatus")
-                .textContent =
-                "❌ La sala está llena.";
-
-                return;
-
-            }
-
-
-            /* BIENVENIDA */
-
-            if(
-                data.type ===
-                "welcome"
-            ){
-
-                myId =
-                    data.myId;
-
-                players =
-                    createLobbyPlayers(
-                        data.players
-                    );
-
-                updateLobby();
-
-            }
-
-
-            /* ACTUALIZAR SALA */
-
-            if(
-                data.type ===
-                "lobby"
-            ){
-
-                players =
-                    createLobbyPlayers(
-                        data.players
-                    );
-
-                updateLobby();
-
-            }
-
-
-            /* TODOS COMIENZAN */
-
-            if(
-                data.type ===
-                "startGame"
-            ){
-
-                myId =
-                    data.myId;
-
-                players =
-                    data.players;
-
-                startOnline();
-
-            }
-
-
-            /* ESTADO */
-
-            if(
-                data.type ===
-                "state"
-            ){
-
-                players =
-                    data.players;
-
-            }
-
-
-            /* PAUSA */
-
-            if(
-                data.type ===
-                "pause"
-            ){
-
-                paused =
-                    data.paused;
-
-            }
-
-
-            /* VOLVER A SALA */
-
-            if(
-                data.type ===
-                "backLobby"
-            ){
-
-                gameRunning = false;
-
-                document
-                .getElementById(
-                    "resultOverlay"
-                )
-                .style.display =
-                "none";
-
-
-                players =
-                    createLobbyPlayers(
-                        data.players
-                    );
-
-
-                updateLobby();
-
-
-                showScreen(
-                    "lobbyScreen"
-                );
-
-            }
-
-
-            /* GANADOR */
-
-            if(
-                data.type ===
-                "winner"
-            ){
-
-                gameRunning = false;
-
-                players =
-                    data.players;
-
-                showResult(
-                    data.winner
-                );
-
-            }
-
-        });
-
-
-        hostConnection.on("close",()=>{
-
-            gameRunning = false;
-
-            document
-            .getElementById("lobbyStatus")
-            .textContent =
-            "❌ El anfitrión salió de la sala.";
-
-        });
+        setupGuestConnection();
 
     });
 
 
-    peer.on("error",error=>{
+    peer.on("error",(err)=>{
 
-        console.log(
-            "GUEST ERROR",
-            error
-        );
+        console.log(err);
 
-
-        document
-        .getElementById("onlineStatus")
-        .textContent =
-        "❌ No se encontró esa sala.";
+        document.getElementById("connectionStatus")
+            .textContent =
+            "No se pudo conectar a la sala.";
 
     });
 
 }
 
 
-/* ======================================================
-   CREAR JUGADORES DEL LOBBY
-====================================================== */
+/* =========================================================
+   GUEST CONNECTION
+========================================================= */
 
-function createLobbyPlayers(list){
+function setupGuestConnection(){
 
-    return list.map(p=>({
+    hostConnection.on("open",()=>{
+
+        document.getElementById("connectionStatus")
+            .textContent =
+            "¡Conectado! Entrando a la sala...";
+
+    });
+
+
+    hostConnection.on("data",(data)=>{
+
+        if(!data) return;
+
+
+        /* ----------- BIENVENIDA ----------- */
+
+        if(data.type === "welcome"){
+
+            myId = data.playerId;
+
+            players = data.players || [];
+
+            hostConnection.send({
+                type:"join",
+                name:myName
+            });
+
+            document.getElementById("roomDisplay")
+                .textContent = roomCode;
+
+            document.getElementById("hostText")
+                .textContent =
+                "Estás dentro de la sala.";
+
+            updateLobby();
+
+            showScreen("lobbyScreen");
+
+            return;
+        }
+
+
+        /* ----------- LOBBY ----------- */
+
+        if(data.type === "lobby"){
+
+            players = data.players || [];
+
+            updateLobby();
+
+            return;
+        }
+
+
+        /* ----------- COMENZAR ----------- */
+
+        if(data.type === "startGame"){
+
+            myId = data.myId;
+
+            players = clonePlayers(data.players);
+
+            startGame();
+
+            return;
+        }
+
+
+        /* ----------- ESTADO ----------- */
+
+        if(data.type === "state"){
+
+            if(!gameRunning) return;
+
+            applyNetworkState(data.players);
+
+            return;
+        }
+
+
+        /* ----------- PAUSA ----------- */
+
+        if(data.type === "pause"){
+
+            gamePaused = data.value;
+
+            document.getElementById("pauseOverlay")
+                .style.display =
+                gamePaused ? "flex" : "none";
+
+            return;
+        }
+
+
+        /* ----------- GANADOR ----------- */
+
+        if(data.type === "winner"){
+
+            gameRunning = false;
+
+            players = clonePlayers(data.players);
+
+            showResult(data.name);
+
+            return;
+        }
+
+
+        /* ----------- VOLVER AL LOBBY ----------- */
+
+        if(data.type === "backLobby"){
+
+            gameRunning = false;
+            gamePaused = false;
+
+            players = data.players || [];
+
+            updateLobby();
+
+            showScreen("lobbyScreen");
+
+            return;
+        }
+
+
+        /* ----------- SALA CERRADA ----------- */
+
+        if(data.type === "roomClosed"){
+
+            alert("El anfitrión cerró la sala.");
+
+            cleanupNetwork();
+
+            showScreen("onlineScreen");
+
+        }
+
+    });
+
+
+    hostConnection.on("close",()=>{
+
+        if(onlineMode && !isHost){
+
+            gameRunning = false;
+
+            alert("El anfitrión salió de la sala.");
+
+            cleanupNetwork();
+
+            showScreen("onlineScreen");
+        }
+
+    });
+
+
+    hostConnection.on("error",(err)=>{
+
+        console.log(err);
+
+        document.getElementById("connectionStatus")
+            .textContent =
+            "Error al conectarse.";
+
+    });
+
+}
+
+
+/* =========================================================
+   CLONAR JUGADORES
+========================================================= */
+
+function clonePlayers(list){
+
+    return (list || []).map(p=>({
 
         id:p.id,
-
         name:p.name,
+        x:p.x,
+        y:p.y,
 
-        x:W/2,
+        vx:p.vx || 0,
+        vy:p.vy || 0,
 
-        y:H/2,
+        radius:p.radius || 25,
 
-        vx:0,
+        hp:p.hp ?? 100,
+        maxHp:p.maxHp || 100,
 
-        vy:0,
+        color:p.color || randomColor(p.id),
 
-        hp:100,
-
-        maxHp:100,
-
-        alive:true,
-
-        color:p.color,
-
-        attack:false,
+        angle:p.angle || 0,
 
         input:{
             x:0,
             y:0,
             attack:false
-        }
+        },
+
+        attackTimer:p.attackTimer || 0,
+        hitCooldown:p.hitCooldown || 0,
+
+        cpu:!!p.cpu,
+        alive:p.alive !== false
 
     }));
 
 }
 
 
-/* ======================================================
-   MOSTRAR LOBBY
-====================================================== */
+/* =========================================================
+   LOBBY
+========================================================= */
 
-function updateLobby(){
+function getLobbyData(){
 
-    const box =
-        document
-        .getElementById(
-            "playerList"
-        );
-
-
-    box.innerHTML = "";
+    return players.map(p=>({
+        id:p.id,
+        name:p.name
+    }));
 
 
-    players.forEach(p=>{
-
-        const div =
-            document.createElement(
-                "div"
-            );
+}
 
 
-        div.className =
-            "playerItem";
+function broadcastLobby(){
+
+    const data = {
+        type:"lobby",
+        players:getLobbyData()
+    };
 
 
-        if(p.id === 0){
+    guestConnections.forEach(conn=>{
 
-            div.innerHTML =
-                "👑 "+
-                p.name+
-                ' <span class="hostTag">(ANFITRIÓN)</span>';
+        if(conn.open){
 
-        }else{
-
-            div.innerHTML =
-                "⚡ "+
-                p.name;
+            try{
+                conn.send(data);
+            }catch(e){}
 
         }
-
-
-        box.appendChild(div);
 
     });
 
 
-    /*
-      BOTÓN DEL ANFITRIÓN
-    */
-
-    if(isHost){
-
-        document
-        .getElementById(
-            "lobbyStatus"
-        )
-        .textContent =
-        players.length+
-        "/4 jugadores en la sala";
+    updateLobby();
+}
 
 
-        document
-        .getElementById(
-            "startMatchButton"
-        )
-        .style.display =
-        players.length >= 2
-        ? "block"
-        : "none";
+function updateLobby(){
+
+    const list =
+        document.getElementById("playersList");
+
+    list.innerHTML = "";
+
+
+    players.forEach((p,index)=>{
+
+        const div =
+            document.createElement("div");
+
+        div.className = "playerItem";
+
+        let crown = p.id === 0 ? " 👑" : "";
+
+        let you = p.id === myId ? " (TÚ)" : "";
+
+        div.innerHTML =
+            "🌀 <b>"+p.name+"</b>"+crown+you;
+
+        list.appendChild(div);
+
+    });
+
+
+    if(players.length < 2){
+
+        document.getElementById("lobbyStatus")
+            .textContent =
+            "Esperando al menos 2 jugadores...";
 
     }else{
 
-        document
-        .getElementById(
-            "startMatchButton"
-        )
-        .style.display =
-        "none";
+        document.getElementById("lobbyStatus")
+            .textContent =
+            players.length+" jugadores listos.";
+
+    }
 
 
-        document
-        .getElementById(
-            "lobbyStatus"
-        )
-        .textContent =
-        "👑 Esperando al anfitrión para iniciar...";
+    const button =
+        document.getElementById("startMatchButton");
+
+
+    if(isHost){
+
+        button.style.display =
+            players.length >= 2 ? "block" : "none";
+
+    }else{
+
+        button.style.display = "none";
 
     }
 
 }
 
 
-/* ======================================================
-   ANFITRIÓN INICIA
-====================================================== */
+/* =========================================================
+   INICIAR PARTIDA ONLINE
+========================================================= */
 
-function hostStartMatch(){
+function hostStartGame(){
 
-    if(!isHost)return;
-
+    if(!isHost) return;
 
     if(players.length < 2){
 
-        alert(
-            "Necesitas al menos 2 jugadores."
-        );
+        alert("Necesitas al menos 2 jugadores.");
 
         return;
-
     }
 
 
-    preparePlayers();
+    const startData = {
+        type:"startGame",
+        players:players,
+    };
 
-
-    /*
-      A CADA JUGADOR LE MANDAMOS
-      SU PROPIO ID.
-    */
 
     guestConnections.forEach(conn=>{
 
         if(conn.open){
 
+            const copy = clonePlayers(players);
+
             conn.send({
-
                 type:"startGame",
-
                 myId:conn.playerId,
-
-                players:players
-
+                players:copy
             });
 
         }
@@ -1709,325 +1519,125 @@ function hostStartMatch(){
     });
 
 
-    /*
-      EL HOST TAMBIÉN ENTRA.
-    */
-
-    startOnline();
+    startOnlineGame();
 
 }
 
 
-/* ======================================================
-   PREPARAR PARTIDA
-====================================================== */
+function startOnlineGame(){
 
-function preparePlayers(){
-
-    const radius =
-        Math.min(W,H)*.28;
-
-
-    players.forEach((p,i)=>{
-
-        const angle =
-            (Math.PI*2/players.length)*i;
-
-
-        p.x =
-            W/2+
-            Math.cos(angle)*radius;
-
-
-        p.y =
-            H/2+
-            Math.sin(angle)*radius;
-
-
-        p.vx=0;
-        p.vy=0;
-
-        p.hp=100;
-
-        p.maxHp=100;
-
-        p.alive=true;
-
-        p.attack=false;
-
-
-        p.input={
-            x:0,
-            y:0,
-            attack:false
-        };
-
-    });
-
-}
-
-
-/* ======================================================
-   START ONLINE
-====================================================== */
-
-function startOnline(){
-
-    gameRunning = true;
-
-    paused = false;
-
-    attackCooldown = 0;
-
-
-    document
-    .getElementById(
-        "resultOverlay"
-    )
-    .style.display =
-    "none";
-
-
-    document
-    .getElementById(
-        "controls"
-    )
-    .style.display =
-    "flex";
-
-
-    showScreen("gameScreen");
-
-
-    lastTime =
-        performance.now();
-
-
-    requestAnimationFrame(
-        gameLoop
-    );
-
-}
-
-
-/* ======================================================
-   JUGAR SOLO
-====================================================== */
-
-function startSolo(){
-
-    myName =
-        document
-        .getElementById(
-            "nameInput"
-        )
-        .value
-        .trim();
-
-
-    if(!myName){
-
-        myName =
-            "Jugador";
-
-    }
-
-
-    myName =
-        myName.substring(
-            0,12
-        );
-
-
-    gameMode =
-        "solo";
-
+    onlineMode = true;
 
     isHost = true;
 
+    gameRunning = true;
 
-    players=[];
+    gamePaused = false;
 
+    showScreen("gameScreen");
 
-    addHostPlayer();
-
-
-    for(
-        let i=1;
-        i<4;
-        i++
-    ){
-
-        players.push({
-
-            id:i,
-
-            name:"CPU "+i,
-
-            x:W/2,
-
-            y:H/2,
-
-            vx:0,
-
-            vy:0,
-
-            hp:100,
-
-            maxHp:100,
-
-            alive:true,
-
-            color:COLORS[i],
-
-            attack:false,
-
-            input:{
-                x:0,
-                y:0,
-                attack:false
-            },
-
-            cpu:true
-
-        });
-
-    }
-
-
-    preparePlayers();
-
-
-    gameRunning=true;
-
-    paused=false;
-
-
-    document
-    .getElementById(
-        "controls"
-    )
-    .style.display =
-    "flex";
-
-
-    showScreen(
-        "gameScreen"
-    );
-
-
-    lastTime =
-        performance.now();
-
-
-    requestAnimationFrame(
-        gameLoop
-    );
+    resizeCanvas();
 
 }
 
 
-/* ======================================================
-   GAME LOOP
-====================================================== */
+/* =========================================================
+   INICIAR JUEGO
+========================================================= */
 
-function gameLoop(time){
+function startGame(){
 
-    if(!gameRunning)return;
+    gameRunning = true;
 
+    gamePaused = false;
 
-    const dt =
-        Math.min(
-            (time-lastTime)/16.67,
-            2
-        );
+    document.getElementById("pauseOverlay")
+        .style.display = "none";
 
+    document.getElementById("resultOverlay")
+        .style.display = "none";
 
-    lastTime=time;
+    showScreen("gameScreen");
 
-
-    if(!paused){
-
-        updateLocalControl();
-
-
-        if(gameMode==="solo"){
-
-            updateSolo(dt);
-
-        }else{
-
-            if(isHost){
-
-                updateHostOnline(dt);
-
-            }
-
-        }
-
-
-        draw();
-
-        updateScore();
-
-    }
-
-
-    requestAnimationFrame(
-        gameLoop
-    );
+    resizeCanvas();
 
 }
 
 
-/* ======================================================
-   CONTROL DEL JUGADOR
-====================================================== */
+/* =========================================================
+   TECLADO
+========================================================= */
 
-function updateLocalControl(){
+const keys = {};
 
-    let x=moveX;
 
-    let y=moveY;
+window.addEventListener("keydown",(e)=>{
+
+    keys[e.key.toLowerCase()] = true;
+
+    if(
+        e.key === "ArrowUp" ||
+        e.key === "ArrowDown" ||
+        e.key === "ArrowLeft" ||
+        e.key === "ArrowRight" ||
+        e.code === "Space"
+    ){
+
+        e.preventDefault();
+
+    }
+
+});
+
+
+window.addEventListener("keyup",(e)=>{
+
+    keys[e.key.toLowerCase()] = false;
+
+});
+
+
+function getKeyboardInput(){
+
+    let x = 0;
+    let y = 0;
 
 
     if(
-        keys["arrowleft"]||
-        keys["a"]
+        keys["a"] ||
+        keys["arrowleft"]
     ){
-        x-=1;
+        x--;
     }
 
 
     if(
-        keys["arrowright"]||
-        keys["d"]
+        keys["d"] ||
+        keys["arrowright"]
     ){
-        x+=1;
+        x++;
     }
 
 
     if(
-        keys["arrowup"]||
-        keys["w"]
+        keys["w"] ||
+        keys["arrowup"]
     ){
-        y-=1;
+        y--;
     }
 
 
     if(
-        keys["arrowdown"]||
-        keys["s"]
+        keys["s"] ||
+        keys["arrowdown"]
     ){
-        y+=1;
+        y++;
     }
 
 
-    const len =
-        Math.hypot(x,y);
+    const len = Math.hypot(x,y);
 
-
-    if(len>1){
+    if(len>0){
 
         x/=len;
         y/=len;
@@ -2035,200 +1645,391 @@ function updateLocalControl(){
     }
 
 
-    const p =
-        players.find(
-            p=>p.id===myId
-        );
+    return {
+        x:x,
+        y:y,
+        attack:!!keys[" "]
+    };
+
+}
 
 
-    if(!p)return;
+/* =========================================================
+   JOYSTICK
+========================================================= */
+
+const joystick =
+    document.getElementById("joystick");
+
+const stick =
+    document.getElementById("stick");
+
+const attackButton =
+    document.getElementById("attackButton");
 
 
-    p.input.x=x;
+let joyX = 0;
+let joyY = 0;
+let joystickActive = false;
 
-    p.input.y=y;
 
+function updateJoystick(clientX,clientY){
 
-    if(attackRequest){
+    const rect =
+        joystick.getBoundingClientRect();
 
-        p.input.attack=true;
+    const centerX =
+        rect.left + rect.width/2;
 
-        attackRequest=false;
+    const centerY =
+        rect.top + rect.height/2;
+
+    let dx =
+        clientX-centerX;
+
+    let dy =
+        clientY-centerY;
+
+    const max =
+        rect.width/2-31;
+
+    const len =
+        Math.hypot(dx,dy);
+
+    if(len > max){
+
+        dx =
+            dx/len*max;
+
+        dy =
+            dy/len*max;
 
     }
 
 
-    /*
-      INVITADO MANDA SUS CONTROLES
-      AL HOST CONSTANTEMENTE.
-    */
+    joyX = dx/max;
+    joyY = dy/max;
+
+
+    stick.style.left =
+        "calc(50% + "+dx+"px)";
+
+    stick.style.top =
+        "calc(50% + "+dy+"px)";
+
+}
+
+
+function resetJoystick(){
+
+    joystickActive = false;
+
+    joyX = 0;
+    joyY = 0;
+
+    stick.style.left = "50%";
+    stick.style.top = "50%";
+
+}
+
+
+joystick.addEventListener("pointerdown",(e)=>{
+
+    joystickActive = true;
+
+    joystick.setPointerCapture(e.pointerId);
+
+    updateJoystick(e.clientX,e.clientY);
+
+});
+
+
+joystick.addEventListener("pointermove",(e)=>{
+
+    if(!joystickActive) return;
+
+    updateJoystick(e.clientX,e.clientY);
+
+});
+
+
+joystick.addEventListener("pointerup",resetJoystick);
+joystick.addEventListener("pointercancel",resetJoystick);
+
+
+let touchAttack = false;
+
+
+attackButton.addEventListener("pointerdown",(e)=>{
+
+    e.preventDefault();
+
+    touchAttack = true;
+
+});
+
+
+attackButton.addEventListener("pointerup",(e)=>{
+
+    e.preventDefault();
+
+    touchAttack = false;
+
+});
+
+
+attackButton.addEventListener("pointercancel",()=>{
+
+    touchAttack = false;
+
+});
+
+
+/* =========================================================
+   CONTROL DEL JUGADOR
+========================================================= */
+
+function getLocalInput(){
+
+    const keyboard =
+        getKeyboardInput();
+
+    let x = keyboard.x;
+    let y = keyboard.y;
+
 
     if(
-        !isHost &&
+        Math.abs(joyX)>0.05 ||
+        Math.abs(joyY)>0.05
+    ){
+
+        x = joyX;
+        y = joyY;
+
+    }
+
+
+    return {
+        x:x,
+        y:y,
+        attack:
+            keyboard.attack ||
+            touchAttack
+    };
+
+}
+
+
+/* =========================================================
+   UPDATE PRINCIPAL
+========================================================= */
+
+let lastTime = performance.now();
+
+
+function gameLoop(now){
+
+    const dt =
+        Math.min((now-lastTime)/16.67,2);
+
+    lastTime = now;
+
+
+    if(gameRunning && !gamePaused){
+
+        if(isHost){
+
+            updateHostGame(dt);
+
+        }else{
+
+            updateGuestGame();
+
+        }
+
+    }
+
+
+    draw();
+
+    requestAnimationFrame(gameLoop);
+
+}
+
+
+requestAnimationFrame(gameLoop);
+
+
+/* =========================================================
+   UPDATE HOST
+========================================================= */
+
+function updateHostGame(dt){
+
+    const human =
+        players.find(p=>p.id===myId);
+
+
+    /* -------------------------
+       CONTROL HUMANO
+    ------------------------- */
+
+    if(human && !human.cpu && human.alive){
+
+        const input =
+            getLocalInput();
+
+        human.input.x = input.x;
+        human.input.y = input.y;
+
+        if(input.attack){
+
+            human.input.attack = true;
+
+        }
+
+    }
+
+
+    /* -------------------------
+       CPU
+    ------------------------- */
+
+    players.forEach(p=>{
+
+        if(!p.cpu || !p.alive) return;
+
+        updateCPU(p,dt);
+
+    });
+
+
+    /* -------------------------
+       MOVIMIENTO
+    ------------------------- */
+
+    players.forEach(p=>{
+
+        if(!p.alive) return;
+
+        updatePlayerMovement(p,dt);
+
+        updateCombat(p);
+
+    });
+
+
+    /* -------------------------
+       ESTADO
+    ------------------------- */
+
+    const now =
+        performance.now();
+
+
+    if(
+        onlineMode &&
+        now-lastStateSend > 50
+    ){
+
+        broadcastState();
+
+        lastStateSend = now;
+
+    }
+
+
+    checkWinner();
+
+}
+
+
+/* =========================================================
+   UPDATE GUEST
+========================================================= */
+
+function updateGuestGame(){
+
+    const p =
+        players.find(p=>p.id===myId);
+
+
+    if(!p || !p.alive) return;
+
+
+    const input =
+        getLocalInput();
+
+
+    const now =
+        performance.now();
+
+
+    if(
         hostConnection &&
-        hostConnection.open
+        hostConnection.open &&
+        now-lastInputSend > 35
     ){
 
         hostConnection.send({
 
             type:"input",
 
-            x:x,
+            x:input.x,
+            y:input.y,
 
-            y:y,
-
-            attack:p.input.attack
+            attack:input.attack
 
         });
 
 
-        /*
-          No dejamos el ataque
-          activado permanentemente.
-        */
-
-        p.input.attack=false;
-
-    }
-
-}
-
-
-/* ======================================================
-   UPDATE HOST
-====================================================== */
-
-function updateHostOnline(dt){
-
-    players.forEach(p=>{
-
-        if(!p.alive)return;
-
-        movePlayer(
-            p,
-            dt
-        );
-
-    });
-
-
-    doCombat();
-
-
-    const alive =
-        players.filter(
-            p=>p.alive
-        );
-
-
-    if(alive.length<=1){
-
-        finishOnline(
-            alive.length
-            ? alive[0].name
-            : "Nadie"
-        );
-
-        return;
+        lastInputSend = now;
 
     }
 
 
-    broadcastGameState();
+    /* No movemos localmente.
+       El host manda la posición real.
+       Así los 4 jugadores permanecen sincronizados. */
 
 }
 
 
-/* ======================================================
-   UPDATE SOLO
-====================================================== */
+/* =========================================================
+   MOVIMIENTO
+========================================================= */
 
-function updateSolo(dt){
+function updatePlayerMovement(p,dt){
 
-    players.forEach(p=>{
-
-        if(!p.alive)return;
-
-
-        if(p.cpu){
-
-            cpuMove(p);
-
-        }
-
-
-        movePlayer(
-            p,
-            dt
-        );
-
-    });
-
-
-    doCombat();
-
-
-    const alive =
-        players.filter(
-            p=>p.alive
-        );
-
-
-    if(alive.length<=1){
-
-        gameRunning=false;
-
-        showResult(
-            alive.length
-            ? alive[0].name
-            : "Nadie"
-        );
-
-    }
-
-}
-
-
-/* ======================================================
-   MOVER
-====================================================== */
-
-function movePlayer(p,dt){
-
-    let x =
+    let dx =
         Number(p.input.x)||0;
 
-    let y =
+    let dy =
         Number(p.input.y)||0;
 
 
     const len =
-        Math.hypot(x,y);
+        Math.hypot(dx,dy);
 
 
     if(len>1){
 
-        x/=len;
-        y/=len;
+        dx/=len;
+        dy/=len;
 
     }
 
 
-    p.vx += x*.78;
+    p.vx += dx*0.85*dt;
+    p.vy += dy*0.85*dt;
 
-    p.vy += y*.78;
 
-
-    p.vx *= .91;
-
-    p.vy *= .91;
+    p.vx *= Math.pow(.91,dt);
+    p.vy *= Math.pow(.91,dt);
 
 
     const speed =
-        Math.hypot(
-            p.vx,
-            p.vy
-        );
+        Math.hypot(p.vx,p.vy);
 
 
     if(speed>6){
@@ -2243,90 +2044,95 @@ function movePlayer(p,dt){
 
 
     p.x += p.vx*dt;
-
     p.y += p.vy*dt;
 
 
-    const r=31;
+    const margin = 50;
 
 
-    if(p.x<r){
+    if(p.x<margin){
 
-        p.x=r;
-
+        p.x=margin;
         p.vx*=-.5;
 
     }
 
 
-    if(p.x>W-r){
+    if(p.x>W-margin){
 
-        p.x=W-r;
-
+        p.x=W-margin;
         p.vx*=-.5;
 
     }
 
 
-    if(p.y<r){
+    if(p.y<margin){
 
-        p.y=r;
-
+        p.y=margin;
         p.vy*=-.5;
 
     }
 
 
-    if(p.y>H-r){
+    if(p.y>H-margin){
 
-        p.y=H-r;
-
+        p.y=H-margin;
         p.vy*=-.5;
+
+    }
+
+
+    p.angle +=
+        Math.hypot(p.vx,p.vy)*.08*dt;
+
+
+    if(p.attackTimer>0){
+
+        p.attackTimer -= dt;
+
+    }
+
+
+    if(p.hitCooldown>0){
+
+        p.hitCooldown -= dt;
 
     }
 
 }
 
 
-/* ======================================================
+/* =========================================================
    CPU
-====================================================== */
+========================================================= */
 
-function cpuMove(p){
+function updateCPU(p,dt){
 
-    const enemies =
+    const targets =
         players.filter(
-            e =>
-            e.id!==p.id &&
-            e.alive
+            x=>x.alive && x.id!==p.id
         );
 
 
-    if(!enemies.length)return;
+    if(!targets.length) return;
 
 
     let target =
-        enemies[0];
+        targets[0];
 
-
-    let closest =
+    let best =
         Infinity;
 
 
-    enemies.forEach(e=>{
+    targets.forEach(t=>{
 
         const d =
-            Math.hypot(
-                e.x-p.x,
-                e.y-p.y
-            );
+            distance(p,t);
 
+        if(d<best){
 
-        if(d<closest){
-
-            closest=d;
-
-            target=e;
+            best=d;
+            target=t;
 
         }
 
@@ -2339,33 +2145,28 @@ function cpuMove(p){
     const dy =
         target.y-p.y;
 
-
     const d =
-        Math.hypot(
-            dx,dy
-        )||1;
+        Math.hypot(dx,dy)||1;
 
 
-    if(d>75){
+    const nx =
+        dx/d;
 
-        p.input.x =
-            dx/d;
+    const ny =
+        dy/d;
 
-        p.input.y =
-            dy/d;
+
+    if(d>85){
+
+        p.input.x=nx;
+        p.input.y=ny;
 
     }else{
 
-        p.input.x =
-            -dy/d;
+        p.input.x=-ny;
+        p.input.y=nx;
 
-        p.input.y =
-            dx/d;
-
-
-        if(
-            Math.random()<.08
-        ){
+        if(Math.random()<.08){
 
             p.input.attack=true;
 
@@ -2376,94 +2177,129 @@ function cpuMove(p){
 }
 
 
-/* ======================================================
+/* =========================================================
    COMBATE
-====================================================== */
+========================================================= */
 
-function doCombat(){
+function updateCombat(p){
 
-    if(attackCooldown>0){
-
-        attackCooldown--;
-
-    }
+    if(!p.alive) return;
 
 
-    players.forEach(p=>{
+    if(p.input.attack && p.attackTimer<=0){
 
-        if(
-            !p.alive
-        )return;
+        p.attackTimer=25;
 
-
-        if(
-            p.input.attack &&
-            attackCooldown<=0
-        ){
-
-            performAttack(p);
-
-            p.input.attack=false;
-
-        }
-
-    });
+        p.input.attack=false;
 
 
-    /* EMPUJONES */
-
-    for(
-        let i=0;
-        i<players.length;
-        i++
-    ){
-
-        for(
-            let j=i+1;
-            j<players.length;
-            j++
-        ){
-
-            const a=players[i];
-
-            const b=players[j];
-
+        players.forEach(enemy=>{
 
             if(
-                !a.alive||
-                !b.alive
-            )continue;
-
-
-            const dx =
-                b.x-a.x;
-
-            const dy =
-                b.y-a.y;
+                enemy.id===p.id ||
+                !enemy.alive
+            ) return;
 
 
             const d =
-                Math.hypot(
-                    dx,dy
-                );
+                distance(p,enemy);
 
 
-            if(d<55){
+            if(d<75){
 
-                const nx =
-                    dx/(d||1);
-
-                const ny =
-                    dy/(d||1);
+                const damage =
+                    8 + Math.random()*7;
 
 
-                a.vx -= nx*.5;
-                a.vy -= ny*.5;
+                enemy.hp -= damage;
 
-                b.vx += nx*.5;
-                b.vy += ny*.5;
+
+                const dx =
+                    enemy.x-p.x;
+
+                const dy =
+                    enemy.y-p.y;
+
+                const len =
+                    Math.hypot(dx,dy)||1;
+
+
+                enemy.vx +=
+                    dx/len*3.5;
+
+                enemy.vy +=
+                    dy/len*3.5;
 
             }
+
+        });
+
+    }
+
+
+    if(p.hp<=0){
+
+        p.hp=0;
+        p.alive=false;
+        p.vx=0;
+        p.vy=0;
+
+    }
+
+}
+
+
+/* =========================================================
+   GANADOR
+========================================================= */
+
+function checkWinner(){
+
+    const alive =
+        players.filter(p=>p.alive);
+
+
+    if(alive.length<=1){
+
+        const winner =
+            alive[0] || null;
+
+
+        gameRunning=false;
+
+
+        if(onlineMode){
+
+            const name =
+                winner ? winner.name : "Nadie";
+
+
+            guestConnections.forEach(conn=>{
+
+                if(conn.open){
+
+                    conn.send({
+
+                        type:"winner",
+
+                        name:name,
+
+                        players:players
+
+                    });
+
+                }
+
+            });
+
+
+            showResult(name);
+
+        }else{
+
+            showResult(
+                winner ? winner.name : "Nadie"
+            );
 
         }
 
@@ -2472,90 +2308,42 @@ function doCombat(){
 }
 
 
-/* ======================================================
-   ATAQUE
-====================================================== */
+/* =========================================================
+   ESTADO ONLINE
+========================================================= */
 
-function performAttack(p){
+function broadcastState(){
 
-    attackCooldown=8;
-
-    p.attack=true;
-
-
-    setTimeout(()=>{
-
-        p.attack=false;
-
-    },130);
-
-
-    players.forEach(enemy=>{
-
-        if(
-            enemy===p||
-            !enemy.alive
-        )return;
-
-
-        const dx =
-            enemy.x-p.x;
-
-        const dy =
-            enemy.y-p.y;
-
-
-        const d =
-            Math.hypot(
-                dx,dy
-            );
-
-
-        if(d<72){
-
-            enemy.hp -= 15;
-
-
-            const nx =
-                dx/(d||1);
-
-            const ny =
-                dy/(d||1);
-
-
-            enemy.vx += nx*5;
-
-            enemy.vy += ny*5;
-
-
-            if(
-                enemy.hp<=0
-            ){
-
-                enemy.hp=0;
-
-                enemy.alive=false;
-
-            }
-
-        }
-
-    });
-
-}
-
-
-/* ======================================================
-   ENVIAR ESTADO
-====================================================== */
-
-function broadcastGameState(){
-
-    const data={
+    const state = {
 
         type:"state",
 
-        players:players
+        players:players.map(p=>({
+
+            id:p.id,
+
+            name:p.name,
+
+            x:p.x,
+            y:p.y,
+
+            vx:p.vx,
+            vy:p.vy,
+
+            radius:p.radius,
+
+            hp:p.hp,
+            maxHp:p.maxHp,
+
+            color:p.color,
+
+            angle:p.angle,
+
+            attackTimer:p.attackTimer,
+
+            alive:p.alive
+
+        }))
 
     };
 
@@ -2566,7 +2354,7 @@ function broadcastGameState(){
 
             try{
 
-                conn.send(data);
+                conn.send(state);
 
             }catch(e){}
 
@@ -2577,278 +2365,79 @@ function broadcastGameState(){
 }
 
 
-/* ======================================================
-   TERMINAR ONLINE
-====================================================== */
+/* =========================================================
+   RECIBIR ESTADO
+========================================================= */
 
-function finishOnline(winner){
+function applyNetworkState(list){
 
-    gameRunning=false;
-
-
-    guestConnections.forEach(conn=>{
-
-        if(conn.open){
-
-            conn.send({
-
-                type:"winner",
-
-                winner:winner,
-
-                players:players
-
-            });
-
-        }
-
-    });
+    if(!Array.isArray(list)) return;
 
 
-    showResult(
-        winner
-    );
+    list.forEach(net=>{
 
-}
-
-
-/* ======================================================
-   RESULTADO
-====================================================== */
-
-function showResult(winner){
-
-    gameRunning=false;
+        let p =
+            players.find(x=>x.id===net.id);
 
 
-    document
-    .getElementById(
-        "winnerText"
-    )
-    .textContent =
-    "🏆 "+winner+" ganó";
+        if(!p){
 
+            p =
+                createPlayer(
+                    net.id,
+                    net.name,
+                    net.x,
+                    net.y,
+                    false
+                );
 
-    document
-    .getElementById(
-        "resultOverlay"
-    )
-    .style.display =
-    "flex";
-
-
-    /*
-      Botones diferentes para
-      anfitrión e invitado.
-    */
-
-    document
-    .getElementById(
-        "hostAgainButton"
-    )
-    .style.display =
-    isHost
-    ? "block"
-    : "none";
-
-
-    document
-    .getElementById(
-        "guestAgainButton"
-    )
-    .style.display =
-    isHost
-    ? "none"
-    : "block";
-
-}
-
-
-/* ======================================================
-   ANFITRIÓN VOLVER A JUGAR
-====================================================== */
-
-function hostBackToLobby(){
-
-    if(!isHost)return;
-
-
-    document
-    .getElementById(
-        "resultOverlay"
-    )
-    .style.display =
-    "none";
-
-
-    /*
-      Reiniciamos los jugadores
-      pero NO cerramos las conexiones.
-    */
-
-    players.forEach(p=>{
-
-        p.hp=100;
-
-        p.alive=true;
-
-        p.vx=0;
-
-        p.vy=0;
-
-        p.attack=false;
-
-        p.input={
-            x:0,
-            y:0,
-            attack:false
-        };
-
-    });
-
-
-    broadcastLobby();
-
-
-    guestConnections.forEach(conn=>{
-
-        if(conn.open){
-
-            conn.send({
-
-                type:"backLobby",
-
-                players:
-                    getLobbyData()
-
-            });
+            players.push(p);
 
         }
 
+
+        p.name=net.name;
+
+        p.x=net.x;
+        p.y=net.y;
+
+        p.vx=net.vx;
+        p.vy=net.vy;
+
+        p.hp=net.hp;
+        p.maxHp=net.maxHp;
+
+        p.color=net.color;
+
+        p.angle=net.angle;
+
+        p.attackTimer=net.attackTimer;
+
+        p.alive=net.alive;
+
     });
 
 
-    updateLobby();
-
-
-    showScreen(
-        "lobbyScreen"
-    );
+    players =
+        players.filter(
+            p=>list.some(n=>n.id===p.id)
+        );
 
 }
 
 
-/* ======================================================
-   INVITADO VOLVER
-====================================================== */
+/* =========================================================
+   DIBUJAR
+========================================================= */
 
-function guestBackToLobby(){
+function draw(){
 
-    document
-    .getElementById(
-        "resultOverlay"
-    )
-    .style.display =
-    "none";
+    ctx.clearRect(0,0,W,H);
 
 
     if(
-        hostConnection &&
-        hostConnection.open
-    ){
-
-        hostConnection.send({
-
-            type:"guestReady"
-
-        });
-
-    }
-
-
-    document
-    .getElementById(
-        "lobbyStatus"
-    )
-    .textContent =
-    "👑 Esperando al anfitrión...";
-
-
-    showScreen(
-        "lobbyScreen"
-    );
-
-}
-
-
-/* ======================================================
-   SALIR DESDE RESULTADO
-====================================================== */
-
-function leaveFromResult(){
-
-    document
-    .getElementById(
-        "resultOverlay"
-    )
-    .style.display =
-    "none";
-
-
-    leaveRoom();
-
-}
-
-
-/* ======================================================
-   SALIR DE SALA
-====================================================== */
-
-function leaveRoom(){
-
-    cleanupNetwork();
-
-
-    document
-    .getElementById(
-        "resultOverlay"
-    )
-    .style.display =
-    "none";
-
-
-    document
-    .getElementById(
-        "controls"
-    )
-    .style.display =
-    "none";
-
-
-    showScreen(
-        "onlineScreen"
-    );
-
-}
-
-
-/* ======================================================
-   PAUSA
-====================================================== */
-
-function togglePause(){
-
-    if(!gameRunning)return;
-
-
-    /*
-      En online solamente
-      el anfitrión puede pausar.
-    */
-
-    if(
-        gameMode==="online" &&
-        !isHost
+        !document.getElementById("gameScreen")
+        .classList.contains("active")
     ){
 
         return;
@@ -2856,28 +2445,321 @@ function togglePause(){
     }
 
 
-    paused =
-        !paused;
+    drawArena();
 
 
-    document
-    .getElementById(
-        "pauseOverlay"
-    )
-    .style.display =
-    paused
-    ? "flex"
-    : "none";
+    players.forEach(p=>{
+
+        if(p.alive){
+
+            drawPlayer(p);
+
+        }
+
+    });
+
+}
 
 
-    /*
-      Avisamos a los celulares.
-    */
+/* =========================================================
+   ARENA
+========================================================= */
 
-    if(
-        gameMode==="online" &&
-        isHost
-    ){
+function drawArena(){
+
+    const gradient =
+        ctx.createRadialGradient(
+            W/2,H/2,50,
+            W/2,H/2,
+            Math.max(W,H)
+        );
+
+
+    gradient.addColorStop(
+        0,
+        "#103e87"
+    );
+
+    gradient.addColorStop(
+        .55,
+        "#061c4d"
+    );
+
+    gradient.addColorStop(
+        1,
+        "#020918"
+    );
+
+
+    ctx.fillStyle=gradient;
+
+    ctx.fillRect(0,0,W,H);
+
+
+    /* círculos de la arena */
+
+    ctx.save();
+
+    ctx.translate(W/2,H/2);
+
+    const radius =
+        Math.min(W,H)*.42;
+
+
+    for(let i=5;i>=1;i--){
+
+        ctx.beginPath();
+
+        ctx.arc(
+            0,
+            0,
+            radius*i/5,
+            0,
+            Math.PI*2
+        );
+
+        ctx.strokeStyle =
+            `rgba(80,190,255,${.08+i*.015})`;
+
+        ctx.lineWidth=2;
+
+        ctx.stroke();
+
+    }
+
+
+    ctx.restore();
+
+
+    /* estrellas */
+
+    for(let i=0;i<45;i++){
+
+        const x =
+            (i*137)%W;
+
+        const y =
+            (i*71)%H;
+
+        ctx.fillStyle =
+            "rgba(100,210,255,.25)";
+
+        ctx.beginPath();
+
+        ctx.arc(
+            x,
+            y,
+            1.5,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fill();
+
+    }
+
+}
+
+
+/* =========================================================
+   DIBUJAR TROMPO
+========================================================= */
+
+function drawPlayer(p){
+
+    ctx.save();
+
+    ctx.translate(p.x,p.y);
+
+
+    /* sombra */
+
+    ctx.beginPath();
+
+    ctx.ellipse(
+        4,
+        8,
+        p.radius*1.1,
+        p.radius*.45,
+        0,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle="rgba(0,0,0,.4)";
+    ctx.fill();
+
+
+    /* ataque */
+
+    if(p.attackTimer>0){
+
+        ctx.beginPath();
+
+        ctx.arc(
+            0,
+            0,
+            70,
+            p.angle,
+            p.angle+Math.PI*1.4
+        );
+
+        ctx.strokeStyle="#9aeaff";
+        ctx.lineWidth=8;
+        ctx.shadowBlur=20;
+        ctx.shadowColor="#00aaff";
+        ctx.stroke();
+
+    }
+
+
+    /* trompo exterior */
+
+    ctx.beginPath();
+
+    ctx.arc(
+        0,
+        0,
+        p.radius,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle=p.color;
+
+    ctx.shadowBlur=18;
+    ctx.shadowColor=p.color;
+
+    ctx.fill();
+
+
+    /* borde */
+
+    ctx.strokeStyle="#c8f6ff";
+    ctx.lineWidth=3;
+
+    ctx.stroke();
+
+
+    /* diseño giratorio */
+
+    ctx.rotate(p.angle);
+
+
+    for(let i=0;i<6;i++){
+
+        ctx.rotate(Math.PI/3);
+
+        ctx.beginPath();
+
+        ctx.moveTo(0,-4);
+        ctx.lineTo(17,-10);
+        ctx.lineTo(9,0);
+        ctx.lineTo(17,10);
+        ctx.closePath();
+
+        ctx.fillStyle=
+            i%2===0
+            ? "#e9fbff"
+            : "#062d79";
+
+        ctx.fill();
+
+    }
+
+
+    /* centro */
+
+    ctx.beginPath();
+
+    ctx.arc(
+        0,
+        0,
+        8,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle="#fff";
+    ctx.fill();
+
+    ctx.restore();
+
+
+    /* nombre */
+
+    ctx.font="bold 14px Arial";
+
+    ctx.textAlign="center";
+
+    ctx.fillStyle="#fff";
+
+    ctx.shadowBlur=4;
+    ctx.shadowColor="#000";
+
+    ctx.fillText(
+        p.name,
+        p.x,
+        p.y-p.radius-28
+    );
+
+
+    /* barra de vida */
+
+    const barW=60;
+    const barH=7;
+
+    const hpPercent =
+        Math.max(0,p.hp/p.maxHp);
+
+
+    ctx.fillStyle="rgba(0,0,0,.7)";
+
+    ctx.fillRect(
+        p.x-barW/2,
+        p.y-p.radius-18,
+        barW,
+        barH
+    );
+
+
+    ctx.fillStyle =
+        hpPercent>.5
+        ? "#37e8ff"
+        : hpPercent>.25
+        ? "#ffc43d"
+        : "#ff4f75";
+
+
+    ctx.fillRect(
+        p.x-barW/2,
+        p.y-p.radius-18,
+        barW*hpPercent,
+        barH
+    );
+
+}
+
+
+/* =========================================================
+   PAUSA
+========================================================= */
+
+function togglePause(){
+
+    if(!gameRunning) return;
+
+
+    if(onlineMode){
+
+        if(!isHost) return;
+
+        gamePaused=!gamePaused;
+
+        document.getElementById("pauseOverlay")
+            .style.display =
+            gamePaused ? "flex" : "none";
+
 
         guestConnections.forEach(conn=>{
 
@@ -2887,7 +2769,7 @@ function togglePause(){
 
                     type:"pause",
 
-                    paused:paused
+                    value:gamePaused
 
                 });
 
@@ -2895,642 +2777,314 @@ function togglePause(){
 
         });
 
+    }else{
+
+        gamePaused=!gamePaused;
+
+        document.getElementById("pauseOverlay")
+            .style.display =
+            gamePaused ? "flex" : "none";
+
     }
 
 }
 
 
-/* ======================================================
-   TECLADO
-====================================================== */
+/* =========================================================
+   RESULTADO
+========================================================= */
 
-window.addEventListener(
-    "keydown",
-    e=>{
+function showResult(name){
 
-        keys[
-            e.key.toLowerCase()
-        ]=true;
+    gameRunning=false;
+
+    document.getElementById("winnerText")
+        .textContent =
+        "🏆 GANADOR: "+name;
 
 
-        if(e.key===" "){
+    document.getElementById("resultOverlay")
+        .style.display="flex";
 
-            e.preventDefault();
 
-            attackRequest=true;
+    const button =
+        document.getElementById("playAgainButton");
+
+
+    if(onlineMode){
+
+        if(isHost){
+
+            button.textContent =
+                "🔄 VOLVER A JUGAR";
+
+        }else{
+
+            button.textContent =
+                "🔄 VOLVER A LA SALA";
 
         }
 
-    }
-);
+    }else{
 
-
-window.addEventListener(
-    "keyup",
-    e=>{
-
-        keys[
-            e.key.toLowerCase()
-        ]=false;
+        button.textContent =
+            "🔄 VOLVER A JUGAR";
 
     }
-);
-
-
-/* ======================================================
-   JOYSTICK
-====================================================== */
-
-const joystick =
-    document.getElementById(
-        "joystick"
-    );
-
-const knob =
-    document.getElementById(
-        "knob"
-    );
-
-
-let joystickActive=false;
-
-
-function moveJoystick(e){
-
-    if(!joystickActive)return;
-
-
-    e.preventDefault();
-
-
-    const touch =
-        e.touches[0];
-
-
-    const rect =
-        joystick.getBoundingClientRect();
-
-
-    const centerX =
-        rect.left+
-        rect.width/2;
-
-
-    const centerY =
-        rect.top+
-        rect.height/2;
-
-
-    let dx =
-        touch.clientX-
-        centerX;
-
-
-    let dy =
-        touch.clientY-
-        centerY;
-
-
-    const max=42;
-
-
-    const len =
-        Math.hypot(
-            dx,dy
-        );
-
-
-    if(len>max){
-
-        dx =
-            dx/len*max;
-
-        dy =
-            dy/len*max;
-
-    }
-
-
-    knob.style.left =
-        (32+dx)+"px";
-
-
-    knob.style.top =
-        (32+dy)+"px";
-
-
-    moveX =
-        dx/max;
-
-    moveY =
-        dy/max;
 
 }
 
 
-joystick.addEventListener(
-    "touchstart",
-    e=>{
+/* =========================================================
+   VOLVER A JUGAR
+========================================================= */
 
-        joystickActive=true;
+function playAgain(){
 
-        moveJoystick(e);
-
-    },
-    {passive:false}
-);
+    document.getElementById("resultOverlay")
+        .style.display="none";
 
 
-joystick.addEventListener(
-    "touchmove",
-    e=>{
+    if(!onlineMode){
 
-        moveJoystick(e);
+        startSolo();
 
-    },
-    {passive:false}
-);
-
-
-joystick.addEventListener(
-    "touchend",
-    e=>{
-
-        joystickActive=false;
-
-        moveX=0;
-
-        moveY=0;
-
-
-        knob.style.left="32px";
-
-        knob.style.top="32px";
-
-    },
-    {passive:false}
-);
-
-
-/* ======================================================
-   BOTÓN ATAQUE
-====================================================== */
-
-document
-.getElementById("attackButton")
-.addEventListener(
-    "touchstart",
-    e=>{
-
-        e.preventDefault();
-
-        attackRequest=true;
-
-    },
-    {passive:false}
-);
-
-
-/* ======================================================
-   DIBUJAR
-====================================================== */
-
-function draw(){
-
-    ctx.clearRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-
-    /* PISO */
-
-    ctx.fillStyle =
-        "#69c858";
-
-    ctx.fillRect(
-        0,
-        0,
-        W,
-        H
-    );
-
-
-    /* CUADRÍCULA */
-
-    ctx.strokeStyle =
-        "rgba(255,255,255,.10)";
-
-    ctx.lineWidth=2;
-
-
-    for(
-        let x=0;
-        x<W;
-        x+=50
-    ){
-
-        ctx.beginPath();
-
-        ctx.moveTo(x,0);
-
-        ctx.lineTo(x,H);
-
-        ctx.stroke();
+        return;
 
     }
 
 
-    for(
-        let y=0;
-        y<H;
-        y+=50
-    ){
+    if(isHost){
 
-        ctx.beginPath();
+        resetOnlineLobby();
 
-        ctx.moveTo(0,y);
+    }else{
 
-        ctx.lineTo(W,y);
+        if(
+            hostConnection &&
+            hostConnection.open
+        ){
 
-        ctx.stroke();
-
-    }
-
-
-    /* ARENA */
-
-    const radius =
-        Math.min(W,H)*.42;
-
-
-    ctx.beginPath();
-
-    ctx.arc(
-        W/2,
-        H/2,
-        radius,
-        0,
-        Math.PI*2
-    );
-
-
-    ctx.fillStyle =
-        "#91df6d";
-
-    ctx.fill();
-
-
-    ctx.strokeStyle =
-        "white";
-
-    ctx.lineWidth=7;
-
-    ctx.stroke();
-
-
-    /* TROMPOS */
-
-    players.forEach(p=>{
-
-        if(p.alive){
-
-            drawTrompo(p);
+            hostConnection.send({
+                type:"guestReady"
+            });
 
         }
 
-    });
+        showScreen("lobbyScreen");
 
-}
-
-
-/* ======================================================
-   TROMPO
-====================================================== */
-
-function drawTrompo(p){
-
-    ctx.save();
-
-
-    ctx.translate(
-        p.x,
-        p.y
-    );
-
-
-    ctx.rotate(
-        performance.now()/75+
-        p.id
-    );
-
-
-    /* SOMBRA */
-
-    ctx.beginPath();
-
-    ctx.ellipse(
-        0,
-        9,
-        31,
-        13,
-        0,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fillStyle =
-        "rgba(0,0,0,.18)";
-
-    ctx.fill();
-
-
-    /* CUERPO */
-
-    ctx.beginPath();
-
-    ctx.moveTo(
-        0,-34
-    );
-
-    ctx.lineTo(
-        25,-11
-    );
-
-    ctx.lineTo(
-        30,10
-    );
-
-    ctx.lineTo(
-        15,29
-    );
-
-    ctx.lineTo(
-        0,34
-    );
-
-    ctx.lineTo(
-        -15,29
-    );
-
-    ctx.lineTo(
-        -30,10
-    );
-
-    ctx.lineTo(
-        -25,-11
-    );
-
-    ctx.closePath();
-
-
-    ctx.fillStyle =
-        p.color;
-
-    ctx.fill();
-
-
-    ctx.strokeStyle =
-        "white";
-
-    ctx.lineWidth=3;
-
-    ctx.stroke();
-
-
-    /* CENTRO */
-
-    ctx.beginPath();
-
-    ctx.arc(
-        0,
-        0,
-        10,
-        0,
-        Math.PI*2
-    );
-
-    ctx.fillStyle =
-        "white";
-
-    ctx.fill();
-
-
-    ctx.restore();
-
-
-    /* ATAQUE */
-
-    if(p.attack){
-
-        ctx.beginPath();
-
-        ctx.arc(
-            p.x,
-            p.y,
-            48,
-            0,
-            Math.PI*2
-        );
-
-        ctx.strokeStyle =
-            "white";
-
-        ctx.lineWidth=5;
-
-        ctx.stroke();
+        document.getElementById("lobbyStatus")
+            .textContent =
+            "Esperando al anfitrión...";
 
     }
 
-
-    /* NOMBRE */
-
-    ctx.fillStyle =
-        "white";
-
-    ctx.font =
-        "bold 13px Arial";
-
-    ctx.textAlign =
-        "center";
-
-
-    ctx.fillText(
-        p.name,
-        p.x,
-        p.y-45
-    );
-
 }
 
 
-/* ======================================================
-   MARCADOR
-====================================================== */
+/* =========================================================
+   REINICIAR SALA ONLINE
+========================================================= */
 
-function updateScore(){
+function resetOnlineLobby(){
 
-    const board =
-        document.getElementById(
-            "scoreBoard"
-        );
+    gameRunning=false;
+    gamePaused=false;
 
 
-    board.innerHTML="";
+    players =
+        players.map(p=>{
 
-
-    players.forEach(p=>{
-
-        if(!p.alive)return;
-
-
-        const div =
-            document.createElement(
-                "div"
+            return createPlayer(
+                p.id,
+                p.name,
+                W/2,
+                H/2,
+                false
             );
 
-
-        div.className =
-            "score";
+        });
 
 
-        div.innerHTML = `
+    /* posiciones */
 
-            <div class="scoreName">
-                ${p.name}
-            </div>
+    const positions = [
 
-            <div class="hpBar">
+        [W/2,H-150],
 
-                <div
-                    class="hpFill"
-                    style="width:${p.hp}%"
-                ></div>
+        [W/2,150],
 
-            </div>
+        [150,H/2],
 
-        `;
+        [W-150,H/2]
+
+    ];
 
 
-        board.appendChild(div);
+    players.forEach((p,i)=>{
+
+        p.x =
+            positions[i][0];
+
+        p.y =
+            positions[i][1];
 
     });
+
+
+    broadcastLobby();
+
+    showScreen("lobbyScreen");
 
 }
 
 
-/* ======================================================
-   VOLVER AL MENÚ
-====================================================== */
+/* =========================================================
+   SALIR DE SALA
+========================================================= */
 
-function backMenu(){
+function leaveRoom(){
+
+    if(isHost){
+
+        guestConnections.forEach(conn=>{
+
+            if(conn.open){
+
+                try{
+
+                    conn.send({
+                        type:"roomClosed"
+                    });
+
+                }catch(e){}
+
+            }
+
+        });
+
+    }
+
 
     cleanupNetwork();
 
-    showScreen(
-        "menuScreen"
-    );
+    showScreen("onlineScreen");
 
 }
 
 
-/* ======================================================
-   LIMPIAR RED
-====================================================== */
+/* =========================================================
+   SALIR DESDE PARTIDA
+========================================================= */
+
+function returnToMenuFromGame(){
+
+    if(onlineMode){
+
+        leaveRoom();
+
+    }else{
+
+        gameRunning=false;
+
+        showScreen("menuScreen");
+
+    }
+
+}
+
+
+/* =========================================================
+   LIMPIAR CONEXIONES
+========================================================= */
 
 function cleanupNetwork(){
 
     gameRunning=false;
+    gamePaused=false;
 
-    paused=false;
+    try{
 
-
-    if(hostConnection){
-
-        try{
+        if(hostConnection){
 
             hostConnection.close();
 
-        }catch(e){}
+        }
 
-        hostConnection=null;
-
-    }
+    }catch(e){}
 
 
-    guestConnections.forEach(conn=>{
+    try{
 
-        try{
+        guestConnections.forEach(conn=>{
 
-            conn.close();
+            try{
+                conn.close();
+            }catch(e){}
 
-        }catch(e){}
+        });
 
-    });
-
-
-    guestConnections=[];
+    }catch(e){}
 
 
-    if(peer){
+    try{
 
-        try{
+        if(peer){
 
             peer.destroy();
 
-        }catch(e){}
+        }
 
-        peer=null;
+    }catch(e){}
 
-    }
 
+    peer=null;
+    hostConnection=null;
+    guestConnections=[];
 
     players=[];
 
+    roomCode="";
+
+    onlineMode=false;
     isHost=false;
+    myId=0;
 
 }
 
 
-/* ======================================================
-   MENÚ
-====================================================== */
+/* =========================================================
+   EVITAR SALIR CON RECARGA
+========================================================= */
 
-function returnMenu(){
+window.addEventListener("beforeunload",()=>{
 
-    cleanupNetwork();
+    if(isHost){
 
-    document
-    .getElementById(
-        "pauseOverlay"
-    )
-    .style.display =
-    "none";
+        guestConnections.forEach(conn=>{
 
+            if(conn.open){
 
-    document
-    .getElementById(
-        "resultOverlay"
-    )
-    .style.display =
-    "none";
+                try{
+                    conn.send({
+                        type:"roomClosed"
+                    });
+                }catch(e){}
 
+            }
 
-    document
-    .getElementById(
-        "controls"
-    )
-    .style.display =
-    "none";
+        });
+
+    }
+
+});
 
 
-    showScreen(
-        "menuScreen"
-    );
+/* =========================================================
+   INICIAR
+========================================================= */
 
-}
+resizeCanvas();
 
 </script>
 
