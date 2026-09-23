@@ -978,7 +978,20 @@ document.getElementById("start").classList.add("hidden");
 
 function startOnline(){
 
-if(!host)return;
+/* El anfitrión real se identifica por myId="host".
+   No dependemos únicamente de la variable host. */
+if(myId==="host" || (players.host && roomCode!=="SOLO")){
+host=true;
+}
+
+if(!host){
+
+document.getElementById("lobbyStatus").textContent=
+"Solo el anfitrión puede iniciar la partida.";
+
+return;
+
+}
 
 let count=Object.keys(players).length;
 
@@ -1000,6 +1013,7 @@ p.alive=true;
 p.attack=false;
 p.inputX=0;
 p.inputY=0;
+p.last=Date.now();
 
 if(i===0){
 
@@ -1015,19 +1029,17 @@ p.y=100+Math.random()*Math.max(100,H-200);
 
 });
 
-playing=true;
-ended=false;
-
+/* Primero avisamos a los invitados. */
 roomConnections.forEach(function(c){
 
-if(c && c.open && c.playerId){
+if(c && c.open){
 
 try{
 
 c.send({
 type:"start",
-players:players,
-myId:c.playerId
+players:copyPlayers(),
+myId:c.playerId||""
 });
 
 }catch(e){}
@@ -1035,6 +1047,10 @@ myId:c.playerId
 }
 
 });
+
+/* Después inicia el juego del anfitrión. */
+playing=true;
+ended=false;
 
 startLocal();
 
@@ -1968,25 +1984,12 @@ players:state
 document.addEventListener("contextmenu",function(e){
 e.preventDefault();
 });
+
+document.getElementById("start").addEventListener("click",function(e){
+e.preventDefault();
+startOnline();
+}); 
 </script>
 
 </body>
 </html>
-
-(function(){
-
-let btn=document.getElementById("start");
-
-if(btn){
-
-btn.onclick=function(e){
-
-e.preventDefault();
-
-startOnline();
-
-};
-
-}
-
-})();
