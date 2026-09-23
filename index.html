@@ -597,17 +597,14 @@ players[c.playerId].last=Date.now();
 return;
 }
 
-if(data.type==="position"&&c.playerId&&players[c.playerId]){
+if(data.type==="input"&&c.playerId&&players[c.playerId]){
 
-/* El invitado mueve su propio Beyblade y manda su posición real.
-   El anfitrión solo valida y retransmite esa posición. */
+/* El anfitrión es la autoridad: recibe los controles del invitado
+   y mueve al jugador remoto en su propio bucle de juego. */
 let p=players[c.playerId];
-let nx=Number(data.x);
-let ny=Number(data.y);
 
-if(Number.isFinite(nx)) p.x=Math.max(42,Math.min(W-42,nx));
-if(Number.isFinite(ny)) p.y=Math.max(42,Math.min(H-42,ny));
-
+p.inputX=Math.max(-1,Math.min(1,Number(data.x)||0));
+p.inputY=Math.max(-1,Math.min(1,Number(data.y)||0));
 p.last=Date.now();
 p.cpu=false;
 
@@ -956,37 +953,11 @@ return;
 
 if(data.type==="state"){
 
-/* Actualizar por ID sin romper el objeto local del jugador. */
+/* El anfitrión es la única autoridad del movimiento online.
+   El invitado NO mueve su copia local: solo manda controles.
+   Así no hay dos simulaciones peleándose por la posición. */
 let incoming=data.players||{};
-
-Object.keys(incoming).forEach(function(id){
-  if(!players[id]){
-    players[id]=incoming[id];
-    return;
-  }
-
-  /* IMPORTANTE:
-     El invitado mueve SU propio Beyblade localmente.
-     El estado del anfitrión no puede reemplazar x/y del jugador local,
-     porque eso hacía que el joystick pareciera congelado.
-     El anfitrión sí sigue siendo la autoridad para vida/estado y para
-     las posiciones de los demás jugadores. */
-  if(id===myId){
-    let localX=players[id].x;
-    let localY=players[id].y;
-
-    Object.assign(players[id],incoming[id]);
-
-    if(Number.isFinite(localX)) players[id].x=localX;
-    if(Number.isFinite(localY)) players[id].y=localY;
-  }else{
-    Object.assign(players[id],incoming[id]);
-  }
-});
-
-Object.keys(players).forEach(function(id){
-  if(!incoming[id]) delete players[id];
-});
+players=incoming;
 
 return;
 
@@ -994,7 +965,10 @@ return;
 
 if(data.type==="result"){
 
+playing=false;
+ended=true;
 showResult(data.title,data.text);
+return;
 
 }
 
@@ -1160,14 +1134,13 @@ function enviarInputMovil(x,y,attack){
 
 if(host || !conn || !conn.open || !playing)return;
 
+try{
 let me=players[myId];
 if(!me)return;
-
-try{
 conn.send({
-  type:"position",
-  x:me.x,
-  y:me.y,
+  type:"input",
+  x:Number(x)||0,
+  y:Number(y)||0,
   attack:!!attack
 });
 }catch(e){}
@@ -1178,15 +1151,12 @@ function enviarAtaqueRemoto(){
 
 if(host || !conn || !conn.open || !playing || countdownActive)return;
 
-let me=players[myId];
-if(!me)return;
-
 try{
 conn.send({
-  type:"position",
-  x:me.x,
-  y:me.y,
-  attack:true
+type:"input",
+x:0,
+y:0,
+attack:true
 });
 }catch(e){}
 
@@ -1196,15 +1166,28 @@ function enviarInputRemoto(){
 
 if(host || !conn || !conn.open || !playing)return;
 
-let me=players[myId];
-if(!me)return;
+let x=0,y=0;
+
+if(joyActive){
+  x=joyX;
+  y=joyY;
+}else{
+  if(keys["a"]||keys["arrowleft"])x-=1;
+  if(keys["d"]||keys["arrowright"])x+=1;
+  if(keys["w"]||keys["arrowup"])y-=1;
+  if(keys["s"]||keys["arrowdown"])y+=1;
+}
+
+let l=Math.hypot(x,y)||1;
 
 try{
+let me=players[myId];
+if(!me)return;
 conn.send({
-  type:"position",
-  x:me.x,
-  y:me.y,
-  attack:false
+  type:"input",
+  x:x/l,
+  y:y/l,
+  attack:!!keys[" "] || !!keys["spacebar"]
 });
 }catch(e){}
 
@@ -1552,16 +1535,6 @@ knob.style.top="50%";
 joy.addEventListener("pointerup",stopJoy);
 joy.addEventListener("pointercancel",stopJoy);
 
-/* Evitar que el navegador robe el gesto del joystick en celular. */
-["touchstart","touchmove","touchend"].forEach(function(type){
-  document.addEventListener(type,function(e){
-    if(playing && e.target && (e.target.closest("#joy") || e.target.closest("#attack"))){
-      e.preventDefault();
-    }
-  },{passive:false});
-});
-
-
 function move(p,x,y,dt){
 
 let speed=250;
@@ -1737,6 +1710,11 @@ move(me,x,y,dt);
 
 Object.values(players).forEach(function(p){
 
+/* El anfitrión simula a cada invitado con el input recibido. */
+if(p.id!==myId && !p.cpu && p.alive){
+  move(p,p.inputX||0,p.inputY||0,dt);
+}
+
 if(p.cpu&&p.alive){
 
 updateCPU(p,dt);
@@ -1804,15 +1782,28 @@ players:state
 
 }else{
 
-/* El invitado controla localmente su Beyblade.
-   Cada cliente debe poder jugar de forma independiente. */
-let me=players[myId];
-if(me&&me.alive){
-  let k=keyboard();
-  let x=k.x;
-  let y=k.y;
-  if(joyActive){ x=joyX; y=joyY; }
-  move(me,x,y,dt);
+/* El invitado NO simula la posición. Solo envía su control.
+   El anfitrión mueve al jugador y devuelve el estado completo. */
+let k=keyboard();
+let x=k.x;
+let y=k.y;
+
+if(joyActive){
+
+x=joyX;
+y=joyY;
+
+}
+
+if(conn&&conn.open&&myId){
+try{
+conn.send({
+  type:"input",
+  x:x,
+  y:y,
+  attack:false
+});
+}catch(e){}
 }
 
 }
@@ -1875,7 +1866,8 @@ try{
 c.send({
 type:"result",
 title:title,
-text:text
+text:text,
+winnerId:winner ? winner.id : null
 });
 
 }catch(e){}
