@@ -478,10 +478,14 @@ show("lobby");
 
 peer.on("connection",function(c){
 
-c.on("open",function(){
-
 c.on("data",function(data){
 hostMessage(c,data);
+});
+
+c.on("open",function(){
+if(!playing){
+broadcastLobby();
+}
 });
 
 c.on("close",function(){
@@ -492,10 +496,13 @@ c.on("error",function(){
 connectionClosed(c);
 });
 
-});
+if(c.open && !playing){
+setTimeout(function(){
+broadcastLobby();
+},50);
+}
 
 });
-
 peer.on("error",function(e){
 
 if(e.type==="unavailable-id"){
@@ -559,6 +566,10 @@ players:copyPlayers()
 });
 
 broadcastLobby();
+
+setTimeout(function(){
+broadcastLobby();
+},100);
 
 return;
 }
@@ -760,10 +771,28 @@ conn.on("open",function(){
 
 clearTimeout(timer);
 
+let joinSent=false;
+
+function sendJoin(){
+if(conn && conn.open && !joinSent){
 conn.send({
 type:"join",
 name:myName
 });
+}
+}
+
+sendJoin();
+
+let joinRepeat=setInterval(function(){
+if(joinSent || !conn || !conn.open){
+clearInterval(joinRepeat);
+return;
+}
+sendJoin();
+},700);
+
+conn.__joinRepeat=joinRepeat;
 
 });
 
@@ -811,6 +840,10 @@ return;
 if(data.type==="welcome"){
 
 myId=data.id;
+if(conn && conn.__joinRepeat){
+clearInterval(conn.__joinRepeat);
+conn.__joinRepeat=null;
+}
 roomCode=data.room;
 players=data.players||{};
 
