@@ -600,6 +600,11 @@ if(data.type==="input"&&c.playerId&&players[c.playerId]){
 
 let p=players[c.playerId];
 
+if(Number.isFinite(Number(data.px)) && Number.isFinite(Number(data.py))){
+  p.x=Math.max(42,Math.min(W-42,Number(data.px)));
+  p.y=Math.max(42,Math.min(H-42,Number(data.py)));
+}
+
 p.inputX=Math.max(-1,Math.min(1,Number(data.x)||0));
 p.inputY=Math.max(-1,Math.min(1,Number(data.y)||0));
 
@@ -1147,10 +1152,13 @@ function enviarInputMovil(x,y,attack){
 if(host || !conn || !conn.open || !playing)return;
 
 try{
+let me=players[myId];
 conn.send({
 type:"input",
 x:x,
 y:y,
+px:me?me.x:undefined,
+py:me?me.y:undefined,
 attack:!!attack
 });
 }catch(e){}
@@ -1186,10 +1194,13 @@ if(keys["s"]||keys["arrowdown"])y+=1;
 let l=Math.hypot(x,y)||1;
 
 try{
+let me=players[myId];
 conn.send({
 type:"input",
 x:x/l,
 y:y/l,
+px:me?me.x:undefined,
+py:me?me.y:undefined,
 attack:!!keys[" "] || !!keys["spacebar"]
 });
 }catch(e){}
@@ -1814,6 +1825,8 @@ conn.send({
 type:"input",
 x:x,
 y:y,
+px:me?me.x:undefined,
+py:me?me.y:undefined,
 attack:false
 });
 }catch(e){}
@@ -2126,33 +2139,9 @@ enviarInputRemoto();
 },50);
 
 
-/* Puente de controles móviles para jugadores invitados. */
-["joystick","joystickBase","stick","moveStick"].forEach(function(id){
-
-let el=document.getElementById(id);
-
-if(!el)return;
-
-["touchmove","pointermove"].forEach(function(ev){
-
-el.addEventListener(ev,function(e){
-
-if(host||!playing)return;
-
-/* El código existente puede actualizar sus variables; este envío usa
-   las variables globales si existen. */
-let x=Number(window.joyX||window.joystickX||0);
-let y=Number(window.joyY||window.joystickY||0);
-
-if(x||y)enviarInputMovil(x,y,false);
-
-});
-
-});
-
-});
-
+/* El joystick #joy y el botón #attack son los controles móviles oficiales. */
 </script>
 
 </body>
 </html>
+
