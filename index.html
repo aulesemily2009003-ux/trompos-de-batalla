@@ -598,18 +598,9 @@ return;
 
 if(data.type==="input"&&c.playerId&&players[c.playerId]){
 
-/*
-   RED ONLINE ROBUSTA:
-   El invitado es dueño de SU movimiento local y manda su posición
-   actual al anfitrión. El anfitrión no vuelve a mover al invitado con
-   otra simulación, porque eso podía dejar las dos pantallas desfasadas.
-*/
+/* El anfitrión es la autoridad: recibe los controles del invitado
+   y mueve al jugador remoto en su propio bucle de juego. */
 let p=players[c.playerId];
-
-if(Number.isFinite(Number(data.px)) && Number.isFinite(Number(data.py))){
-  p.x=Math.max(42,Math.min(W-42,Number(data.px)));
-  p.y=Math.max(42,Math.min(H-42,Number(data.py)));
-}
 
 p.inputX=Math.max(-1,Math.min(1,Number(data.x)||0));
 p.inputY=Math.max(-1,Math.min(1,Number(data.y)||0));
@@ -961,29 +952,16 @@ return;
 
 if(data.type==="state"){
 
-/* El anfitrión manda la vida y las posiciones de todos.
-   Para el propio jugador NO reemplazamos x/y: así el control local
-   del celular/PC responde de inmediato y el estado de red no lo congela. */
+/* El anfitrión manda la posición real de TODOS. Esto mantiene
+   sincronizados al anfitrión y al invitado. */
 let incoming=data.players||{};
-let local=players[myId];
 
 Object.keys(incoming).forEach(function(id){
-  if(id===myId && local){
-    local.hp=incoming[id].hp;
-    local.maxHp=incoming[id].maxHp;
-    local.alive=incoming[id].alive;
-    local.color=incoming[id].color;
-    local.name=incoming[id].name;
-    local.angle=incoming[id].angle;
-  }else{
-    /* Copiamos también x/y de los demás para que cada cliente vea
-       exactamente dónde está el contrincante. */
-    players[id]=Object.assign({},incoming[id]);
-  }
+  players[id]=Object.assign({},players[id]||{},incoming[id]);
 });
 
 Object.keys(players).forEach(function(id){
-  if(!incoming[id] && id!==myId) delete players[id];
+  if(!incoming[id]) delete players[id];
 });
 
 return;
@@ -1194,10 +1172,15 @@ if(host || !conn || !conn.open || !playing)return;
 
 let x=0,y=0;
 
-if(keys["a"]||keys["arrowleft"])x-=1;
-if(keys["d"]||keys["arrowright"])x+=1;
-if(keys["w"]||keys["arrowup"])y-=1;
-if(keys["s"]||keys["arrowdown"])y+=1;
+if(joyActive){
+  x=joyX;
+  y=joyY;
+}else{
+  if(keys["a"]||keys["arrowleft"])x-=1;
+  if(keys["d"]||keys["arrowright"])x+=1;
+  if(keys["w"]||keys["arrowup"])y-=1;
+  if(keys["s"]||keys["arrowdown"])y+=1;
+}
 
 let l=Math.hypot(x,y)||1;
 
@@ -1732,6 +1715,11 @@ move(me,x,y,dt);
 }
 
 Object.values(players).forEach(function(p){
+
+/* El anfitrión simula a cada invitado con el input recibido. */
+if(p.id!==myId && !p.cpu && p.alive){
+  move(p,p.inputX||0,p.inputY||0,dt);
+}
 
 if(p.cpu&&p.alive){
 
