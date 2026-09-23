@@ -696,15 +696,16 @@ list.appendChild(div);
 
 document.getElementById("roomCode").textContent=roomCode;
 
-if(Object.keys(players).length<2){
+let count=Object.keys(players).length;
 
 document.getElementById("lobbyStatus").textContent=
-"Esperando jugadores... "+Object.keys(players).length+"/4";
+"PARTICIPANTES EN LA SALA: "+count+"/4";
 
-}else{
+if(count<2){
 
 document.getElementById("lobbyStatus").textContent=
-"Jugadores listos. El anfitrión puede iniciar.";
+"PARTICIPANTES EN LA SALA: "+count+"/4 — Esperando jugadores...";
+
 }
 
 }
@@ -899,7 +900,7 @@ list.appendChild(div);
 document.getElementById("roomCode").textContent=roomCode;
 
 document.getElementById("lobbyStatus").textContent=
-"Esperando que el anfitrión inicie la partida...";
+"PARTICIPANTES EN LA SALA: "+Object.keys(players).length+"/4 — Esperando que el anfitrión inicie la partida...";
 
 document.getElementById("start").classList.add("hidden");
 
@@ -1322,13 +1323,6 @@ return Math.hypot(a.x-b.x,a.y-b.y);
 
 }
 
-/* CPU TOTALMENTE ACTIVO:
-   cada CPU busca al enemigo más cercano,
-   se mueve hacia él,
-   puede atacar,
-   cambia de objetivo,
-   y también puede pelear contra otros CPU. */
-
 function updateCPU(p,dt){
 
 if(!p.alive)return;
@@ -1367,22 +1361,18 @@ let len=Math.hypot(dx,dy)||1;
 let x=dx/len;
 let y=dy/len;
 
-/* El CPU siempre se mueve */
 move(p,x,y,dt);
 
-/* Cuando está cerca, intenta atacar */
 p.attackCooldown-=dt;
 
 if(shortest<125&&p.attackCooldown<=0){
 
 p.attack=true;
 
-/* ataque rápido para que los CPU sí peleen */
 p.attackCooldown=.35+Math.random()*.35;
 
 }
 
-/* Si está demasiado cerca, se separa un poco */
 if(shortest<65){
 
 p.x-=x*90*dt;
@@ -1437,8 +1427,6 @@ function update(dt){
 
 if(!playing||ended)return;
 
-/* MODO SOLO Y HOST:
-   el host controla absolutamente todos los CPU */
 if(host){
 
 let me=players[myId];
@@ -1474,7 +1462,6 @@ dt
 
 }
 
-/* TODOS LOS CPU SE ACTUALIZAN CADA FRAME */
 Object.values(players).forEach(function(p){
 
 if(p.cpu&&p.alive){
@@ -1485,7 +1472,6 @@ updateCPU(p,dt);
 
 });
 
-/* TODOS LOS TROMPOS QUE TENGAN ATAQUE PEGAN */
 Object.values(players).forEach(function(p){
 
 if(p.alive&&p.attack){
@@ -1498,12 +1484,8 @@ p.attack=false;
 
 });
 
-/* IMPORTANTE:
-   los CPU continúan peleando aunque el jugador
-   esté lejos o no los esté mirando */
 checkWinner();
 
-/* ONLINE: convertir jugador desconectado en CPU */
 if(roomCode!=="SOLO"){
 
 let now=Date.now();
@@ -1524,7 +1506,6 @@ p.cpu=true;
 
 }
 
-/* mandar posiciones a los jugadores online */
 if(roomCode!=="SOLO"&&peer){
 
 let state=copyPlayers();
@@ -1554,7 +1535,6 @@ players:state
 
 }else{
 
-/* jugador invitado online */
 if(conn&&conn.open&&myId){
 
 let k=keyboard();
@@ -1783,8 +1763,6 @@ ctx.fillStyle="#fff";
 ctx.fill();
 
 ctx.restore();
-
-/* VIDA */
 
 let bw=78;
 let bh=8;
