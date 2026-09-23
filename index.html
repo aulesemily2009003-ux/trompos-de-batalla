@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
 <title>GUERRA BEYBLADE</title>
 
 <script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
@@ -14,19 +14,23 @@
     padding:0;
 }
 
-body{
-    background:#050505;
-    color:white;
-    font-family:Arial,Helvetica,sans-serif;
+html,body{
+    width:100%;
+    height:100%;
     overflow:hidden;
+    font-family:Arial,Helvetica,sans-serif;
+    background:#050817;
 }
 
 canvas{
     display:block;
     width:100vw;
     height:100vh;
-    background:#17251b;
 }
+
+/* =========================
+   PANTALLAS
+========================= */
 
 .screen{
     position:fixed;
@@ -35,74 +39,120 @@ canvas{
     justify-content:center;
     align-items:center;
     background:
-        radial-gradient(circle at center,#252525 0%,#090909 65%);
-    z-index:10;
+        radial-gradient(circle at 50% 35%,
+        rgba(55,100,255,.20),
+        transparent 35%),
+        linear-gradient(135deg,#030510,#10152d,#04050b);
+    z-index:20;
 }
 
 .panel{
-    width:min(92%,500px);
-    padding:30px;
-    border-radius:25px;
-    background:rgba(15,15,15,.95);
-    border:2px solid #555;
-    box-shadow:0 0 40px #000;
+    width:min(92%,520px);
+    padding:32px;
+    border-radius:28px;
+
+    background:
+        linear-gradient(
+            145deg,
+            rgba(25,32,65,.96),
+            rgba(5,8,22,.97)
+        );
+
+    border:2px solid rgba(120,180,255,.55);
+
+    box-shadow:
+        0 0 25px rgba(45,120,255,.3),
+        0 0 70px rgba(0,0,0,.9),
+        inset 0 0 25px rgba(100,150,255,.08);
+
     text-align:center;
 }
 
 h1{
-    font-size:42px;
-    margin-bottom:10px;
-    color:#fff;
-    text-shadow:0 0 15px #ff3333;
+    font-size:clamp(32px,7vw,52px);
+    margin-bottom:8px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #4de8ff,
+            #ffffff,
+            #ffdc45,
+            #ff5b68
+        );
+
+    -webkit-background-clip:text;
+    color:transparent;
+
+    text-shadow:
+        0 0 18px rgba(50,200,255,.4);
 }
 
 h2{
+    color:#fff;
     margin-bottom:20px;
 }
 
 .subtitle{
-    color:#bbb;
+    color:#b8c8ec;
     margin-bottom:25px;
+    font-size:16px;
 }
 
 button{
     width:100%;
     padding:15px;
     margin:8px 0;
-    border:0;
-    border-radius:13px;
-    background:#292929;
+
+    border:none;
+    border-radius:15px;
+
     color:white;
     font-size:18px;
     font-weight:bold;
+
     cursor:pointer;
-    transition:.15s;
+
+    background:
+        linear-gradient(
+            135deg,
+            #202a4d,
+            #10162d
+        );
+
+    border:1px solid rgba(130,180,255,.35);
+
+    box-shadow:
+        0 5px 15px rgba(0,0,0,.4),
+        inset 0 0 10px rgba(255,255,255,.04);
+
+    transition:.18s;
 }
 
 button:hover{
-    transform:scale(1.02);
-    background:#3c3c3c;
+    transform:translateY(-2px) scale(1.015);
+    filter:brightness(1.2);
 }
 
 .red{
-    background:#9b1717;
+    background:linear-gradient(135deg,#ff394c,#8e1024);
 }
 
 .blue{
-    background:#1558a6;
+    background:linear-gradient(135deg,#208cff,#1740a5);
 }
 
 .green{
-    background:#16753a;
+    background:linear-gradient(135deg,#16d978,#087a52);
 }
 
 .orange{
-    background:#a85c10;
+    background:linear-gradient(135deg,#ffb52e,#d55208);
 }
 
 .small{
-    font-size:14px;
-    color:#aaa;
+    color:#8090b5;
+    font-size:13px;
     margin-top:15px;
 }
 
@@ -110,39 +160,74 @@ input{
     width:100%;
     padding:14px;
     margin:8px 0;
-    border-radius:12px;
-    border:1px solid #555;
-    background:#111;
+
+    border-radius:13px;
+    border:1px solid #3c4d76;
+
+    background:#070b1b;
     color:white;
+
     font-size:18px;
     text-align:center;
 }
 
+.code{
+    font-size:28px;
+    font-weight:bold;
+    letter-spacing:5px;
+    color:#63e8ff;
+    margin:15px 0;
+    text-shadow:0 0 15px #00cfff;
+}
+
+/* =========================
+   HUD
+========================= */
+
 #hud{
     display:none;
+
     position:fixed;
     top:10px;
     left:10px;
     right:10px;
-    z-index:5;
+
+    z-index:10;
+
     pointer-events:none;
 }
 
 .hudBox{
     display:inline-block;
-    padding:10px 14px;
-    border-radius:12px;
-    background:rgba(0,0,0,.65);
-    border:1px solid #555;
+
+    padding:9px 14px;
+
     margin-right:5px;
+
+    border-radius:13px;
+
+    background:rgba(3,8,25,.78);
+
+    border:1px solid rgba(120,200,255,.4);
+
+    box-shadow:
+        0 0 15px rgba(30,130,255,.15);
+
+    color:white;
 }
 
 #pauseBtn{
     pointer-events:auto;
+
     float:right;
+
     width:auto;
-    padding:10px 16px;
+
     margin:0;
+
+    padding:9px 16px;
+
+    font-size:14px;
 }
 
 #playersHUD{
@@ -150,33 +235,24 @@ input{
 }
 
 .playerLine{
-    font-size:13px;
+    font-size:12px;
     margin:2px;
+
+    text-shadow:0 1px 3px #000;
 }
 
 .dead{
-    opacity:.4;
+    opacity:.35;
     text-decoration:line-through;
 }
+
+/* =========================
+   PAUSA / GAME OVER
+========================= */
 
 #pauseScreen,
 #gameOver{
     display:none;
-}
-
-.code{
-    font-size:28px;
-    font-weight:bold;
-    letter-spacing:5px;
-    color:#6ee7ff;
-    margin:15px 0;
-    word-break:break-all;
-}
-
-#message{
-    min-height:25px;
-    margin-top:10px;
-    color:#ffd34d;
 }
 </style>
 </head>
@@ -185,25 +261,38 @@ input{
 
 <canvas id="game"></canvas>
 
+<!-- ================= HUD ================= -->
+
 <div id="hud">
+
     <div class="hudBox">
         ❤️ <span id="myLife">100</span>
     </div>
 
     <div class="hudBox">
-        👥 <span id="aliveCount">0</span>/4
+        ⚔️ <span id="aliveCount">0</span>/4
     </div>
 
-    <button id="pauseBtn" onclick="togglePause()">⏸ PAUSA</button>
+    <button id="pauseBtn" onclick="togglePause()">
+        ⏸ PAUSA
+    </button>
 
     <div id="playersHUD"></div>
+
 </div>
 
-<!-- MENÚ -->
+
+<!-- ================= MENÚ ================= -->
+
 <div class="screen" id="menu">
+
     <div class="panel">
+
         <h1>⚡ GUERRA BEYBLADE ⚡</h1>
-        <div class="subtitle">¡La batalla de trompos comienza!</div>
+
+        <div class="subtitle">
+            🔥 ¡LA ARENA DE LOS TROMPOS! 🔥
+        </div>
 
         <button class="red" onclick="startSolo()">
             🎮 JUGAR SOLO
@@ -218,49 +307,81 @@ input{
         </button>
 
         <div class="small">
-            Máximo 4 trompos por batalla
+            ⚔️ Hasta 4 trompos por batalla
         </div>
+
     </div>
+
 </div>
 
-<!-- ONLINE -->
+
+<!-- ================= ONLINE ================= -->
+
 <div class="screen" id="onlineScreen" style="display:none;">
+
     <div class="panel">
-        <h2 id="onlineTitle">🌐 ONLINE</h2>
+
+        <h2 id="onlineTitle">
+            🌐 ONLINE
+        </h2>
 
         <button class="green" onclick="createRoom()">
             ➕ CREAR SALA
         </button>
 
-        <div style="margin:12px 0;color:#aaa;">o</div>
+        <div style="margin:12px;color:#8190b8;">
+            ───── O ─────
+        </div>
 
-        <input id="roomInput" placeholder="Código de sala">
+        <input
+            id="roomInput"
+            placeholder="Código de sala"
+        >
 
         <button class="blue" onclick="joinRoom()">
             🚪 UNIRSE
         </button>
 
         <div id="roomInfo"></div>
+
         <div id="message"></div>
 
         <button onclick="backToMenu()">
             ↩ VOLVER
         </button>
+
     </div>
+
 </div>
 
-<!-- LOBBY -->
+
+<!-- ================= LOBBY ================= -->
+
 <div class="screen" id="lobbyScreen" style="display:none;">
+
     <div class="panel">
+
         <h2>⚔️ SALA DE BATALLA</h2>
 
-        <div>Comparte este código:</div>
-        <div class="code" id="myRoomCode">---</div>
+        <div>
+            Comparte este código:
+        </div>
 
-        <div id="lobbyPlayers" style="margin:20px 0;"></div>
+        <div class="code" id="myRoomCode">
+            ---
+        </div>
 
-        <button class="red" id="startOnlineBtn" onclick="startOnlineBattle()">
+        <div id="lobbyPlayers"
+             style="margin:20px 0;">
+        </div>
+
+        <button
+            class="red"
+            id="startOnlineBtn"
+            onclick="startOnlineBattle()">
+
             ▶ JUGAR
+
         </button>
 
         <button onclick="backToMenu()">
@@ -268,58 +389,82 @@ input{
         </button>
 
         <div class="small">
-            En ONLINE + CPU se completan automáticamente los espacios con CPU.
+            🤖 En ONLINE + CPU se completan
+            automáticamente los espacios.
         </div>
+
     </div>
+
 </div>
 
-<!-- PAUSA -->
+
+<!-- ================= PAUSA ================= -->
+
 <div class="screen" id="pauseScreen">
+
     <div class="panel">
+
         <h2>⏸ JUEGO PAUSADO</h2>
 
-        <button class="green" onclick="togglePause()">
+        <button class="green"
+                onclick="togglePause()">
             ▶ CONTINUAR
         </button>
 
         <button onclick="backToMenu()">
             🏠 MENÚ PRINCIPAL
         </button>
+
     </div>
+
 </div>
 
-<!-- GAME OVER -->
-<div class="screen" id="gameOver">
-    <div class="panel">
-        <h1>🏆</h1>
-        <h2 id="winnerText">GANADOR</h2>
 
-        <button class="red" onclick="restartCurrentMode()">
+<!-- ================= GAME OVER ================= -->
+
+<div class="screen" id="gameOver">
+
+    <div class="panel">
+
+        <h1>🏆</h1>
+
+        <h2 id="winnerText">
+            GANADOR
+        </h2>
+
+        <button
+            class="red"
+            onclick="restartCurrentMode()">
+
             🔄 VOLVER A JUGAR
+
         </button>
 
         <button onclick="backToMenu()">
             🏠 MENÚ
         </button>
+
     </div>
+
 </div>
 
+
 <script>
+
 /* =========================================================
-   CONFIGURACIÓN
+   CANVAS
 ========================================================= */
 
-const canvas = document.getElementById("game");
-const ctx = canvas.getContext("2d");
+const canvas=document.getElementById("game");
+const ctx=canvas.getContext("2d");
 
-const MAX_PLAYERS = 4;
-
-let W = 0;
-let H = 0;
+let W=0;
+let H=0;
 
 function resize(){
-    W = canvas.width = window.innerWidth;
-    H = canvas.height = window.innerHeight;
+
+    W=canvas.width=window.innerWidth;
+    H=canvas.height=window.innerHeight;
 }
 
 window.addEventListener("resize",resize);
@@ -327,53 +472,109 @@ resize();
 
 
 /* =========================================================
-   ESTADO DEL JUEGO
+   VARIABLES
 ========================================================= */
 
-let gameMode = "solo";
-let paused = false;
-let gameRunning = false;
+const MAX_PLAYERS=4;
 
-let state = {
-    players: [],
+let gameMode="solo";
+let gameRunning=false;
+let paused=false;
+
+let localPlayerIndex=0;
+
+let state={
+    players:[],
     running:false,
     winner:null,
     tick:0
 };
 
-let localPlayerIndex = 0;
+let peer=null;
+let isHost=false;
+let hostConnection=null;
+let connections=[];
+
+let onlineModeCPU=false;
+let roomCode="";
+
+const keys={};
 
 
 /* =========================================================
-   ONLINE
+   PARTÍCULAS
 ========================================================= */
 
-let peer = null;
-let isHost = false;
-let hostConnection = null;
-let connections = [];
+let particles=[];
 
-let onlineModeCPU = false;
-let roomCode = "";
+function createParticle(x,y,type="spark"){
 
+    particles.push({
 
-/* =========================================================
-   TECLADO
-========================================================= */
+        x:x,
+        y:y,
 
-const keys = {};
+        vx:(Math.random()-.5)*5,
+        vy:(Math.random()-.5)*5,
 
-window.addEventListener("keydown",e=>{
-    keys[e.key.toLowerCase()] = true;
+        life:25+Math.random()*25,
 
-    if(e.key === "Escape"){
-        togglePause();
+        maxLife:50,
+
+        size:2+Math.random()*4,
+
+        type:type
+    });
+}
+
+function updateParticles(){
+
+    for(let i=particles.length-1;i>=0;i--){
+
+        const p=particles[i];
+
+        p.x+=p.vx;
+        p.y+=p.vy;
+
+        p.vx*=.96;
+        p.vy*=.96;
+
+        p.life--;
+
+        if(p.life<=0){
+            particles.splice(i,1);
+        }
     }
-});
+}
 
-window.addEventListener("keyup",e=>{
-    keys[e.key.toLowerCase()] = false;
-});
+function drawParticles(){
+
+    particles.forEach(p=>{
+
+        const alpha=p.life/p.maxLife;
+
+        ctx.globalAlpha=alpha;
+
+        ctx.beginPath();
+
+        ctx.arc(
+            p.x,
+            p.y,
+            p.size,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fillStyle=
+            p.type==="hit"
+            ? "#ffdf3d"
+            : "#68eaff";
+
+        ctx.fill();
+    });
+
+    ctx.globalAlpha=1;
+}
 
 
 /* =========================================================
@@ -385,65 +586,90 @@ function random(min,max){
 }
 
 function distance(a,b){
-    return Math.hypot(a.x-b.x,a.y-b.y);
+    return Math.hypot(
+        a.x-b.x,
+        a.y-b.y
+    );
 }
 
 function clamp(v,min,max){
-    return Math.max(min,Math.min(max,v));
+    return Math.max(
+        min,
+        Math.min(max,v)
+    );
 }
 
 
 /* =========================================================
-   TROMPOS
+   NOMBRES
 ========================================================= */
 
-const names = [
+const names=[
     "DRAGÓN",
     "FÉNIX",
     "TITÁN",
     "SOMBRA"
 ];
 
-const symbols = [
+const symbols=[
     "🐉",
     "🔥",
     "⚡",
     "🌑"
 ];
 
+
+/* =========================================================
+   CREAR TROMPO
+========================================================= */
+
 function createPlayer(index,cpu=false){
 
-    const margin = 100;
+    return{
 
-    return {
         id:index,
+
         name:names[index],
         symbol:symbols[index],
 
-        x:random(margin,W-margin),
-        y:random(margin,H-margin),
+        x:random(100,W-100),
+        y:random(100,H-100),
 
         vx:0,
         vy:0,
 
-        radius:28,
+        radius:29,
 
         life:100,
         maxLife:100,
 
         cpu:cpu,
+
         alive:true,
 
         attack:false,
+
         attackTimer:0,
 
         cooldown:0,
 
+        hitCooldown:0,
+
         target:null,
 
-        angle:random(0,Math.PI*2),
+        angle:random(
+            0,
+            Math.PI*2
+        ),
 
-        aiTimer:0
+        input:{
+            up:false,
+            down:false,
+            left:false,
+            right:false,
+            attack:false
+        }
+
     };
 }
 
@@ -453,9 +679,12 @@ function createPlayer(index,cpu=false){
 ========================================================= */
 
 function hideAllScreens(){
-    document.querySelectorAll(".screen").forEach(s=>{
-        s.style.display="none";
-    });
+
+    document
+        .querySelectorAll(".screen")
+        .forEach(s=>{
+            s.style.display="none";
+        });
 }
 
 function backToMenu(){
@@ -464,9 +693,11 @@ function backToMenu(){
     paused=false;
 
     if(peer){
+
         try{
             peer.destroy();
         }catch(e){}
+
     }
 
     peer=null;
@@ -476,9 +707,17 @@ function backToMenu(){
 
     hideAllScreens();
 
-    document.getElementById("menu").style.display="flex";
-    document.getElementById("hud").style.display="none";
+    document.getElementById("menu")
+        .style.display="flex";
+
+    document.getElementById("hud")
+        .style.display="none";
 }
+
+
+/* =========================================================
+   SOLO
+========================================================= */
 
 function startSolo(){
 
@@ -487,20 +726,21 @@ function startSolo(){
 
     hideAllScreens();
 
-    document.getElementById("hud").style.display="block";
+    document.getElementById("hud")
+        .style.display="block";
 
-    state = {
+    state={
         players:[],
         running:true,
         winner:null,
         tick:0
     };
 
-    /*
-       1 jugador humano + 3 CPU
-    */
-    for(let i=0;i<MAX_PLAYERS;i++){
-        state.players.push(createPlayer(i,i!==0));
+    for(let i=0;i<4;i++){
+
+        state.players.push(
+            createPlayer(i,i!==0)
+        );
     }
 
     localPlayerIndex=0;
@@ -508,35 +748,43 @@ function startSolo(){
     gameRunning=true;
     paused=false;
 
+    particles=[];
+
     updateHUD();
 }
 
 
 /* =========================================================
-   ONLINE MENÚ
+   ONLINE
 ========================================================= */
 
 function openOnline(withCPU){
 
     onlineModeCPU=withCPU;
-    gameMode=withCPU ? "onlinecpu" : "online";
+
+    gameMode=
+        withCPU
+        ? "onlinecpu"
+        : "online";
 
     hideAllScreens();
 
-    document.getElementById("onlineScreen").style.display="flex";
+    document.getElementById(
+        "onlineScreen"
+    ).style.display="flex";
 
-    document.getElementById("onlineTitle").textContent =
-        withCPU ? "🤖 ONLINE + CPU" : "🌐 ONLINE";
+    document.getElementById(
+        "onlineTitle"
+    ).textContent=
+        withCPU
+        ? "🤖 ONLINE + CPU"
+        : "🌐 ONLINE";
 
-    document.getElementById("roomInfo").innerHTML="";
-    document.getElementById("message").textContent="";
+    document.getElementById("message")
+        .textContent="";
 }
 
 function createRoom(){
-
-    if(peer){
-        try{peer.destroy();}catch(e){}
-    }
 
     isHost=true;
 
@@ -546,13 +794,20 @@ function createRoom(){
 
         roomCode=id;
 
-        document.getElementById("myRoomCode").textContent=id;
+        document.getElementById(
+            "myRoomCode"
+        ).textContent=id;
 
         showLobby();
-
     });
 
     peer.on("connection",conn=>{
+
+        if(connections.length>=3){
+
+            conn.close();
+            return;
+        }
 
         connections.push(conn);
 
@@ -563,44 +818,56 @@ function createRoom(){
             });
 
             sendLobby();
-
         });
 
         conn.on("close",()=>{
-            connections=connections.filter(c=>c!==conn);
+
+            connections=
+                connections.filter(
+                    c=>c!==conn
+                );
+
             sendLobby();
         });
 
     });
 
     peer.on("error",err=>{
-        document.getElementById("message").textContent =
+
+        document.getElementById(
+            "message"
+        ).textContent=
             "Error de conexión.";
+
         console.error(err);
     });
 }
 
 function joinRoom(){
 
-    const code=document.getElementById("roomInput").value.trim();
+    const code=
+        document.getElementById(
+            "roomInput"
+        ).value.trim();
 
     if(!code){
-        document.getElementById("message").textContent =
-            "Escribe el código de la sala.";
+
+        document.getElementById(
+            "message"
+        ).textContent=
+            "Escribe el código.";
+
         return;
     }
 
     isHost=false;
 
-    if(peer){
-        try{peer.destroy();}catch(e){}
-    }
-
     peer=new Peer();
 
     peer.on("open",()=>{
 
-        hostConnection=peer.connect(code);
+        hostConnection=
+            peer.connect(code);
 
         hostConnection.on("open",()=>{
 
@@ -609,7 +876,6 @@ function joinRoom(){
             });
 
             showLobby();
-
         });
 
         hostConnection.on("data",data=>{
@@ -617,16 +883,23 @@ function joinRoom(){
         });
 
         hostConnection.on("close",()=>{
-            alert("La conexión con el anfitrión se cerró.");
+
+            alert(
+                "La conexión con el anfitrión terminó."
+            );
+
             backToMenu();
         });
 
     });
 
     peer.on("error",err=>{
-        document.getElementById("message").textContent =
-            "No se pudo conectar a la sala.";
-        console.error(err);
+
+        document.getElementById(
+            "message"
+        ).textContent=
+            "No se pudo conectar.";
+
     });
 }
 
@@ -639,84 +912,99 @@ function showLobby(){
 
     hideAllScreens();
 
-    document.getElementById("lobbyScreen").style.display="flex";
+    document.getElementById(
+        "lobbyScreen"
+    ).style.display="flex";
 
-    document.getElementById("myRoomCode").textContent =
-        roomCode || "SALA";
+    document.getElementById(
+        "myRoomCode"
+    ).textContent=
+        roomCode||"SALA";
 
     updateLobbyUI();
 
-    if(isHost){
-        document.getElementById("startOnlineBtn").style.display="block";
-    }else{
-        document.getElementById("startOnlineBtn").style.display="none";
-    }
+    document.getElementById(
+        "startOnlineBtn"
+    ).style.display=
+        isHost
+        ? "block"
+        : "none";
 }
 
 function updateLobbyUI(){
 
-    let count=1;
-
-    if(isHost){
-        count=1+connections.length;
-    }
+    let count=
+        isHost
+        ? 1+connections.length
+        : 1;
 
     let html="";
 
     for(let i=0;i<count;i++){
-        html += `
-            <div style="
-                padding:8px;
-                margin:5px;
-                border-radius:8px;
-                background:#222;
-            ">
-                🎮 Jugador ${i+1}
-            </div>
-        `;
+
+        html+=`
+        <div style="
+            padding:9px;
+            margin:5px;
+            border-radius:10px;
+            background:
+            linear-gradient(90deg,
+            #16213d,#101528);
+            border:1px solid #304a79;
+        ">
+            🎮 JUGADOR ${i+1}
+        </div>`;
     }
 
     if(onlineModeCPU){
-        for(let i=count;i<MAX_PLAYERS;i++){
-            html += `
-                <div style="
-                    padding:8px;
-                    margin:5px;
-                    border-radius:8px;
-                    background:#171717;
-                    color:#aaa;
-                ">
-                    🤖 CPU ${i+1}
-                </div>
-            `;
+
+        for(let i=count;i<4;i++){
+
+            html+=`
+            <div style="
+                padding:9px;
+                margin:5px;
+                border-radius:10px;
+                background:#0c1020;
+                color:#7e8cae;
+            ">
+                🤖 CPU ${i+1}
+            </div>`;
         }
     }
 
-    document.getElementById("lobbyPlayers").innerHTML=html;
+    document.getElementById(
+        "lobbyPlayers"
+    ).innerHTML=html;
 }
 
 
 /* =========================================================
-   DATOS ONLINE
+   ONLINE DATOS
 ========================================================= */
 
 function sendLobby(){
 
     if(!isHost)return;
 
-    const playerCount=Math.min(
-        MAX_PLAYERS,
-        1+connections.length
-    );
+    const count=
+        Math.min(
+            4,
+            1+connections.length
+        );
 
     connections.forEach(conn=>{
+
         try{
+
             conn.send({
                 type:"lobby",
-                count:playerCount,
+                count:count,
                 cpu:onlineModeCPU
             });
+
         }catch(e){}
+
     });
 
     updateLobbyUI();
@@ -725,33 +1013,28 @@ function sendLobby(){
 function handleHostData(conn,data){
 
     if(data.type==="join"){
+
         sendLobby();
         return;
     }
 
     if(data.type==="input"){
 
-        /*
-           Encontrar al jugador de esta conexión.
-           El jugador 0 es el host.
-        */
+        const index=
+            connections.indexOf(conn)+1;
 
-        const index=connections.indexOf(conn)+1;
+        if(
+            index>=1 &&
+            index<state.players.length
+        ){
 
-        if(index>=1 && index<state.players.length){
-
-            const p=state.players[index];
-
-            if(p){
-
-                p.input={
-                    up:!!data.up,
-                    down:!!data.down,
-                    left:!!data.left,
-                    right:!!data.right,
-                    attack:!!data.attack
-                };
-            }
+            state.players[index].input={
+                up:!!data.up,
+                down:!!data.down,
+                left:!!data.left,
+                right:!!data.right,
+                attack:!!data.attack
+            };
         }
     }
 }
@@ -763,13 +1046,27 @@ function handleGuestData(data){
         onlineModeCPU=data.cpu;
 
         updateLobbyUI();
-        return;
+
     }
 
     if(data.type==="start"){
 
-        startGuestGame(data);
-        return;
+        state=data.state;
+
+        localPlayerIndex=data.index;
+
+        gameMode=
+            onlineModeCPU
+            ? "onlinecpu"
+            : "online";
+
+        gameRunning=true;
+
+        hideAllScreens();
+
+        document.getElementById(
+            "hud"
+        ).style.display="block";
     }
 
     if(data.type==="state"){
@@ -777,7 +1074,6 @@ function handleGuestData(data){
         state=data.state;
 
         updateHUD();
-        return;
     }
 
     if(data.type==="gameover"){
@@ -795,14 +1091,11 @@ function startOnlineBattle(){
 
     if(!isHost)return;
 
-    let humanCount=Math.min(
-        MAX_PLAYERS,
-        1+connections.length
-    );
-
-    /*
-       Crear jugadores humanos.
-    */
+    const humans=
+        Math.min(
+            4,
+            1+connections.length
+        );
 
     state={
         players:[],
@@ -811,104 +1104,55 @@ function startOnlineBattle(){
         tick:0
     };
 
-    for(let i=0;i<humanCount;i++){
+    /* jugadores humanos */
 
-        const p=createPlayer(i,false);
+    for(let i=0;i<humans;i++){
 
-        p.input={
-            up:false,
-            down:false,
-            left:false,
-            right:false,
-            attack:false
-        };
-
-        state.players.push(p);
+        state.players.push(
+            createPlayer(i,false)
+        );
     }
 
-    /*
-       ONLINE + CPU:
-       llenar hasta 4 jugadores con CPU.
-    */
+    /* CPU */
 
     if(onlineModeCPU){
 
-        while(state.players.length<MAX_PLAYERS){
+        while(
+            state.players.length<4
+        ){
 
-            const i=state.players.length;
+            const i=
+                state.players.length;
 
-            const p=createPlayer(i,true);
-
-            p.input={
-                up:false,
-                down:false,
-                left:false,
-                right:false,
-                attack:false
-            };
-
-            state.players.push(p);
+            state.players.push(
+                createPlayer(i,true)
+            );
         }
     }
 
-    /*
-       ONLINE normal:
-       solamente los jugadores conectados.
-    */
-
-    state.running=true;
-
-    localPlayerIndex=0;
-
     gameRunning=true;
     paused=false;
 
     hideAllScreens();
 
-    document.getElementById("hud").style.display="block";
+    document.getElementById(
+        "hud"
+    ).style.display="block";
 
-    /*
-       Avisar a los invitados.
-    */
+    connections.forEach(
+        (conn,index)=>{
 
-    connections.forEach((conn,index)=>{
+            try{
 
-        try{
+                conn.send({
+                    type:"start",
+                    state:state,
+                    index:index+1
+                });
 
-            conn.send({
-                type:"start",
-                state:state,
-                index:index+1
-            });
-
-        }catch(e){}
-
-    });
-
-    updateHUD();
-}
-
-
-/* =========================================================
-   JUEGO INVITADO
-========================================================= */
-
-function startGuestGame(data){
-
-    state=data.state;
-
-    localPlayerIndex=data.index;
-
-    gameMode=onlineModeCPU ?
-        "onlinecpu" :
-        "online";
-
-    gameRunning=true;
-    paused=false;
-
-    hideAllScreens();
-
-    document.getElementById("hud").style.display="block";
+            }catch(e){}
+        }
+    );
 
     updateHUD();
 }
@@ -918,34 +1162,55 @@ function startGuestGame(data){
    INPUT
 ========================================================= */
 
+window.addEventListener(
+    "keydown",
+    e=>{
+
+        keys[e.key.toLowerCase()]=true;
+
+        if(e.key==="Escape"){
+            togglePause();
+        }
+    }
+);
+
+window.addEventListener(
+    "keyup",
+    e=>{
+
+        keys[e.key.toLowerCase()]=false;
+    }
+);
+
 function getInput(){
 
-    return {
+    return{
+
         up:
-            keys["w"] ||
+            keys["w"]||
             keys["arrowup"],
 
         down:
-            keys["s"] ||
+            keys["s"]||
             keys["arrowdown"],
 
         left:
-            keys["a"] ||
+            keys["a"]||
             keys["arrowleft"],
 
         right:
-            keys["d"] ||
+            keys["d"]||
             keys["arrowright"],
 
         attack:
-            keys[" "] ||
+            keys[" "]||
             keys["enter"]
     };
 }
 
 
 /* =========================================================
-   MOVIMIENTO HUMANO
+   HUMANO
 ========================================================= */
 
 function updateHuman(p){
@@ -955,71 +1220,56 @@ function updateHuman(p){
     let input;
 
     if(gameMode==="solo"){
+
         input=getInput();
-    }
-    else if(gameMode==="online" || gameMode==="onlinecpu"){
 
-        if(isHost){
+    }else{
 
-            /*
-               Host:
-               jugador 0 usa teclado.
-               invitados usan p.input.
-            */
+        if(!isHost){
 
-            if(p.id===0){
-                input=getInput();
-            }else{
-                input=p.input || {
-                    up:false,
-                    down:false,
-                    left:false,
-                    right:false,
-                    attack:false
-                };
-            }
+            if(
+                p.id===localPlayerIndex
+            ){
 
-        }else{
-
-            /*
-               Los invitados mandan su input al host.
-            */
-
-            if(p.id===localPlayerIndex){
                 input=getInput();
 
                 if(hostConnection){
 
                     try{
+
                         hostConnection.send({
                             type:"input",
                             ...input
                         });
+
                     }catch(e){}
                 }
-
-                /*
-                   No simulamos movimiento del invitado.
-                */
-
-                return;
             }
 
             return;
+        }
+
+        if(p.id===0){
+
+            input=getInput();
+
+        }else{
+
+            input=p.input;
         }
     }
 
     let dx=0;
     let dy=0;
 
-    if(input.up)dy-=1;
-    if(input.down)dy+=1;
-    if(input.left)dx-=1;
-    if(input.right)dx+=1;
+    if(input.up)dy--;
+    if(input.down)dy++;
+    if(input.left)dx--;
+    if(input.right)dx++;
 
     const len=Math.hypot(dx,dy);
 
-    if(len>0){
+    if(len){
 
         dx/=len;
         dy/=len;
@@ -1031,89 +1281,100 @@ function updateHuman(p){
     p.vx*=.88;
     p.vy*=.88;
 
-    const maxSpeed=5;
+    const speed=Math.hypot(
+        p.vx,
+        p.vy
+    );
 
-    const speed=Math.hypot(p.vx,p.vy);
+    if(speed>5){
 
-    if(speed>maxSpeed){
+        p.vx=
+            p.vx/speed*5;
 
-        p.vx=p.vx/speed*maxSpeed;
-        p.vy=p.vy/speed*maxSpeed;
+        p.vy=
+            p.vy/speed*5;
     }
 
     p.x+=p.vx;
     p.y+=p.vy;
 
-    p.x=clamp(p.x,45,W-45);
-    p.y=clamp(p.y,45,H-45);
+    p.x=clamp(
+        p.x,
+        55,
+        W-55
+    );
 
-    if(input.attack && p.cooldown<=0){
+    p.y=clamp(
+        p.y,
+        55,
+        H-55
+    );
+
+    if(
+        input.attack &&
+        p.cooldown<=0
+    ){
 
         p.attack=true;
-        p.attackTimer=9;
+        p.attackTimer=10;
         p.cooldown=25;
     }
 }
 
 
 /* =========================================================
-   IA DE CPU
+   CPU
 ========================================================= */
 
 function updateCPU(p,index){
 
     if(!p.alive)return;
 
+    let target=null;
+    let best=Infinity;
+
     /*
-       REDUCCIÓN IMPORTANTE DEL BUG:
+       BUSCA A TODOS LOS ENEMIGOS.
 
-       El CPU busca a CUALQUIER otro jugador vivo.
-
-       No importa si es:
-       - humano
-       - CPU
-       - jugador invitado
-
-       Así los CPU también se atacan entre ellos.
+       Incluye otros CPU.
     */
 
-    let target=null;
-    let bestDistance=Infinity;
+    state.players.forEach(
+        (other,i)=>{
 
-    for(let i=0;i<state.players.length;i++){
+            if(i===index)return;
 
-        if(i===index)continue;
+            if(!other.alive)return;
 
-        const other=state.players[i];
+            const d=
+                distance(p,other);
 
-        if(!other.alive)continue;
+            if(d<best){
 
-        const d=distance(p,other);
-
-        if(d<bestDistance){
-
-            bestDistance=d;
-            target=other;
+                best=d;
+                target=other;
+            }
         }
-    }
-
-    p.target=target ? target.id : null;
+    );
 
     if(!target)return;
 
-    const dx=target.x-p.x;
-    const dy=target.y-p.y;
+    p.target=target.id;
 
-    const d=Math.hypot(dx,dy)||1;
+    const dx=
+        target.x-p.x;
+
+    const dy=
+        target.y-p.y;
+
+    const d=
+        Math.hypot(dx,dy)||1;
 
     const nx=dx/d;
     const ny=dy/d;
 
     /*
-       IA:
-       - lejos: se acerca
-       - cerca: se mueve alrededor
-       - muy cerca: ataca
+       ACERCARSE
     */
 
     if(d>75){
@@ -1124,21 +1385,16 @@ function updateCPU(p,index){
     }else{
 
         /*
-           Movimiento circular para que no se queden
-           quietos delante del enemigo.
+           GIRAR ALREDEDOR
         */
 
-        const sideX=-ny;
-        const sideY=nx;
+        const sx=-ny;
+        const sy=nx;
 
-        p.vx+=sideX*.42;
-        p.vy+=sideY*.42;
+        p.vx+=sx*.42;
+        p.vy+=sy*.42;
 
-        /*
-           Mantenerse cerca del objetivo.
-        */
-
-        if(d>65){
+        if(d>62){
 
             p.vx+=nx*.25;
             p.vy+=ny*.25;
@@ -1146,14 +1402,13 @@ function updateCPU(p,index){
     }
 
     /*
-       ATAQUE CPU
-
-       Ahora el ataque tiene un rango mayor que el
-       simple choque físico. Esto evita que los CPU
-       se queden girando sin hacerse daño.
+       ATAQUE
     */
 
-    if(d<=92 && p.cooldown<=0){
+    if(
+        d<95 &&
+        p.cooldown<=0
+    ){
 
         p.attack=true;
         p.attackTimer=10;
@@ -1163,26 +1418,40 @@ function updateCPU(p,index){
     p.vx*=.90;
     p.vy*=.90;
 
-    const maxSpeed=4.4;
+    const speed=
+        Math.hypot(
+            p.vx,
+            p.vy
+        );
 
-    const speed=Math.hypot(p.vx,p.vy);
+    if(speed>4.5){
 
-    if(speed>maxSpeed){
+        p.vx=
+            p.vx/speed*4.5;
 
-        p.vx=p.vx/speed*maxSpeed;
-        p.vy=p.vy/speed*maxSpeed;
+        p.vy=
+            p.vy/speed*4.5;
     }
 
     p.x+=p.vx;
     p.y+=p.vy;
 
-    p.x=clamp(p.x,45,W-45);
-    p.y=clamp(p.y,45,H-45);
+    p.x=clamp(
+        p.x,
+        55,
+        W-55
+    );
+
+    p.y=clamp(
+        p.y,
+        55,
+        H-55
+    );
 }
 
 
 /* =========================================================
-   ACTUALIZAR ATAQUES
+   TIMERS
 ========================================================= */
 
 function updateTimers(p){
@@ -1191,10 +1460,13 @@ function updateTimers(p){
         p.cooldown--;
     }
 
+    if(p.hitCooldown>0){
+        p.hitCooldown--;
+    }
+
     if(p.attackTimer>0){
 
         p.attackTimer--;
-
         p.attack=true;
 
     }else{
@@ -1205,12 +1477,13 @@ function updateTimers(p){
 
 
 /* =========================================================
-   ATAQUES Y COLISIONES
+   COLISIONES
 ========================================================= */
 
 function collisions(){
 
-    const players=state.players;
+    const players=
+        state.players;
 
     for(let i=0;i<players.length;i++){
 
@@ -1218,29 +1491,35 @@ function collisions(){
 
         if(!a.alive)continue;
 
-        for(let j=i+1;j<players.length;j++){
+        for(
+            let j=i+1;
+            j<players.length;
+            j++
+        ){
 
             const b=players[j];
 
             if(!b.alive)continue;
 
-            const dx=b.x-a.x;
-            const dy=b.y-a.y;
+            const dx=
+                b.x-a.x;
 
-            const d=Math.hypot(dx,dy)||1;
+            const dy=
+                b.y-a.y;
 
-            /*
-               Colisión física.
-            */
+            const d=
+                Math.hypot(dx,dy)||1;
 
-            const minDist=a.radius+b.radius;
+            const minDist=
+                a.radius+b.radius;
 
             if(d<minDist){
 
                 const nx=dx/d;
                 const ny=dy/d;
 
-                const overlap=minDist-d;
+                const overlap=
+                    minDist-d;
 
                 a.x-=nx*overlap*.5;
                 a.y-=ny*overlap*.5;
@@ -1248,37 +1527,38 @@ function collisions(){
                 b.x+=nx*overlap*.5;
                 b.y+=ny*overlap*.5;
 
-                const push=1.2;
+                a.vx-=nx*1.2;
+                a.vy-=ny*1.2;
 
-                a.vx-=nx*push;
-                a.vy-=ny*push;
-
-                b.vx+=nx*push;
-                b.vy+=ny*push;
+                b.vx+=nx*1.2;
+                b.vy+=ny*1.2;
             }
 
-            /*
-               ATAQUE A
+            const range=
+                a.radius+
+                b.radius+
+                35;
 
-               Importante:
-               no exige que estén exactamente chocando.
-            */
+            if(
+                a.attack &&
+                d<=range
+            ){
 
-            const attackRange =
-                a.radius+b.radius+35;
-
-            if(a.attack && d<=attackRange){
-
-                damagePlayer(b,a);
+                damagePlayer(
+                    b,
+                    a
+                );
             }
 
-            /*
-               ATAQUE B
-            */
+            if(
+                b.attack &&
+                d<=range
+            ){
 
-            if(b.attack && d<=attackRange){
-
-                damagePlayer(a,b);
+                damagePlayer(
+                    a,
+                    b
+                );
             }
         }
     }
@@ -1289,63 +1569,64 @@ function collisions(){
    DAÑO
 ========================================================= */
 
-function damagePlayer(target,attacker){
+function damagePlayer(
+    target,
+    attacker
+){
 
     if(!target.alive)return;
 
-    /*
-       Evitar daño exageradamente rápido.
-       Cada trompo tiene un pequeño cooldown
-       de contacto por ataque.
-    */
-
-    if(target.hitCooldown>0)return;
+    if(target.hitCooldown>0)
+        return;
 
     target.hitCooldown=10;
 
-    const damage=8;
-
-    target.life-=damage;
+    target.life-=8;
 
     /*
-       Empujón.
+       PARTÍCULAS DE IMPACTO
     */
 
-    const dx=target.x-attacker.x;
-    const dy=target.y-attacker.y;
+    for(let i=0;i<8;i++){
 
-    const d=Math.hypot(dx,dy)||1;
+        createParticle(
+            target.x,
+            target.y,
+            "hit"
+        );
+    }
 
-    target.vx+=(dx/d)*2.5;
-    target.vy+=(dy/d)*2.5;
+    const dx=
+        target.x-attacker.x;
+
+    const dy=
+        target.y-attacker.y;
+
+    const d=
+        Math.hypot(dx,dy)||1;
+
+    target.vx+=
+        dx/d*2.5;
+
+    target.vy+=
+        dy/d*2.5;
 
     if(target.life<=0){
 
         target.life=0;
+
         target.alive=false;
 
         target.vx=0;
         target.vy=0;
 
         target.attack=false;
-
-        /*
-           MUY IMPORTANTE:
-
-           Aquí NO detenemos el juego.
-
-           Si muere el humano:
-           los CPU siguen peleando.
-
-           Solo se comprueba si queda un único
-           jugador vivo.
-        */
     }
 }
 
 
 /* =========================================================
-   ACTUALIZAR JUEGO
+   UPDATE
 ========================================================= */
 
 function updateGame(){
@@ -1354,57 +1635,45 @@ function updateGame(){
     if(paused)return;
 
     /*
-       En ONLINE el HOST es quien ejecuta
-       la simulación completa.
+       El invitado no simula.
     */
 
-    if(gameMode==="online" || gameMode==="onlinecpu"){
+    if(
+        gameMode==="online"||
+        gameMode==="onlinecpu"
+    ){
 
-        if(!isHost){
-
-            /*
-               El invitado solamente envía controles.
-            */
-
-            return;
-        }
+        if(!isHost)return;
     }
 
     state.tick++;
 
-    for(let i=0;i<state.players.length;i++){
+    state.players.forEach(
+        (p,i)=>{
 
-        const p=state.players[i];
+            updateTimers(p);
 
-        if(p.hitCooldown>0){
-            p.hitCooldown--;
+            if(!p.alive)return;
+
+            if(p.cpu){
+
+                updateCPU(p,i);
+
+            }else{
+
+                updateHuman(p);
+            }
         }
-
-        updateTimers(p);
-
-        if(!p.alive)continue;
-
-        if(p.cpu){
-
-            updateCPU(p,i);
-
-        }else{
-
-            updateHuman(p);
-        }
-    }
+    );
 
     collisions();
 
+    updateParticles();
+
     checkWinner();
 
-    /*
-       ONLINE:
-       mandar estado a todos los invitados.
-    */
-
     if(
-        gameMode==="online" ||
+        gameMode==="online"||
         gameMode==="onlinecpu"
     ){
 
@@ -1419,34 +1688,31 @@ function updateGame(){
 
 function checkWinner(){
 
-    if(!state.running)return;
-
-    const alive=state.players.filter(p=>p.alive);
-
-    /*
-       La partida solamente termina cuando
-       queda UN trompo.
-    */
+    const alive=
+        state.players.filter(
+            p=>p.alive
+        );
 
     if(alive.length<=1){
 
         state.running=false;
         gameRunning=false;
 
-        const winner=alive.length===1 ?
-            alive[0] :
-            null;
-
-        state.winner=winner ? winner.id : null;
+        state.winner=
+            alive.length
+            ? alive[0].id
+            : null;
 
         if(
-            gameMode==="online" ||
-            gameMode==="onlinecpu"
+            isHost &&
+            (
+                gameMode==="online"||
+                gameMode==="onlinecpu"
+            )
         ){
 
-            if(isHost){
-
-                connections.forEach(conn=>{
+            connections.forEach(
+                conn=>{
 
                     try{
 
@@ -1456,36 +1722,38 @@ function checkWinner(){
                         });
 
                     }catch(e){}
-                });
-
-            }
-
+                }
+            );
         }
 
-        showGameOver(state.winner);
+        showGameOver(
+            state.winner
+        );
     }
 }
 
 
 /* =========================================================
-   ONLINE STATE
+   BROADCAST
 ========================================================= */
 
 function broadcastState(){
 
     if(!isHost)return;
 
-    connections.forEach(conn=>{
+    connections.forEach(
+        conn=>{
 
-        try{
+            try{
 
-            conn.send({
-                type:"state",
-                state:state
-            });
+                conn.send({
+                    type:"state",
+                    state:state
+                });
 
-        }catch(e){}
-    });
+            }catch(e){}
+        }
+    );
 }
 
 
@@ -1495,35 +1763,54 @@ function broadcastState(){
 
 function updateHUD(){
 
-    if(!state.players.length)return;
+    if(!state.players.length)
+        return;
 
-    const me=state.players[localPlayerIndex];
+    const me=
+        state.players[
+            localPlayerIndex
+        ];
 
     if(me){
 
-        document.getElementById("myLife").textContent =
+        document.getElementById(
+            "myLife"
+        ).textContent=
             Math.ceil(me.life);
     }
 
-    const alive=state.players.filter(p=>p.alive).length;
+    const alive=
+        state.players.filter(
+            p=>p.alive
+        ).length;
 
-    document.getElementById("aliveCount").textContent =
-        alive;
+    document.getElementById(
+        "aliveCount"
+    ).textContent=alive;
 
     let html="";
 
-    state.players.forEach((p,i)=>{
+    state.players.forEach(
+        p=>{
 
-        html+=`
-            <div class="playerLine ${p.alive?"":"dead"}">
-                ${p.symbol} ${p.name}
+            html+=`
+            <div class="playerLine
+                ${p.alive?"":"dead"}">
+
+                ${p.symbol}
+                ${p.name}
+
                 ${p.cpu?"🤖":""}
-                ❤️ ${Math.ceil(p.life)}
-            </div>
-        `;
-    });
 
-    document.getElementById("playersHUD").innerHTML=html;
+                ❤️ ${Math.ceil(p.life)}
+
+            </div>`;
+        }
+    );
+
+    document.getElementById(
+        "playersHUD"
+    ).innerHTML=html;
 }
 
 
@@ -1531,23 +1818,25 @@ function updateHUD(){
    GAME OVER
 ========================================================= */
 
-function showGameOver(winnerId){
+function showGameOver(id){
 
     hideAllScreens();
 
-    document.getElementById("gameOver").style.display="flex";
+    document.getElementById(
+        "gameOver"
+    ).style.display="flex";
 
-    let winner=state.players.find(p=>p.id===winnerId);
+    const winner=
+        state.players.find(
+            p=>p.id===id
+        );
 
-    if(winner){
-
-        document.getElementById("winnerText").textContent =
-            `${winner.symbol} ${winner.name} GANÓ`;
-    }else{
-
-        document.getElementById("winnerText").textContent =
-            "NO HAY GANADOR";
-    }
+    document.getElementById(
+        "winnerText"
+    ).textContent=
+        winner
+        ? `${winner.symbol} ${winner.name} GANÓ`
+        : "NO HAY GANADOR";
 }
 
 function restartCurrentMode(){
@@ -1560,9 +1849,14 @@ function restartCurrentMode(){
 
         backToMenu();
 
-        setTimeout(()=>{
-            openOnline(onlineModeCPU);
-        },50);
+        setTimeout(
+            ()=>{
+                openOnline(
+                    onlineModeCPU
+                );
+            },
+            100
+        );
     }
 }
 
@@ -1577,85 +1871,379 @@ function togglePause(){
 
     paused=!paused;
 
-    if(paused){
-
-        document.getElementById("pauseScreen").style.display="flex";
-
-    }else{
-
-        document.getElementById("pauseScreen").style.display="none";
-    }
+    document.getElementById(
+        "pauseScreen"
+    ).style.display=
+        paused
+        ? "flex"
+        : "none";
 }
 
 
 /* =========================================================
-   DIBUJO DEL MAPA
+   ARENA NUEVA
 ========================================================= */
 
 function drawArena(){
 
-    ctx.fillStyle="#162219";
-    ctx.fillRect(0,0,W,H);
-
     /*
-       Césped.
+       FONDO PROFUNDO
     */
 
-    ctx.fillStyle="#1b3020";
-    ctx.fillRect(25,25,W-50,H-50);
+    const bg=
+        ctx.createLinearGradient(
+            0,0,
+            0,H
+        );
+
+    bg.addColorStop(
+        0,
+        "#071b32"
+    );
+
+    bg.addColorStop(
+        .5,
+        "#0b3a29"
+    );
+
+    bg.addColorStop(
+        1,
+        "#04140e"
+    );
+
+    ctx.fillStyle=bg;
+
+    ctx.fillRect(
+        0,0,W,H
+    );
+
 
     /*
-       Líneas decorativas.
+       TEXTURA DEL CÉSPED
     */
 
-    ctx.strokeStyle="rgba(255,255,255,.05)";
-    ctx.lineWidth=2;
+    ctx.save();
 
-    for(let x=40;x<W;x+=50){
+    for(
+        let x=0;
+        x<W;
+        x+=18
+    ){
 
-        ctx.beginPath();
-        ctx.moveTo(x,30);
-        ctx.lineTo(x,H-30);
-        ctx.stroke();
+        for(
+            let y=0;
+            y<H;
+            y+=18
+        ){
+
+            const n=
+                Math.sin(
+                    x*.13+
+                    y*.07
+                );
+
+            ctx.fillStyle=
+                n>0
+                ? "rgba(80,180,75,.035)"
+                : "rgba(0,0,0,.04)";
+
+            ctx.fillRect(
+                x,
+                y,
+                14,
+                14
+            );
+        }
     }
 
-    for(let y=40;y<H;y+=50){
+    ctx.restore();
 
-        ctx.beginPath();
-        ctx.moveTo(30,y);
-        ctx.lineTo(W-30,y);
-        ctx.stroke();
-    }
 
     /*
-       Arena central.
+       BORDE DE ARENA
+    */
+
+    ctx.fillStyle="#08130e";
+
+    ctx.fillRect(
+        18,
+        18,
+        W-36,
+        H-36
+    );
+
+
+    /*
+       CÍRCULO CENTRAL
     */
 
     const cx=W/2;
     const cy=H/2;
 
-    const radius=Math.min(W,H)*.38;
+    const radius=
+        Math.min(W,H)*.39;
 
-    ctx.beginPath();
-    ctx.arc(cx,cy,radius,0,Math.PI*2);
-
-    ctx.fillStyle="#263a29";
-    ctx.fill();
-
-    ctx.strokeStyle="#687d5d";
-    ctx.lineWidth=6;
-    ctx.stroke();
 
     /*
-       Círculo interior.
+       RESPLANDOR
+    */
+
+    const glow=
+        ctx.createRadialGradient(
+            cx,
+            cy,
+            radius*.2,
+            cx,
+            cy,
+            radius*1.1
+        );
+
+    glow.addColorStop(
+        0,
+        "rgba(40,190,255,.13)"
+    );
+
+    glow.addColorStop(
+        1,
+        "rgba(0,0,0,0)"
+    );
+
+    ctx.fillStyle=glow;
+
+    ctx.fillRect(
+        0,
+        0,
+        W,
+        H
+    );
+
+
+    /*
+       ARENA
+    */
+
+    const arena=
+        ctx.createRadialGradient(
+            cx-radius*.2,
+            cy-radius*.2,
+            radius*.05,
+            cx,
+            cy,
+            radius
+        );
+
+    arena.addColorStop(
+        0,
+        "#477e3f"
+    );
+
+    arena.addColorStop(
+        .5,
+        "#285c35"
+    );
+
+    arena.addColorStop(
+        1,
+        "#102f24"
+    );
+
+    ctx.beginPath();
+
+    ctx.arc(
+        cx,
+        cy,
+        radius,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle=arena;
+    ctx.fill();
+
+
+    /*
+       TEXTURA CIRCULAR
+    */
+
+    ctx.save();
+
+    ctx.beginPath();
+
+    ctx.arc(
+        cx,
+        cy,
+        radius-5,
+        0,
+        Math.PI*2
+    );
+
+    ctx.clip();
+
+    for(
+        let r=70;
+        r<radius;
+        r+=38
+    ){
+
+        ctx.beginPath();
+
+        ctx.arc(
+            cx,
+            cy,
+            r,
+            0,
+            Math.PI*2
+        );
+
+        ctx.strokeStyle=
+            "rgba(160,230,130,.07)";
+
+        ctx.lineWidth=3;
+
+        ctx.stroke();
+    }
+
+    ctx.restore();
+
+
+    /*
+       BORDE EXTERIOR BRILLANTE
     */
 
     ctx.beginPath();
-    ctx.arc(cx,cy,radius*.72,0,Math.PI*2);
 
-    ctx.strokeStyle="rgba(255,255,255,.10)";
-    ctx.lineWidth=3;
+    ctx.arc(
+        cx,
+        cy,
+        radius,
+        0,
+        Math.PI*2
+    );
+
+    ctx.strokeStyle="#77e65c";
+    ctx.lineWidth=7;
+
+    ctx.shadowColor="#39ff7c";
+    ctx.shadowBlur=18;
+
     ctx.stroke();
+
+    ctx.shadowBlur=0;
+
+
+    /*
+       ANILLO INTERIOR
+    */
+
+    ctx.beginPath();
+
+    ctx.arc(
+        cx,
+        cy,
+        radius*.72,
+        0,
+        Math.PI*2
+    );
+
+    ctx.strokeStyle=
+        "rgba(120,220,255,.22)";
+
+    ctx.lineWidth=4;
+
+    ctx.stroke();
+
+
+    /*
+       CENTRO DE BATALLA
+    */
+
+    const center=
+        ctx.createRadialGradient(
+            cx,
+            cy,
+            2,
+            cx,
+            cy,
+            radius*.18
+        );
+
+    center.addColorStop(
+        0,
+        "#ffffff"
+    );
+
+    center.addColorStop(
+        .25,
+        "#66dfff"
+    );
+
+    center.addColorStop(
+        1,
+        "rgba(40,120,180,0)"
+    );
+
+    ctx.beginPath();
+
+    ctx.arc(
+        cx,
+        cy,
+        radius*.17,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle=center;
+    ctx.fill();
+
+
+    /*
+       MARCAS DECORATIVAS
+    */
+
+    ctx.strokeStyle=
+        "rgba(255,255,255,.13)";
+
+    ctx.lineWidth=2;
+
+    for(let i=0;i<12;i++){
+
+        const a=
+            i*Math.PI/6;
+
+        const x1=
+            cx+
+            Math.cos(a)*
+            radius*.75;
+
+        const y1=
+            cy+
+            Math.sin(a)*
+            radius*.75;
+
+        const x2=
+            cx+
+            Math.cos(a)*
+            radius*.88;
+
+        const y2=
+            cy+
+            Math.sin(a)*
+            radius*.88;
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            x1,
+            y1
+        );
+
+        ctx.lineTo(
+            x2,
+            y2
+        );
+
+        ctx.stroke();
+    }
 }
 
 
@@ -1666,162 +2254,405 @@ function drawArena(){
 function drawPlayer(p){
 
     /*
-       Sombra.
+       SOMBRA
     */
 
     ctx.beginPath();
+
     ctx.ellipse(
-        p.x+4,
-        p.y+7,
-        p.radius*.9,
-        p.radius*.45,
+        p.x+5,
+        p.y+9,
+        p.radius*1.05,
+        p.radius*.48,
         0,
         0,
         Math.PI*2
     );
 
-    ctx.fillStyle="rgba(0,0,0,.35)";
+    ctx.fillStyle=
+        "rgba(0,0,0,.42)";
+
     ctx.fill();
 
+
     /*
-       Trompo.
+       AURA
     */
+
+    if(p.attack){
+
+        const glow=
+            ctx.createRadialGradient(
+                p.x,
+                p.y,
+                p.radius*.5,
+                p.x,
+                p.y,
+                p.radius*2
+            );
+
+        glow.addColorStop(
+            0,
+            "rgba(255,240,70,.25)"
+        );
+
+        glow.addColorStop(
+            1,
+            "rgba(255,200,0,0)"
+        );
+
+        ctx.beginPath();
+
+        ctx.arc(
+            p.x,
+            p.y,
+            p.radius*2,
+            0,
+            Math.PI*2
+        );
+
+        ctx.fillStyle=glow;
+        ctx.fill();
+    }
+
 
     ctx.save();
 
-    ctx.translate(p.x,p.y);
+    ctx.translate(
+        p.x,
+        p.y
+    );
 
-    p.angle+=.15;
+    p.angle+=
+        p.attack
+        ? .30
+        : .15;
 
     ctx.rotate(p.angle);
 
-    const gradient=ctx.createRadialGradient(
-        -8,-8,3,
-        0,0,p.radius
-    );
-
-    gradient.addColorStop(0,"#ffffff");
-    gradient.addColorStop(.2,
-        p.id===0 ? "#e63946" :
-        p.id===1 ? "#2196f3" :
-        p.id===2 ? "#ffc107" :
-        "#9c27b0"
-    );
-    gradient.addColorStop(1,"#111");
-
-    ctx.beginPath();
-    ctx.arc(0,0,p.radius,0,Math.PI*2);
-
-    ctx.fillStyle=gradient;
-    ctx.fill();
-
-    ctx.strokeStyle="#ddd";
-    ctx.lineWidth=2;
-    ctx.stroke();
 
     /*
-       Diseño del trompo.
+       COLORES
+    */
+
+    const colors=[
+        ["#ff5a62","#7d071c"],
+        ["#55eaff","#0754a6"],
+        ["#ffe44e","#b34d00"],
+        ["#e477ff","#49107d"]
+    ];
+
+    const c=
+        colors[p.id%4];
+
+
+    /*
+       RESPLANDOR
     */
 
     ctx.beginPath();
+
+    ctx.arc(
+        0,
+        0,
+        p.radius+4,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle=
+        p.attack
+        ? "rgba(255,225,50,.18)"
+        : "rgba(80,210,255,.06)";
+
+    ctx.fill();
+
+
+    /*
+       TROMPO PRINCIPAL
+    */
+
+    const gradient=
+        ctx.createRadialGradient(
+            -9,
+            -10,
+            3,
+            0,
+            0,
+            p.radius
+        );
+
+    gradient.addColorStop(
+        0,
+        "#ffffff"
+    );
+
+    gradient.addColorStop(
+        .18,
+        c[0]
+    );
+
+    gradient.addColorStop(
+        1,
+        c[1]
+    );
+
+
+    ctx.beginPath();
+
+    ctx.arc(
+        0,
+        0,
+        p.radius,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle=gradient;
+
+    ctx.fill();
+
+
+    /*
+       BORDE METÁLICO
+    */
+
+    ctx.strokeStyle="#ffffff";
+    ctx.lineWidth=2;
+
+    ctx.stroke();
+
+
+    /*
+       DISEÑO DE ASPAS
+    */
 
     for(let i=0;i<8;i++){
 
-        const a=i*Math.PI/4;
+        const a=
+            i*Math.PI/4;
 
-        ctx.lineTo(
-            Math.cos(a)*p.radius,
-            Math.sin(a)*p.radius
+        ctx.save();
+
+        ctx.rotate(a);
+
+        ctx.beginPath();
+
+        ctx.moveTo(
+            0,
+            -4
         );
 
         ctx.lineTo(
-            Math.cos(a+.18)*p.radius*.4,
-            Math.sin(a+.18)*p.radius*.4
+            p.radius*.82,
+            -5
         );
+
+        ctx.lineTo(
+            p.radius*.52,
+            5
+        );
+
+        ctx.lineTo(
+            0,
+            3
+        );
+
+        ctx.closePath();
+
+        ctx.fillStyle=
+            i%2===0
+            ? "rgba(255,255,255,.28)"
+            : "rgba(0,0,0,.18)";
+
+        ctx.fill();
+
+        ctx.restore();
     }
 
-    ctx.closePath();
-
-    ctx.strokeStyle="rgba(255,255,255,.6)";
-    ctx.lineWidth=2;
-    ctx.stroke();
 
     /*
-       Centro.
+       ANILLO
     */
 
     ctx.beginPath();
-    ctx.arc(0,0,7,0,Math.PI*2);
 
-    ctx.fillStyle="#eee";
+    ctx.arc(
+        0,
+        0,
+        p.radius*.56,
+        0,
+        Math.PI*2
+    );
+
+    ctx.strokeStyle=
+        "rgba(255,255,255,.75)";
+
+    ctx.lineWidth=3;
+
+    ctx.stroke();
+
+
+    /*
+       CENTRO
+    */
+
+    const core=
+        ctx.createRadialGradient(
+            -3,
+            -3,
+            1,
+            0,
+            0,
+            9
+        );
+
+    core.addColorStop(
+        0,
+        "#ffffff"
+    );
+
+    core.addColorStop(
+        .35,
+        "#bcefff"
+    );
+
+    core.addColorStop(
+        1,
+        "#183d65"
+    );
+
+    ctx.beginPath();
+
+    ctx.arc(
+        0,
+        0,
+        9,
+        0,
+        Math.PI*2
+    );
+
+    ctx.fillStyle=core;
+
     ctx.fill();
+
+    ctx.strokeStyle="#fff";
+    ctx.lineWidth=2;
+
+    ctx.stroke();
+
 
     ctx.restore();
 
+
     /*
-       Barra de vida.
+       BARRA DE VIDA
     */
 
-    const barWidth=60;
+    const barWidth=68;
     const barHeight=7;
 
-    const lifePercent=
-        Math.max(0,p.life/p.maxLife);
+    const percent=
+        Math.max(
+            0,
+            p.life/p.maxLife
+        );
 
-    ctx.fillStyle="#111";
+    ctx.fillStyle=
+        "rgba(0,0,0,.7)";
 
     ctx.fillRect(
         p.x-barWidth/2,
-        p.y-p.radius-16,
+        p.y-p.radius-18,
         barWidth,
         barHeight
     );
 
-    ctx.fillStyle=
-        lifePercent>.5 ? "#37d65b" :
-        lifePercent>.25 ? "#ffc107" :
-        "#e53935";
+    const lifeGradient=
+        ctx.createLinearGradient(
+            p.x-barWidth/2,
+            0,
+            p.x+barWidth/2,
+            0
+        );
+
+    lifeGradient.addColorStop(
+        0,
+        "#ff304f"
+    );
+
+    lifeGradient.addColorStop(
+        .5,
+        "#ffe84c"
+    );
+
+    lifeGradient.addColorStop(
+        1,
+        "#43ff79"
+    );
+
+    ctx.fillStyle=lifeGradient;
 
     ctx.fillRect(
         p.x-barWidth/2,
-        p.y-p.radius-16,
-        barWidth*lifePercent,
+        p.y-p.radius-18,
+        barWidth*percent,
         barHeight
     );
 
+
     /*
-       Nombre.
+       NOMBRE
     */
 
-    ctx.font="bold 12px Arial";
+    ctx.font=
+        "bold 12px Arial";
+
     ctx.textAlign="center";
 
-    ctx.fillStyle="white";
+    ctx.fillStyle="#ffffff";
+
+    ctx.shadowColor="#000";
+    ctx.shadowBlur=5;
 
     ctx.fillText(
         p.name,
         p.x,
-        p.y+p.radius+18
+        p.y+p.radius+20
     );
 
+    ctx.shadowBlur=0;
+
+
     /*
-       Indicador de ataque.
+       ATAQUE
     */
 
     if(p.attack){
 
         ctx.beginPath();
+
         ctx.arc(
             p.x,
             p.y,
-            p.radius+10,
+            p.radius+11+
+            Math.sin(
+                state.tick*.3
+            )*3,
             0,
             Math.PI*2
         );
 
-        ctx.strokeStyle="#ffdf00";
+        ctx.strokeStyle="#ffe329";
+
         ctx.lineWidth=4;
+
+        ctx.shadowColor="#ffb300";
+        ctx.shadowBlur=15;
+
         ctx.stroke();
+
+        ctx.shadowBlur=0;
     }
 }
 
@@ -1834,20 +2665,21 @@ function draw(){
 
     drawArena();
 
-    if(state.players){
-
-        state.players.forEach(p=>{
+    state.players.forEach(
+        p=>{
 
             if(p.alive){
                 drawPlayer(p);
             }
-        });
-    }
+        }
+    );
+
+    drawParticles();
 }
 
 
 /* =========================================================
-   LOOP PRINCIPAL
+   LOOP
 ========================================================= */
 
 function loop(){
@@ -1865,93 +2697,77 @@ loop();
 
 
 /* =========================================================
-   BOTÓN ATAQUE PARA CELULAR
-========================================================= */
-
-let touchAttack=false;
-
-canvas.addEventListener("touchstart",e=>{
-
-    e.preventDefault();
-
-    if(gameRunning){
-
-        touchAttack=true;
-
-        if(gameMode==="solo"){
-
-            keys[" "]=true;
-
-        }else{
-
-            keys[" "]=true;
-        }
-    }
-
-},{passive:false});
-
-canvas.addEventListener("touchend",e=>{
-
-    e.preventDefault();
-
-    touchAttack=false;
-    keys[" "]=false;
-
-},{passive:false});
-
-
-/* =========================================================
-   CONTROLES TÁCTILES BÁSICOS
+   CELULAR
 ========================================================= */
 
 let touchStartX=0;
 let touchStartY=0;
 
-canvas.addEventListener("touchstart",e=>{
+canvas.addEventListener(
+    "touchstart",
+    e=>{
 
-    const t=e.touches[0];
+        const t=e.touches[0];
 
-    touchStartX=t.clientX;
-    touchStartY=t.clientY;
+        touchStartX=t.clientX;
+        touchStartY=t.clientY;
 
-},{passive:true});
+        keys[" "] = true;
 
-canvas.addEventListener("touchmove",e=>{
+    },
+    {passive:true}
+);
 
-    if(!gameRunning)return;
+canvas.addEventListener(
+    "touchmove",
+    e=>{
 
-    const t=e.touches[0];
+        if(!gameRunning)return;
 
-    const dx=t.clientX-touchStartX;
-    const dy=t.clientY-touchStartY;
+        const t=e.touches[0];
 
-    keys["arrowup"]=dy<-25;
-    keys["arrowdown"]=dy>25;
-    keys["arrowleft"]=dx<-25;
-    keys["arrowright"]=dx>25;
+        const dx=
+            t.clientX-touchStartX;
 
-},{passive:true});
+        const dy=
+            t.clientY-touchStartY;
 
-canvas.addEventListener("touchend",()=>{
+        keys["arrowup"]=
+            dy<-25;
 
-    keys["arrowup"]=false;
-    keys["arrowdown"]=false;
-    keys["arrowleft"]=false;
-    keys["arrowright"]=false;
+        keys["arrowdown"]=
+            dy>25;
 
-});
+        keys["arrowleft"]=
+            dx<-25;
 
+        keys["arrowright"]=
+            dx>25;
 
-/* =========================================================
-   EVITAR MENÚ CONTEXTUAL
-========================================================= */
+    },
+    {passive:true}
+);
 
-canvas.addEventListener("contextmenu",e=>{
-    e.preventDefault();
-});
+canvas.addEventListener(
+    "touchend",
+    ()=>{
+
+        keys["arrowup"]=false;
+        keys["arrowdown"]=false;
+        keys["arrowleft"]=false;
+        keys["arrowright"]=false;
+
+        keys[" "]=false;
+
+    }
+);
+
+canvas.addEventListener(
+    "contextmenu",
+    e=>e.preventDefault()
+);
 
 </script>
 
 </body>
 </html>
-
