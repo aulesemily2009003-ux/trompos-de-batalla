@@ -960,16 +960,17 @@ players=incoming;
 /* Si el anfitrión ya marcó a alguien como eliminado, el invitado
    también termina la partida aunque el mensaje "result" se pierda. */
 if(data.gameOver){
-  finalizarPartidaRemota(data.title,data.text,data.winnerId);
+  /* El resultado SIEMPRE depende del ID real del ganador, nunca del nombre.
+     Esto funciona igual aunque entren jugadores llamados Emily, Eliana, Eva, etc. */
+  let ganadorId=data.winnerId||null;
+  finalizarPartidaRemota(null,null,ganadorId);
   return;
 }
 
 let vivos=Object.values(players).filter(function(p){return p.alive;});
 if(Object.keys(players).length>1 && vivos.length<=1){
   let ganador=vivos[0]||null;
-  let titulo=ganador&&ganador.id===myId?"🏆 ¡GANASTE!":"💥 PERDISTE";
-  let texto=ganador?ganador.name+" ganó la batalla.":"Todos los Beyblade fueron eliminados.";
-  finalizarPartidaRemota(titulo,texto,ganador?ganador.id:null);
+  finalizarPartidaRemota(null,null,ganador?ganador.id:null);
 }
 
 return;
@@ -978,7 +979,7 @@ return;
 
 if(data.type==="result"){
 
-finalizarPartidaRemota(data.title,data.text,data.winnerId);
+finalizarPartidaRemota(null,null,data.winnerId||null);
 return;
 
 }
@@ -986,6 +987,20 @@ return;
 }
 
 function finalizarPartidaRemota(title,text,winnerId){
+
+/* El ganador se determina ÚNICAMENTE por su ID de jugador.
+   El nombre solo se usa para mostrarlo, nunca para decidir quién ganó. */
+let winner=winnerId ? players[winnerId] : null;
+if(winnerId && myId===winnerId){
+  title="🏆 ¡GANASTE!";
+  text="Tu Beyblade quedó como el último en la arena.";
+}else if(winnerId){
+  title="💥 PERDISTE";
+  text=(winner&&winner.name ? winner.name : "Otro jugador")+" ganó la batalla.";
+}else{
+  title="💥 EMPATE";
+  text="Todos los Beyblade fueron eliminados.";
+}
 
 /* Detener TODO en el cliente invitado. */
 playing=false;
@@ -1002,7 +1017,7 @@ if(knob){
   knob.style.top="50%";
 }
 
-showResult(title||"FIN DE LA PARTIDA",text||"La batalla terminó.");
+showResult(title,text);
 
 }
 
