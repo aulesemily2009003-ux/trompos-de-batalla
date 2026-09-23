@@ -1059,6 +1059,47 @@ function startOnline(){
 return iniciarPartidaAhora();
 }
 
+
+
+function enviarInputMovil(x,y,attack){
+
+if(host || !conn || !conn.open || !playing)return;
+
+try{
+conn.send({
+type:"input",
+x:x,
+y:y,
+attack:!!attack
+});
+}catch(e){}
+
+}
+
+function enviarInputRemoto(){
+
+if(host || !conn || !conn.open || !playing)return;
+
+let x=0,y=0;
+
+if(keys["a"]||keys["arrowleft"])x-=1;
+if(keys["d"]||keys["arrowright"])x+=1;
+if(keys["w"]||keys["arrowup"])y-=1;
+if(keys["s"]||keys["arrowdown"])y+=1;
+
+let l=Math.hypot(x,y)||1;
+
+try{
+conn.send({
+type:"input",
+x:x/l,
+y:y/l,
+attack:!!keys[" "] || !!keys["spacebar"]
+});
+}catch(e){}
+
+}
+
 function startLocal(){
 
 playing=true;
@@ -1530,11 +1571,42 @@ target.alive=false;
 
 }
 
+
+function actualizarJugadorRemoto(p,dt){
+
+if(!p || !p.alive)return;
+
+let x=Number(p.inputX)||0;
+let y=Number(p.inputY)||0;
+let l=Math.hypot(x,y)||1;
+
+if(x!==0||y!==0){
+
+x/=l;
+y/=l;
+
+move(p,x,y,dt);
+
+}
+
+}
+
 function update(dt){
 
 if(!playing||ended)return;
 
 if(host){
+
+/* El host controla también los jugadores que entraron. */
+Object.values(players).forEach(function(p){
+
+if(p.id!==myId && !p.cpu){
+actualizarJugadorRemoto(p,dt);
+}
+
+});
+
+
 
 let me=players[myId];
 
@@ -1969,6 +2041,38 @@ e.preventDefault();
 
 
 
+
+
+setInterval(function(){
+enviarInputRemoto();
+},50);
+
+
+/* Puente de controles móviles para jugadores invitados. */
+["joystick","joystickBase","stick","moveStick"].forEach(function(id){
+
+let el=document.getElementById(id);
+
+if(!el)return;
+
+["touchmove","pointermove"].forEach(function(ev){
+
+el.addEventListener(ev,function(e){
+
+if(host||!playing)return;
+
+/* El código existente puede actualizar sus variables; este envío usa
+   las variables globales si existen. */
+let x=Number(window.joyX||window.joystickX||0);
+let y=Number(window.joyY||window.joystickY||0);
+
+if(x||y)enviarInputMovil(x,y,false);
+
+});
+
+});
+
+});
 
 </script>
 
