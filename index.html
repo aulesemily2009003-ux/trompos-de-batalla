@@ -4,30 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
 <title>GUERRA BEYBLADE</title>
-<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js">
-setInterval(function(){
-
-if(host && playing){
-broadcastGameState();
-}
-
-},50);
-
-
-let startButton=document.getElementById("start");
-
-if(startButton){
-
-startButton.addEventListener("click",function(e){
-
-e.preventDefault();
-startOnline();
-
-});
-
-}
-
-</script>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;width:100%;height:100%;overflow:hidden;font-family:Arial,sans-serif;background:#050510;color:white}
@@ -374,6 +351,7 @@ let dpr=1;
 let peer=null;
 let conn=null;
 let host=false;
+let roomConnections=[];
 
 let roomCode="";
 let myId="";
@@ -502,6 +480,8 @@ show("lobby");
 
 peer.on("connection",function(c){
 
+roomConnections.push(c);
+
 // IMPORTANTE: escuchar DATA inmediatamente.
 // El jugador visitante manda "join" al abrir su conexión.
 c.on("data",function(data){
@@ -509,6 +489,7 @@ hostMessage(c,data);
 });
 
 c.on("close",function(){
+roomConnections=roomConnections.filter(function(x){return x!==c;});
 connectionClosed(c);
 });
 
@@ -920,7 +901,6 @@ myId=data.myId||myId;
 startLocal();
 
 return;
-
 }
 
 if(data.type==="state"){
@@ -977,7 +957,14 @@ document.getElementById("start").classList.add("hidden");
 
 function startOnline(){
 
-if(!host)return;
+if(!host){
+
+document.getElementById("lobbyStatus").textContent=
+"Solo el ANFITRIÓN puede iniciar la partida.";
+
+return;
+
+}
 
 let count=Object.keys(players).length;
 
@@ -990,14 +977,7 @@ return;
 
 }
 
-/*
- El anfitrión prepara la partida y manda a TODOS los invitados
- la orden de comenzar. El jugador invitado conserva su propio
- myId, así ambos pueden controlar su propio trompo.
-*/
-
-players=copyPlayers();
-
+/* Preparar todos los jugadores. */
 Object.values(players).forEach(function(p,i){
 
 p.hp=100;
@@ -1017,19 +997,26 @@ p.y=120+Math.random()*Math.max(100,H-240);
 
 });
 
+/* El host empieza con la misma lista que enviará a los invitados. */
 playing=true;
 ended=false;
 
-/* Avisar a cada jugador que la partida empieza. */
-roomConnections.forEach(function(c){
+let state=copyPlayers();
 
-if(c && c.open && c.playerId){
+/* Enviar START usando peer.connections, que es la conexión real. */
+if(peer){
+
+peer.connections.forEach(function(list){
+
+list.forEach(function(c){
+
+if(c && c.open){
 
 try{
 
 c.send({
 type:"start",
-players:copyPlayers(),
+players:state,
 myId:c.playerId
 });
 
@@ -1039,7 +1026,10 @@ myId:c.playerId
 
 });
 
-/* El anfitrión también empieza localmente. */
+});
+
+}
+
 show("game");
 startCountdown();
 
@@ -1056,10 +1046,10 @@ document.getElementById("result").style.display="none";
 
 show("game");
 
-countdown();
+/* Ambos clientes ejecutan su propia cuenta regresiva al recibir START. */
+startCountdown();
 
 }
-
 function startCountdown(){
 
 let n=3;
@@ -1950,6 +1940,12 @@ players:state
 document.addEventListener("contextmenu",function(e){
 e.preventDefault();
 });
+
+document.getElementById("start").addEventListener("click",function(e){
+e.preventDefault();
+startOnline();
+});
+
 </script>
 
 </body>
