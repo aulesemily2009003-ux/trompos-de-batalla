@@ -980,12 +980,26 @@ function startOnline(){
 
 if(!host)return;
 
+let count=Object.keys(players).length;
+
+if(count<2){
+
+document.getElementById("lobbyStatus").textContent=
+"PARTICIPANTES EN LA SALA: "+count+"/4 — SE NECESITAN 2 JUGADORES";
+
+return;
+
+}
+
 players=copyPlayers();
 
 Object.values(players).forEach(function(p,i){
 
 p.hp=100;
 p.alive=true;
+p.attack=false;
+p.inputX=0;
+p.inputY=0;
 
 if(i===0){
 
@@ -1004,11 +1018,9 @@ p.y=100+Math.random()*Math.max(100,H-200);
 playing=true;
 ended=false;
 
-peer.connections.forEach(function(list){
+roomConnections.forEach(function(c){
 
-list.forEach(function(c){
-
-if(c.open){
+if(c && c.open && c.playerId){
 
 try{
 
@@ -1024,12 +1036,9 @@ myId:c.playerId
 
 });
 
-});
-
 startLocal();
 
 }
-
 function startLocal(){
 
 playing=true;
@@ -1963,3 +1972,21 @@ e.preventDefault();
 
 </body>
 </html>
+
+(function(){
+
+let btn=document.getElementById("start");
+
+if(btn){
+
+btn.onclick=function(e){
+
+e.preventDefault();
+
+startOnline();
+
+};
+
+}
+
+})();
