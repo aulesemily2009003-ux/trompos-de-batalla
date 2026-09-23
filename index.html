@@ -960,8 +960,28 @@ if(data.type==="state"){
 let incoming=data.players||{};
 
 Object.keys(incoming).forEach(function(id){
-  if(!players[id]) players[id]=incoming[id];
-  else Object.assign(players[id],incoming[id]);
+  if(!players[id]){
+    players[id]=incoming[id];
+    return;
+  }
+
+  /* IMPORTANTE:
+     El invitado mueve SU propio Beyblade localmente.
+     El estado del anfitrión no puede reemplazar x/y del jugador local,
+     porque eso hacía que el joystick pareciera congelado.
+     El anfitrión sí sigue siendo la autoridad para vida/estado y para
+     las posiciones de los demás jugadores. */
+  if(id===myId){
+    let localX=players[id].x;
+    let localY=players[id].y;
+
+    Object.assign(players[id],incoming[id]);
+
+    if(Number.isFinite(localX)) players[id].x=localX;
+    if(Number.isFinite(localY)) players[id].y=localY;
+  }else{
+    Object.assign(players[id],incoming[id]);
+  }
 });
 
 Object.keys(players).forEach(function(id){
@@ -1531,6 +1551,16 @@ knob.style.top="50%";
 
 joy.addEventListener("pointerup",stopJoy);
 joy.addEventListener("pointercancel",stopJoy);
+
+/* Evitar que el navegador robe el gesto del joystick en celular. */
+["touchstart","touchmove","touchend"].forEach(function(type){
+  document.addEventListener(type,function(e){
+    if(playing && e.target && (e.target.closest("#joy") || e.target.closest("#attack"))){
+      e.preventDefault();
+    }
+  },{passive:false});
+});
+
 
 function move(p,x,y,dt){
 
