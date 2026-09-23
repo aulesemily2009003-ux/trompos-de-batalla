@@ -467,10 +467,7 @@ angle:0,
 attack:false,
 inputX:0,
 inputY:0,
-last:Date.now(),
-lastInput:Date.now(),
-ready:false,
-started:false
+last:Date.now()
 }
 };
 
@@ -562,10 +559,7 @@ angle:Math.random()*6.28,
 attack:false,
 inputX:0,
 inputY:0,
-last:Date.now(),
-lastInput:Date.now(),
-ready:false,
-started:false
+last:Date.now()
 };
 
 c.send({
@@ -574,6 +568,12 @@ id:id,
 room:roomCode,
 players:copyPlayers()
 });
+
+/* El nuevo jugador recibe inmediatamente el estado actual,
+   incluso antes de que empiece el intervalo de sincronización. */
+try{
+c.send({type:"state",players:copyPlayers()});
+}catch(e){}
 
 updateLobby();
 broadcastLobby();
@@ -605,8 +605,6 @@ return;
 
 if(data.type==="input"&&c.playerId&&players[c.playerId]){
 
-/* El anfitrión es la autoridad: recibe los controles del invitado
-   y mueve al jugador remoto en su propio bucle de juego. */
 let p=players[c.playerId];
 
 p.inputX=Math.max(-1,Math.min(1,Number(data.x)||0));
@@ -617,7 +615,6 @@ p.cpu=false;
 if(data.attack){
   p.attack=true;
 }
-p.lastInput=Date.now();
 
 }
 
@@ -655,7 +652,7 @@ function copyPlayers(){
 
 let result={};
 
-Object.values(players).forEach(p=>{
+Object.values(players).forEach(function(p){
 
 result[p.id]={
 id:p.id,
@@ -668,8 +665,10 @@ hp:p.hp,
 maxHp:p.maxHp,
 color:p.color,
 alive:p.alive,
-cpu:p.cpu,
-angle:p.angle
+cpu:!!p.cpu,
+angle:p.angle,
+inputX:p.inputX||0,
+inputY:p.inputY||0
 };
 
 });
@@ -886,19 +885,38 @@ document.getElementById("onlineStatus").textContent=
 function applyNetworkPlayers(incoming){
 
 let source=Object.values(incoming||{});
-let sourceW=Number(source[0]&&source[0].worldW)||W;
-let sourceH=Number(source[0]&&source[0].worldH)||H;
+let sourceW=Number(source[0]&&source[0].worldW)||1280;
+let sourceH=Number(source[0]&&source[0].worldH)||720;
 
 let mapped={};
+
 source.forEach(function(raw){
-  let p=Object.assign({},raw);
-  /* Todos comparten un mundo lógico aunque cada pantalla tenga
-     un tamaño distinto. Esto evita que un jugador aparezca fuera
-     de la pantalla del celular. */
-  p.x=Math.max(45,Math.min(W-45,(Number(raw.x)||0)/sourceW*W));
-  p.y=Math.max(75,Math.min(H-45,(Number(raw.y)||0)/sourceH*H));
-  mapped[p.id]=p;
+
+let p=Object.assign({},raw);
+
+/* El servidor/anfitrión trabaja en coordenadas normalizadas.
+   Cada dispositivo las adapta a SU pantalla. */
+let nx=Number(raw.x);
+let ny=Number(raw.y);
+
+if(!Number.isFinite(nx))nx=sourceW/2;
+if(!Number.isFinite(ny))ny=sourceH/2;
+
+nx=Math.max(0,Math.min(sourceW,nx))/sourceW;
+ny=Math.max(0,Math.min(sourceH,ny))/sourceH;
+
+p.x=45+nx*Math.max(1,W-90);
+p.y=75+ny*Math.max(1,H-120);
+
+p.hp=Math.max(0,Number(raw.hp)||0);
+p.maxHp=Math.max(1,Number(raw.maxHp)||100);
+p.alive=raw.alive!==false;
+p.angle=Number(raw.angle)||0;
+
+mapped[p.id]=p;
+
 });
+
 return mapped;
 }
 
@@ -981,24 +999,40 @@ return;
 
 if(data.type==="state"){
 
-/* El anfitrión es la única autoridad de la partida.
-   El cliente NO decide posiciones, vida ni ganador. */
 let incoming=data.players||{};
+
+/* El anfitrión es la única autoridad de la partida online.
+   Cada estado reemplaza la copia visual completa, por lo que
+   cualquier jugador nuevo aparece automáticamente. */
 players=applyNetworkPlayers(incoming);
 
-if(data.gameOver){
-  finalizarPartidaRemota(null,null,data.winnerId||null);
+if(!players[myId] && myId){
+  /* Si el estado llegó antes del welcome completo, no borramos
+     accidentalmente la identidad local. */
   return;
 }
 
-/* Si por alguna razón el mensaje result se perdió, el estado final
-   también permite terminar la partida correctamente por ID. */
-if(playing){
-  let vivos=Object.values(players).filter(function(p){return p.alive;});
-  if(Object.keys(players).length>1 && vivos.length<=1){
-    finalizarPartidaRemota(null,null,vivos[0]?vivos[0].id:null);
-  }
+if(data.gameOver){
+
+finalizarPartidaRemota(data.title,data.text,data.winnerId||null);
+return;
+
 }
+
+let vivos=Object.values(players).filter(function(p){return p.alive;});
+
+if(Object.keys(players).length>1 && vivos.length<=1){
+
+let ganador=vivos[0]||null;
+
+finalizarPartidaRemota(
+ganador&&ganador.id===myId?"🏆 ¡GANASTE!":"💥 PERDISTE",
+null,
+ganador?ganador.id:null
+);
+
+}
+
 return;
 
 }
@@ -1014,21 +1048,25 @@ return;
 
 function finalizarPartidaRemota(title,text,winnerId){
 
-/* El ganador se determina ÚNICAMENTE por su ID de jugador.
-   El nombre solo se usa para mostrarlo, nunca para decidir quién ganó. */
 let winner=winnerId ? players[winnerId] : null;
+
 if(winnerId && myId===winnerId){
-  title="🏆 ¡GANASTE!";
-  text="Tu Beyblade quedó como el último en la arena.";
+
+title="🏆 ¡GANASTE!";
+text="Tu Beyblade quedó como el último en la arena.";
+
 }else if(winnerId){
-  title="💥 PERDISTE";
-  text=(winner&&winner.name ? winner.name : "Otro jugador")+" ganó la batalla.";
+
+title="💥 PERDISTE!";
+text=(winner&&winner.name ? winner.name : "Otro jugador")+" ganó la batalla.";
+
 }else{
-  title="💥 EMPATE";
-  text="Todos los Beyblade fueron eliminados.";
+
+title="💥 EMPATE";
+text="Todos los Beyblade fueron eliminados.";
+
 }
 
-/* Detener TODO en el cliente invitado. */
 playing=false;
 ended=true;
 countdownActive=false;
@@ -1039,9 +1077,15 @@ joyY=0;
 Object.keys(keys).forEach(function(k){keys[k]=false;});
 
 if(knob){
-  knob.style.left="50%";
-  knob.style.top="50%";
+knob.style.left="50%";
+knob.style.top="50%";
 }
+
+Object.values(players).forEach(function(p){
+  p.attack=false;
+  p.inputX=0;
+  p.inputY=0;
+});
 
 showResult(title,text);
 
@@ -1125,7 +1169,6 @@ p.attack=false;
 p.inputX=0;
 p.inputY=0;
 p.last=Date.now();
-p.lastInput=Date.now();
 
 p.x=i===0?W/2:120+Math.random()*Math.max(100,W-240);
 p.y=i===0?H/2:120+Math.random()*Math.max(100,H-240);
@@ -1167,6 +1210,7 @@ console.error(err);
 }
 
 enviarInicio();
+broadcastGameState();
 
 let intentos=0;
 let startRetry=setInterval(function(){
@@ -1236,15 +1280,17 @@ attack:true
 
 }
 
+let inputSeq=0;
+
 function enviarInputRemoto(){
 
-if(host || !conn || !conn.open || !playing)return;
+if(host || !conn || !conn.open || !playing || ended)return;
 
 let x=0,y=0;
 
 if(joyActive){
-  x=joyX;
-  y=joyY;
+  x=Number(joyX)||0;
+  y=Number(joyY)||0;
 }else{
   if(keys["a"]||keys["arrowleft"])x-=1;
   if(keys["d"]||keys["arrowright"])x+=1;
@@ -1254,15 +1300,22 @@ if(joyActive){
 
 let l=Math.hypot(x,y)||1;
 
+if(l>1){
+  x/=l;
+  y/=l;
+}
+
 try{
-let me=players[myId];
-if(!me)return;
+
 conn.send({
-  type:"input",
-  x:x/l,
-  y:y/l,
-  attack:!!keys[" "] || !!keys["spacebar"]
+type:"input",
+x:x,
+y:y,
+attack:false,
+seq:++inputSeq,
+sentAt:Date.now()
 });
+
 }catch(e){}
 
 }
@@ -1819,7 +1872,7 @@ Object.values(players).forEach(function(p){
 
 if(p.id!=="host"&&p.id!=="me"&&!p.cpu){
 
-if(now-(p.lastInput||p.last)>12000){
+if(now-p.last>5000){
 
 p.cpu=true;
 
@@ -1833,24 +1886,7 @@ p.cpu=true;
 
 if(roomCode!=="SOLO"){
 
-let state=copyPlayers();
-
-roomConnections.forEach(function(c){
-
-if(c&&c.open){
-
-try{
-
-c.send({
-type:"state",
-players:state
-});
-
-}catch(e){}
-
-}
-
-});
+broadcastGameState();
 
 }
 
@@ -1873,10 +1909,9 @@ if(conn&&conn.open&&myId){
 try{
 conn.send({
   type:"input",
-  x:Math.max(-1,Math.min(1,Number(x)||0)),
-  y:Math.max(-1,Math.min(1,Number(y)||0)),
-  attack:false,
-  t:Date.now()
+  x:x,
+  y:y,
+  attack:false
 });
 }catch(e){}
 }
@@ -1889,42 +1924,87 @@ function checkWinner(){
 
 if(ended)return;
 
-let alive=Object.values(players).filter(function(p){return p.alive;});
+let alive=Object.values(players).filter(function(p){
 
-if(alive.length<=1 && Object.keys(players).length>1){
+return p.alive;
+
+});
+
+if(alive.length<=1&&Object.keys(players).length>1){
 
 ended=true;
 playing=false;
-let winner=alive[0]||null;
-let winnerId=winner?winner.id:null;
 
-if(host && roomCode!=="SOLO"){
-  let finalState=copyPlayers();
-  let msg={type:"result",gameOver:true,winnerId:winnerId,players:finalState};
-  let sent=new Set();
-  roomConnections.forEach(function(c){
-    if(c&&c.open){
-      try{c.send(msg);sent.add(c);}catch(e){}
-    }
-  });
-  if(peer&&peer.connections){
-    peer.connections.forEach(function(list){
-      list.forEach(function(c){
-        if(c&&c.open&&!sent.has(c)){try{c.send(msg);}catch(e){}}
-      });
-    });
-  }
-}
+let winner=alive[0];
 
-if(winnerId===myId){
-  showResult("🏆 ¡GANASTE!","Tu Beyblade quedó como el último en la arena.");
-}else if(winner){
-  showResult("💥 PERDISTE",(winner.name||"Otro jugador")+" ganó la batalla.");
+let title="";
+let text="";
+
+if(winner){
+
+if(winner.id===myId){
+
+title="🏆 ¡GANASTE!";
+text="Tu Beyblade quedó como el último en la arena.";
+
 }else{
-  showResult("💥 EMPATE","Todos los Beyblade fueron eliminados.");
+
+title="💥 PERDISTE";
+text=winner.name+" ganó la batalla.";
+
+}
+
+}else{
+
+title="💥 EMPATE";
+text="Todos los Beyblade fueron eliminados.";
+
+}
+
+showResult(title,text);
+
+if(host&&roomCode!=="SOLO"){
+
+let finalState=copyPlayers();
+let msg={
+  type:"result",
+  title:title,
+  text:text,
+  winnerId:winner ? winner.id : null,
+  gameOver:true,
+  players:finalState
+};
+
+/* Enviar el final por las conexiones que realmente usa la sala. */
+let enviados=[];
+roomConnections.forEach(function(c){
+  if(c&&c.open){
+    try{ c.send(msg); enviados.push(c); }catch(e){}
+  }
+});
+
+/* Compatibilidad con conexiones PeerJS que no estén en roomConnections. */
+if(peer&&peer.connections){
+  peer.connections.forEach(function(list){
+    list.forEach(function(c){
+      if(!c||!c.open||enviados.indexOf(c)!==-1)return;
+      try{c.send(msg);}catch(e){}
+    });
+  });
+}
+
+/* También mandamos el estado final inmediatamente, antes de que el
+   bucle del anfitrión se detenga. */
+roomConnections.forEach(function(c){
+  if(c&&c.open){
+    try{c.send({type:"state",players:finalState,gameOver:true,title:title,text:text,winnerId:winner?winner.id:null});}catch(e){}
+  }
+});
+
 }
 
 }
+
 }
 
 function showResult(title,text){
@@ -2116,24 +2196,7 @@ setInterval(function(){
 
 if(host&&playing&&roomCode!=="SOLO"){
 
-let state=copyPlayers();
-
-roomConnections.forEach(function(c){
-
-if(c&&c.open){
-
-try{
-
-c.send({
-type:"state",
-players:state
-});
-
-}catch(e){}
-
-}
-
-});
+broadcastGameState();
 
 }
 
