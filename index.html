@@ -676,30 +676,29 @@ updateLobby();
 }
 
 function updateLobby(){
+  const count=Object.keys(players).length;
+  const status=document.getElementById("lobbyStatus");
+  const list=document.getElementById("playerList");
 
-let list=document.getElementById("playerList");
+  status.textContent="PARTICIPANTES EN LA SALA: "+count+"/4";
 
-list.innerHTML="";
+  list.innerHTML="";
+  Object.values(players).forEach(function(p){
+    const item=document.createElement("div");
+    item.textContent=(p.host?"👑 ":"👤 ")+p.name;
+    list.appendChild(item);
+  });
 
-Object.values(players).forEach(function(p,i){
+  if(isHost && count>=2){
+    startBtn.style.display="block";
+    startBtn.textContent="INICIAR PARTIDA";
+  }else{
+    startBtn.style.display="none";
+  }
 
-let div=document.createElement("div");
-
-div.className="player";
-
-let a=document.createElement("span");
-
-a.textContent=(i===0?"👑 ":"⚡ ")+p.name;
-
-let b=document.createElement("span");
-
-b.textContent=i===0?"ANFITRIÓN":"🟢 LISTO";
-
-div.appendChild(a);
-div.appendChild(b);
-
-list.appendChild(div);
-
+  if(!isHost && count<4){
+    status.textContent="PARTICIPANTES EN LA SALA: "+count+"/4 — Esperando al anfitrión...";
+  }
 });
 
 document.getElementById("roomCode").textContent=roomCode;
