@@ -953,11 +953,24 @@ return;
 
 if(data.type==="state"){
 
-/* El anfitrión es la única autoridad del movimiento online.
-   El invitado NO mueve su copia local: solo manda controles.
-   Así no hay dos simulaciones peleándose por la posición. */
+/* El anfitrión es la autoridad del estado online. */
 let incoming=data.players||{};
 players=incoming;
+
+/* Si el anfitrión ya marcó a alguien como eliminado, el invitado
+   también termina la partida aunque el mensaje "result" se pierda. */
+if(data.gameOver){
+  finalizarPartidaRemota(data.title,data.text,data.winnerId);
+  return;
+}
+
+let vivos=Object.values(players).filter(function(p){return p.alive;});
+if(Object.keys(players).length>1 && vivos.length<=1){
+  let ganador=vivos[0]||null;
+  let titulo=ganador&&ganador.id===myId?"🏆 ¡GANASTE!":"💥 PERDISTE";
+  let texto=ganador?ganador.name+" ganó la batalla.":"Todos los Beyblade fueron eliminados.";
+  finalizarPartidaRemota(titulo,texto,ganador?ganador.id:null);
+}
 
 return;
 
@@ -965,12 +978,31 @@ return;
 
 if(data.type==="result"){
 
-playing=false;
-ended=true;
-showResult(data.title,data.text);
+finalizarPartidaRemota(data.title,data.text,data.winnerId);
 return;
 
 }
+
+}
+
+function finalizarPartidaRemota(title,text,winnerId){
+
+/* Detener TODO en el cliente invitado. */
+playing=false;
+ended=true;
+countdownActive=false;
+joyActive=false;
+joyX=0;
+joyY=0;
+
+Object.keys(keys).forEach(function(k){keys[k]=false;});
+
+if(knob){
+  knob.style.left="50%";
+  knob.style.top="50%";
+}
+
+showResult(title||"FIN DE LA PARTIDA",text||"La batalla terminó.");
 
 }
 
@@ -1853,29 +1885,42 @@ text="Todos los Beyblade fueron eliminados.";
 
 showResult(title,text);
 
-if(host&&roomCode!=="SOLO"&&peer){
+if(host&&roomCode!=="SOLO"){
 
-peer.connections.forEach(function(list){
+let finalState=copyPlayers();
+let msg={
+  type:"result",
+  title:title,
+  text:text,
+  winnerId:winner ? winner.id : null,
+  gameOver:true,
+  players:finalState
+};
 
-list.forEach(function(c){
-
-if(c.open){
-
-try{
-
-c.send({
-type:"result",
-title:title,
-text:text,
-winnerId:winner ? winner.id : null
+/* Enviar el final por las conexiones que realmente usa la sala. */
+let enviados=[];
+roomConnections.forEach(function(c){
+  if(c&&c.open){
+    try{ c.send(msg); enviados.push(c); }catch(e){}
+  }
 });
 
-}catch(e){}
-
+/* Compatibilidad con conexiones PeerJS que no estén en roomConnections. */
+if(peer&&peer.connections){
+  peer.connections.forEach(function(list){
+    list.forEach(function(c){
+      if(!c||!c.open||enviados.indexOf(c)!==-1)return;
+      try{c.send(msg);}catch(e){}
+    });
+  });
 }
 
-});
-
+/* También mandamos el estado final inmediatamente, antes de que el
+   bucle del anfitrión se detenga. */
+roomConnections.forEach(function(c){
+  if(c&&c.open){
+    try{c.send({type:"state",players:finalState,gameOver:true,title:title,text:text,winnerId:winner?winner.id:null});}catch(e){}
+  }
 });
 
 }
