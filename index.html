@@ -420,6 +420,7 @@ if(peer)peer.destroy();
 
 conn=null;
 peer=null;
+roomConnections=[];
 host=false;
 }
 
@@ -480,14 +481,9 @@ show("lobby");
 
 peer.on("connection",function(c){
 
-/* Guardamos TODAS las conexiones del anfitrión. */
 if(roomConnections.indexOf(c)===-1) roomConnections.push(c);
 
-c.on("open",function(){
-  /* El invitado enviará "join" inmediatamente después de abrirse. */
-  broadcastLobby();
-});
-
+// Escuchar DATA desde el primer momento.
 c.on("data",function(data){
   hostMessage(c,data);
 });
@@ -529,105 +525,91 @@ if(!data)return;
 
 if(data.type==="join"){
 
-  /* Evitar registrar dos veces al mismo jugador. */
-  if(c.playerId && players[c.playerId]){
+if(Object.keys(players).length>=4){
 
-    try{
-      if(c.open){
-        c.send({
-          type:"welcome",
-          id:c.playerId,
-          room:roomCode,
-          players:copyPlayers()
-        });
-      }
-    }catch(e){}
-    return;
-  }
+c.send({type:"full"});
+return;
 
-  if(Object.keys(players).length>=4){
-    try{ if(c.open)c.send({type:"full"}); }catch(e){}
-    return;
-  }
+}
 
-  let id="p"+Math.random().toString(36).substring(2,9);
-  c.playerId=id;
+if(c.playerId)return;
 
-  let n=String(data.name||"Jugador").substring(0,14);
+let id="p"+Math.random().toString(36).substring(2,9);
 
-  players[id]={
-    id:id,
-    name:n,
-    x:120+Math.random()*Math.max(100,W-240),
-    y:120+Math.random()*Math.max(100,H-240),
-    hp:100,
-    maxHp:100,
-    color:colors[Object.keys(players).length%colors.length],
-    alive:true,
-    cpu:false,
-    angle:Math.random()*6.28,
-    attack:false,
-    inputX:0,
-    inputY:0,
-    last:Date.now()
-  };
+c.playerId=id;
 
-  /* Primero confirmamos al invitado que ya pertenece a la sala. */
-  try{
-    if(c.open){
-      c.send({
-        type:"welcome",
-        id:id,
-        room:roomCode,
-        players:copyPlayers()
-      });
-    }
-  }catch(e){}
+let n=String(data.name||"Jugador").substring(0,14);
 
-  /* Después actualizamos a TODOS los jugadores. */
-  broadcastLobby();
-  updateLobby();
+players[id]={
+id:id,
+name:n,
+x:120+Math.random()*Math.max(100,W-240),
+y:120+Math.random()*Math.max(100,H-240),
+hp:100,
+maxHp:100,
+color:colors[Object.keys(players).length%colors.length],
+alive:true,
+cpu:false,
+angle:Math.random()*6.28,
+attack:false,
+inputX:0,
+inputY:0,
+last:Date.now()
+};
 
-  return;
+c.send({
+type:"welcome",
+id:id,
+room:roomCode,
+players:copyPlayers()
+});
+
+updateLobby();
+broadcastLobby();
+
+return;
 }
 
 if(data.type==="ready"){
-  if(c.playerId && players[c.playerId]){
-    players[c.playerId].ready=true;
-    players[c.playerId].cpu=false;
-    players[c.playerId].last=Date.now();
-  }
-  broadcastLobby();
-  return;
+
+if(c.playerId && players[c.playerId]){
+players[c.playerId].ready=true;
+players[c.playerId].cpu=false;
+players[c.playerId].last=Date.now();
+}
+
+return;
 }
 
 if(data.type==="startAck"){
-  if(c.playerId && players[c.playerId]){
-    players[c.playerId].started=true;
-    players[c.playerId].cpu=false;
-    players[c.playerId].last=Date.now();
-  }
-  return;
+
+if(c.playerId && players[c.playerId]){
+players[c.playerId].started=true;
+players[c.playerId].cpu=false;
+players[c.playerId].last=Date.now();
+}
+
+return;
 }
 
 if(data.type==="input"&&c.playerId&&players[c.playerId]){
 
-  let pl=players[c.playerId];
+let p=players[c.playerId];
 
-  pl.inputX=Math.max(-1,Math.min(1,Number(data.x)||0));
-  pl.inputY=Math.max(-1,Math.min(1,Number(data.y)||0));
+p.inputX=Math.max(-1,Math.min(1,Number(data.x)||0));
+p.inputY=Math.max(-1,Math.min(1,Number(data.y)||0));
 
-  if(data.attack){
-    pl.attack=true;
-  }
+if(data.attack){
+p.attack=true;
+}
 
-  pl.last=Date.now();
-  pl.cpu=false;
-  return;
+p.last=Date.now();
+p.cpu=false;
+
 }
 
 if(data.type==="again"){
-  resetLobby();
+resetLobby();
 }
 
 }
@@ -685,23 +667,53 @@ function broadcastLobby(){
 if(!host)return;
 
 let data={
-  type:"lobby",
-  room:roomCode,
-  players:copyPlayers()
+type:"lobby",
+room:roomCode,
+players:copyPlayers()
 };
 
-/* Usamos una sola lista fiable: roomConnections. */
-roomConnections=roomConnections.filter(function(c){
-  return c && !c.destroyed;
+if(peer){
+
+peer.connections.forEach(list=>{
+
+list.forEach(c=>{
+
+if(c.open){
+
+try{
+c.send(data);
+}catch(e){}
+
+}
+
 });
 
-roomConnections.forEach(function(c){
-  if(c && c.open){
-    try{ c.send(data); }catch(e){}
-  }
 });
+
+}
 
 updateLobby();
+
+}
+
+function broadcastGameState(){
+
+if(!host || !playing)return;
+
+let data={
+type:"state",
+players:copyPlayers()
+};
+
+roomConnections.forEach(function(c){
+
+if(c && c.open){
+
+try{c.send(data);}catch(e){}
+
+}
+
+});
 
 }
 
@@ -816,7 +828,7 @@ name:myName
 
 tries++;
 
-if(tries<10){
+if(tries<6){
 setTimeout(sendJoin,500);
 }
 
@@ -826,9 +838,7 @@ sendJoin();
 
 });
 
-conn.on("data",function(data){
-guestMessage(data);
-});
+conn.on("data",guestMessage);
 
 conn.on("close",function(){
 
@@ -907,6 +917,11 @@ if(data.type==="start"){
 players=data.players||{};
 playing=true;
 ended=false;
+
+let result=document.getElementById("result");
+if(result)result.style.display="none";
+let hud=document.getElementById("roomHud");
+if(hud)hud.textContent="SALA "+roomCode;
 
 show("game");
 
@@ -1755,31 +1770,32 @@ players:state
 
 }else{
 
-if(conn&&conn.open&&myId){
-
+/* El invitado también mueve su propio Beyblade localmente para que
+   el control responda de inmediato. El anfitrión sigue siendo la
+   autoridad y recibe el mismo input por red. */
+let me=players[myId];
 let k=keyboard();
-
 let x=k.x;
 let y=k.y;
 
 if(joyActive){
-
-x=joyX;
-y=joyY;
-
+  x=joyX;
+  y=joyY;
 }
 
-try{
+if(me&&me.alive){
+  move(me,x,y,dt);
+}
 
-conn.send({
-type:"input",
-x:x,
-y:y,
-attack:false
-});
-
-}catch(e){}
-
+if(conn&&conn.open&&myId){
+  try{
+    conn.send({
+      type:"input",
+      x:x,
+      y:y,
+      attack:false
+    });
+  }catch(e){}
 }
 
 }
