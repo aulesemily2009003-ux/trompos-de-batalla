@@ -922,6 +922,17 @@ players=data.players||{};
 playing=true;
 ended=false;
 
+let me=players[myId];
+if(me){
+  me.inputX=0;
+  me.inputY=0;
+  me.attack=false;
+  me.last=Date.now();
+}
+
+document.getElementById("roomHud").textContent="SALA "+roomCode;
+
+document.getElementById("result").style.display="none";
 show("game");
 
 startCountdown();
@@ -940,7 +951,28 @@ return;
 
 if(data.type==="state"){
 
-players=data.players||{};
+/* El anfitrión manda la vida y las posiciones de todos.
+   Para el propio jugador NO reemplazamos x/y: así el control local
+   del celular/PC responde de inmediato y el estado de red no lo congela. */
+let incoming=data.players||{};
+let local=players[myId];
+
+Object.keys(incoming).forEach(function(id){
+  if(id===myId && local){
+    local.hp=incoming[id].hp;
+    local.maxHp=incoming[id].maxHp;
+    local.alive=incoming[id].alive;
+    local.color=incoming[id].color;
+    local.name=incoming[id].name;
+    local.angle=incoming[id].angle;
+  }else{
+    players[id]=incoming[id];
+  }
+});
+
+Object.keys(players).forEach(function(id){
+  if(!incoming[id] && id!==myId) delete players[id];
+});
 
 return;
 
